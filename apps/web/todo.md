@@ -1,0 +1,29 @@
+# BridgeX Implementation Tracker
+
+- [x] Establish the refined BridgeX design system, navigation model, and responsive visual foundation.
+- [x] Define and migrate database models for profiles, verification, requests, listings, offers, orders, wallet activity, messages, reviews, reports, and disputes.
+- [x] Build the public landing page with a prominent sender-to-escrow-to-traveler payment flow.
+- [x] Build About, How It Works, Safety & Trust, FAQ, Contact, Terms, and Privacy public pages.
+- [x] Add authentication entry points for registration, login, OTP verification, password recovery, and account recovery.
+- [x] Create profile and identity-verification flows for NID, passport, student ID, email, and mobile verification.
+- [x] Display a prominent verified-account badge wherever a user profile appears.
+- [x] Build the sender request composer with image upload, item details, size and weight, product link, budget, and Bangladesh district/city delivery address selectors.
+- [x] Build the traveler flight/cargo listing composer with route, date, capacity, price, and request-management tools.
+- [x] Build searchable product-request and flight-listing marketplace feeds with route, category, date, filtering, sorting, saved listings, and recommendations.
+- [x] Build offer submission, comparison, selection, and rejection workflows.
+- [x] Build the escrow order lifecycle interface: funding, purchase, transit, delivery confirmation, release, dispute, and review.
+- [x] Build the account dashboard for profile, verification, posts, offers, orders, saved listings, wallet, transactions, reviews, and settings.
+- [x] Build order-based messaging with image and location-sharing affordances.
+- [x] Build an administrative panel for verification review, order/payment oversight, reports, analytics, moderation, and user-ban actions.
+- [x] Write and run unit tests covering escrow-stage rules, Bangladesh delivery selectors, and authentication logout behavior.
+- [x] Verify desktop and mobile interfaces, resolve defects, and create the initial application checkpoint.
+- [x] Prioritize a direct post action in the public top navigation and landing-page hero.
+- [x] Rework the primary marketplace surface into a focused social-style feed with the essential post and discovery actions.
+- [x] Remove low-value marketing and interface elements so the public experience stays concise and task-oriented.
+- [x] Validate the streamlined desktop and mobile flows and save an updated BridgeX checkpoint.
+- [ ] Assess and expose the BridgeX backend contracts required by a native mobile application.
+- [ ] Build an APK-ready native BridgeX client connected to authentication, marketplace, post, offer, order, chat, verification, and profile services.
+- [ ] Validate end-to-end frontend-to-backend mobile workflows and generate the Android APK artifact.
+- [ ] Connect the native BridgeX project to Expo project e612d589-1746-4e8c-879c-5d8cd651f06f.
+- [ ] Synchronize the BridgeX mobile application source with abdullahbinfahad/BridgeX.
+- [ ] Submit and monitor the production Android build, retrying safely after temporary Expo service-load failures.

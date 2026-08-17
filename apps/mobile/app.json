@@ -1,0 +1,29 @@
+{
+  "expo": {
+    "name": "BridgeX",
+    "slug": "bridgex-mobile",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "scheme": "bridgex",
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "im.bridgex.marketplace"
+    },
+    "android": {
+      "package": "im.bridgex.marketplace",
+      "adaptiveIcon": {
+        "backgroundColor": "#f7f5ef",
+        "foregroundImage": "./assets/android-icon-foreground.png",
+        "backgroundImage": "./assets/android-icon-background.png",
+        "monochromeImage": "./assets/android-icon-monochrome.png"
+      },
+      "permissions": ["INTERNET", "ACCESS_FINE_LOCATION", "ACCESS_COARSE_LOCATION", "CAMERA", "READ_MEDIA_IMAGES"],
+      "predictiveBackGestureEnabled": false
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    }
+  }
+}
