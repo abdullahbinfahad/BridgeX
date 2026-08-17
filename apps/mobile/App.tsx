@@ -3,7 +3,7 @@ import { useRef, useState } from "react";
 import { ActivityIndicator, Alert, Pressable, SafeAreaView, StyleSheet, Text, View } from "react-native";
 import { WebView } from "react-native-webview";
 
-const DEFAULT_BRIDGEX_URL = "https://3000-ivjfogeygnwsfn0mkomo1-0bb95f93.us3.manus.computer/access";
+const DEFAULT_BRIDGEX_URL = "https://bridgexmp-fcp7rl7v.manus.space/access";
 const configuredBridgeXUrl = process.env.EXPO_PUBLIC_BRIDGEX_URL?.trim();
 const BRIDGEX_URL = configuredBridgeXUrl && /^https:\/\/[a-z0-9.-]+/i.test(configuredBridgeXUrl)
   ? configuredBridgeXUrl
