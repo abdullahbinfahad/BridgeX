@@ -146,6 +146,11 @@ export const appRouter = router({
   }),
   admin: router({
     overview: adminProcedure.query(() => db.getAdminSummary()),
+    users: adminProcedure.query(() => db.getAdminUsers()),
+    verifications: adminProcedure.query(() => db.getAdminVerificationQueue()),
+    operations: adminProcedure.query(() => db.getAdminOperations()),
+    reviewVerification: adminProcedure.input(z.object({ id: z.number().int().positive(), decision: z.enum(["approved", "rejected"]), note: z.string().max(1000).optional() }))
+      .mutation(({ ctx, input }) => db.reviewVerification({ ...input, reviewerId: ctx.user.id })),
   }),
 });
 

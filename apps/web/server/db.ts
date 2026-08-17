@@ -159,3 +159,38 @@ export async function getAdminSummary() {
     openReports: Number(reportRow[0]?.total ?? 0),
   };
 }
+
+export async function getAdminUsers() {
+  const db = await getDb();
+  if (!db) return [];
+  return db.select({ id: users.id, name: users.name, email: users.email, role: users.role, createdAt: users.createdAt, lastSignedIn: users.lastSignedIn })
+    .from(users).orderBy(desc(users.createdAt)).limit(100);
+}
+
+export async function getAdminVerificationQueue() {
+  const db = await getDb();
+  if (!db) return [];
+  return db.select({ id: verifications.id, userId: verifications.userId, documentType: verifications.documentType, status: verifications.status, createdAt: verifications.createdAt, name: users.name, email: users.email })
+    .from(verifications).leftJoin(users, eq(verifications.userId, users.id)).orderBy(desc(verifications.createdAt)).limit(100);
+}
+
+export async function reviewVerification(values: { id: number; reviewerId: number; decision: "approved" | "rejected"; note?: string }) {
+  const db = await getDb();
+  if (!db) throw new Error("Verification storage is not available.");
+  const submission = await db.select().from(verifications).where(eq(verifications.id, values.id)).limit(1);
+  const record = submission[0];
+  if (!record) throw new Error("Verification submission was not found.");
+  await db.update(verifications).set({ status: values.decision, reviewerId: values.reviewerId, reviewerNote: values.note, reviewedAt: new Date() }).where(eq(verifications.id, values.id));
+  await db.update(profiles).set({ verificationStatus: values.decision === "approved" ? "verified" : "rejected" }).where(eq(profiles.userId, record.userId));
+  return { success: true } as const;
+}
+
+export async function getAdminOperations() {
+  const db = await getDb();
+  if (!db) return { orders: [], reports: [] };
+  const [adminOrders, adminReports] = await Promise.all([
+    db.select().from(orders).orderBy(desc(orders.updatedAt)).limit(100),
+    db.select().from(reports).orderBy(desc(reports.createdAt)).limit(100),
+  ]);
+  return { orders: adminOrders, reports: adminReports };
+}
