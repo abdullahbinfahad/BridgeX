@@ -25,5 +25,12 @@
 - [ ] Build an APK-ready native BridgeX client connected to authentication, marketplace, post, offer, order, chat, verification, and profile services.
 - [ ] Validate end-to-end frontend-to-backend mobile workflows and generate the Android APK artifact.
 - [ ] Connect the native BridgeX project to Expo project e612d589-1746-4e8c-879c-5d8cd651f06f.
-- [ ] Synchronize the BridgeX mobile application source with abdullahbinfahad/BridgeX.
+- [x] Synchronize the BridgeX mobile application source with abdullahbinfahad/BridgeX.
 - [ ] Submit and monitor the production Android build, retrying safely after temporary Expo service-load failures.
+- [ ] Link BridgeX to the new Expo project 131fe15d-e14d-4db6-80bc-e0a8eec89ac7 and submit its production APK build.
+- [ ] Add a mandatory first-entry authentication page with registration, Google sign-in entry, account recovery, and a verification-status journey.
+- [ ] Add an onboarding flow for verified contact details, Bangladesh address, account type, and identity-review submission.
+- [ ] Refine the post system with accurate item and carry-space status, offer, order, and escrow actions.
+- [x] Expand the admin management workspace to manage users, verification requests, data, posts, orders, payments, reports, and system controls.
+- [x] Document the BridgeX frontend-to-backend data flow and integration process in concise Bengali.
+- [x] Fix the mobile app error caused by an undefined BridgeX web domain and validate the repaired runtime connection.
