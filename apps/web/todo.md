@@ -28,8 +28,8 @@
 - [x] Synchronize the BridgeX mobile application source with abdullahbinfahad/BridgeX.
 - [ ] Submit and monitor the production Android build, retrying safely after temporary Expo service-load failures.
 - [ ] Link BridgeX to the new Expo project 131fe15d-e14d-4db6-80bc-e0a8eec89ac7 and submit its production APK build.
-- [ ] Add a mandatory first-entry authentication page with registration, Google sign-in entry, account recovery, and a verification-status journey.
-- [ ] Add an onboarding flow for verified contact details, Bangladesh address, account type, and identity-review submission.
+- [x] Add a mandatory first-entry authentication page with registration, Google sign-in entry, account recovery, and a verification-status journey.
+- [x] Add an onboarding flow for verified contact details, Bangladesh address, account type, and identity-review submission.
 - [ ] Refine the post system with accurate item and carry-space status, offer, order, and escrow actions.
 - [x] Expand the admin management workspace to manage users, verification requests, data, posts, orders, payments, reports, and system controls.
 - [x] Document the BridgeX frontend-to-backend data flow and integration process in concise Bengali.

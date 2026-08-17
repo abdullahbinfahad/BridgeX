@@ -11,6 +11,7 @@ import { CreateListing, CreateRequest } from "./pages/CreateFlow";
 import Workspace, { AdminWorkspace } from "./pages/Workspace";
 import Access from "./pages/Access";
 import OfferPage from "./pages/OfferPage";
+import Onboarding from "./pages/Onboarding";
 
 function Router() {
   // make sure to consider if you need authentication for certain routes
@@ -29,6 +30,7 @@ function Router() {
       <Route path={"/create-listing"} component={CreateListing} />
       <Route path={"/offer"} component={OfferPage} />
       <Route path={"/access"} component={Access} />
+      <Route path={"/onboarding"} component={Onboarding} />
       <Route path={"/dashboard"} component={Workspace} />
       <Route path={"/dashboard/:section"} component={Workspace} />
       <Route path={"/admin"} component={AdminWorkspace} />
