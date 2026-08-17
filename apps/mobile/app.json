@@ -22,6 +22,11 @@
       "permissions": ["INTERNET", "ACCESS_FINE_LOCATION", "ACCESS_COARSE_LOCATION", "CAMERA", "READ_MEDIA_IMAGES"],
       "predictiveBackGestureEnabled": false
     },
+    "extra": {
+      "eas": {
+        "projectId": "e612d589-1746-4e8c-879c-5d8cd651f06f"
+      }
+    },
     "web": {
       "favicon": "./assets/favicon.png"
     }

@@ -8,6 +8,12 @@
         "buildType": "apk"
       },
       "distribution": "internal"
+    },
+    "production": {
+      "android": {
+        "buildType": "apk"
+      },
+      "distribution": "internal"
     }
   }
 }
