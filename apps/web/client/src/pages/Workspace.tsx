@@ -10,6 +10,7 @@ import { compressImageForUpload } from "@/lib/fileUpload";
 import { supabase } from "@/lib/supabase";
 import GlobalVerification from "@/pages/GlobalVerification";
 import Deals from "@/pages/Deals";
+import ManagePosts from "@/pages/ManagePosts";
 import { Banknote, CheckCircle2, ChevronRight, FileUp, MapPin, PackageCheck, Plane, ShieldCheck, WalletCards } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { Link, useLocation } from "wouter";
@@ -162,6 +163,6 @@ export default function Workspace() {
   const [location] = useLocation();
   const section = location.split("/")[2] ?? "overview";
   const data = useMemberData(user?.id);
-const content = section === "verification" ? <GlobalVerification /> : section === "wallet" ? <Wallet data={data} /> : section === "orders" ? <Orders data={data} /> : section === "offers" ? <Offers /> : section === "deals" ? <Deals /> : section === "settings" ? <SettingsView /> : section === "requests" ? <MyRequests data={data} /> : section === "listings" ? <MyListings data={data} /> : section === "reviews" ? <Reviews /> : <Overview data={data} />;
+const content = section === "verification" ? <GlobalVerification /> : section === "wallet" ? <Wallet data={data} /> : section === "orders" ? <Orders data={data} /> : section === "offers" ? <Offers /> : section === "deals" ? <Deals /> : section === "manage-posts" ? <ManagePosts /> : section === "settings" ? <SettingsView /> : section === "requests" ? <MyRequests data={data} /> : section === "listings" ? <MyListings data={data} /> : section === "reviews" ? <Reviews /> : <Overview data={data} />;
   return <DashboardLayout>{content}</DashboardLayout>;
 }

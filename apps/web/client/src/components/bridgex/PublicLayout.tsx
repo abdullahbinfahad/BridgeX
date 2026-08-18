@@ -23,12 +23,13 @@ function NativePushBridge() {
 }
 
 function AccountMenu({ mobile = false }: { mobile?: boolean }) {
-  const { user, isAuthenticated, logout } = useAuth(); const [, setLocation] = useLocation(); const [open, setOpen] = useState(false);
+  const { user, isAuthenticated, loading, logout } = useAuth(); const [, setLocation] = useLocation(); const [open, setOpen] = useState(false);
+  if (loading) return mobile ? <span className="rounded-lg px-3 py-2.5 text-sm font-bold text-[#748083]">Loading account…</span> : <span className="ml-2 text-sm font-semibold text-[#748083]">Loading account…</span>;
   if (!isAuthenticated || !user) return mobile ? <Link href="/access" className="rounded-lg px-3 py-2.5 text-sm font-bold hover:bg-[#ece8dd]">Log in or create account</Link> : <Link href="/access"><Button variant="ghost" size="sm" className="ml-1 font-semibold text-[#354145] hover:bg-[#e9e4d8]">Log in</Button></Link>;
   const initial = displayName(user).charAt(0).toUpperCase(); const go = (path: string) => { setOpen(false); setLocation(path); }; const signOut = async () => { await logout(); setOpen(false); setLocation("/"); };
   const workspaceLink = <button onClick={() => go("/dashboard")} className="flex w-full items-center gap-2 rounded-xl px-3 py-2.5 text-sm font-bold hover:bg-[#f0ede5]"><UserRound className="size-4" />Workspace</button>;
   const editLink = <button onClick={() => go("/dashboard/settings")} className="flex w-full items-center gap-2 rounded-xl px-3 py-2.5 text-sm font-bold hover:bg-[#f0ede5]"><Settings className="size-4" />Edit profile</button>;
-  const adminLink = user.role === "admin" ? <button onClick={() => go("/admin")} className="flex w-full items-center gap-2 rounded-xl px-3 py-2.5 text-sm font-bold hover:bg-[#f0ede5]"><ShieldCheck className="size-4" />Admin control panel</button> : null;
+  const adminLink = user.role === "admin" || user.role === "super_admin" ? <button onClick={() => go("/admin")} className="flex w-full items-center gap-2 rounded-xl px-3 py-2.5 text-sm font-bold hover:bg-[#f0ede5]"><ShieldCheck className="size-4" />{user.role === "super_admin" ? "Super Admin control panel" : "Admin control panel"}</button> : null;
   const signOutLink = <button onClick={signOut} className="flex w-full items-center gap-2 rounded-xl px-3 py-2.5 text-sm font-bold text-[#9b4b3e] hover:bg-[#fdf0ed]"><LogOut className="size-4" />Sign out</button>;
   const memberHead = <button onClick={() => go("/dashboard")} className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left hover:bg-[#f0ede5]"><Avatar className="size-8"><AvatarImage src={user.avatarUrl} alt="Profile photo" /><AvatarFallback className="bg-[#dff5ea] text-xs font-bold text-[#176447]">{initial}</AvatarFallback></Avatar><span className="min-w-0"><span className="block truncate text-sm font-bold">{displayName(user)}</span><span className="block truncate text-xs text-[#687579]">{user.email}</span></span></button>;
   if (mobile) return <div className="mt-2 rounded-xl bg-white p-2">{memberHead}{editLink}{workspaceLink}{adminLink}{signOutLink}</div>;

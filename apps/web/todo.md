@@ -75,3 +75,11 @@
 - [x] Improve marketplace client performance through leaner queries, efficient media loading, and route-aware code delivery.
 - [x] Replace protected-order milestones with sender and traveler perspectives for match, China pickup, handoff, transit, delivery, and release.
 - [x] Replace remaining Bangladesh-only marketplace headings with the requested generic carry-marketplace wording.
+- [x] Assign `abdullahbinfahad.abf@gmail.com` as the sole Super Admin and enforce that ordinary admins cannot suspend, remove, or alter any administrator role.
+- [x] Add Super Admin-only authority to promote or demote ordinary administrators and to view system-wide sensitive operational controls.
+- [x] Add member post-management controls for editing and deleting the signed-in member’s own open requests and carry listings from the dashboard.
+- [x] Permit members to make multiple offers and interests on eligible different posts while preventing only duplicated responses to the same post.
+- [x] Expand accepted-deal views with editable delivery contact details, complete counterpart pickup/delivery information, a named deal inbox, and persistent private messaging.
+- [ ] Automatically advance Offer and Matched order milestones after acceptance, let travelers update subsequent milestones, and remind inactive travelers daily with an escalation after three days. (Database procedure and secured endpoint are implemented; the selected Render scheduled job still needs its secret and one daily schedule configured.)
+- [x] Improve session hydration and persistence so authenticated navigation stays smooth after route changes and refreshes.
+- [x] Rename request language to “I need to send” and expand the global request form for personal goods, family products, business products, any-country routes, item details, multiple compressed photos, and optional compressed video.

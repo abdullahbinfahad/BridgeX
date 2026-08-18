@@ -44,6 +44,22 @@ async function startServer() {
       createContext,
     })
   );
+  app.post("/api/scheduled/traveler-reminders", async (req, res) => {
+    const providedSecret = req.get("x-bridgex-reminder-secret");
+    const expectedSecret = process.env.REMINDER_CRON_SECRET;
+    if (!expectedSecret || !providedSecret || providedSecret !== expectedSecret) return res.status(403).json({ error: "forbidden" });
+    const url = process.env.VITE_SUPABASE_URL;
+    const key = process.env.VITE_SUPABASE_PUBLISHABLE_KEY;
+    if (!url || !key) return res.status(500).json({ error: "missing_supabase_runtime_configuration" });
+    try {
+      const response = await fetch(`${url}/rest/v1/rpc/process_bridgex_overdue_traveler_reminders`, { method: "POST", headers: { apikey: key, Authorization: `Bearer ${key}`, "Content-Type": "application/json" }, body: "{}" });
+      const body = await response.text();
+      if (!response.ok) return res.status(response.status).json({ error: "reminder_run_failed", details: body });
+      return res.json({ ok: true, remindersProcessed: Number(body || 0) });
+    } catch (error) {
+      return res.status(500).json({ error: "reminder_run_error", details: error instanceof Error ? error.message : String(error) });
+    }
+  });
   // development mode uses Vite, production mode uses static files
   if (process.env.NODE_ENV === "development") {
     await setupVite(app, server);
