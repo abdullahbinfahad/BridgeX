@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { supabase } from "@/lib/supabase";
 import { CalendarDays, Heart, MapPin, PackageCheck, Plane, Search, Weight } from "lucide-react";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Link } from "wouter";
 
 type View = "requests" | "flights";
@@ -28,10 +28,17 @@ export default function Marketplace() {
   const [items, setItems] = useState<MarketItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const activeObjectUrls = useRef<string[]>([]);
+
+  const clearObjectUrls = () => {
+    activeObjectUrls.current.forEach((url) => URL.revokeObjectURL(url));
+    activeObjectUrls.current = [];
+  };
 
   const load = async () => {
     setLoading(true);
     setError("");
+    clearObjectUrls();
 
     if (view === "requests") {
       const { data, error: requestError } = await supabase
@@ -47,10 +54,13 @@ export default function Marketplace() {
         const mapped = await Promise.all((data ?? []).map(async (item: any): Promise<MarketItem> => {
           let imageUrl: string | null = null;
           if (item.image_path) {
-            const { data: signed, error: signingError } = await supabase.storage
+            const { data: imageBlob, error: imageError } = await supabase.storage
               .from("request-media")
-              .createSignedUrl(item.image_path, 60 * 60);
-            if (!signingError) imageUrl = signed?.signedUrl ?? null;
+              .download(item.image_path);
+            if (!imageError && imageBlob) {
+              imageUrl = URL.createObjectURL(imageBlob);
+              activeObjectUrls.current.push(imageUrl);
+            }
           }
 
           return {
@@ -97,6 +107,7 @@ export default function Marketplace() {
   };
 
   useEffect(() => { void load(); }, [view]);
+  useEffect(() => () => clearObjectUrls(), []);
 
   const filtered = useMemo(
     () => items.filter((item) => `${item.title} ${item.route} ${item.location} ${item.category}`.toLowerCase().includes(query.toLowerCase())),
