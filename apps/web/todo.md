@@ -41,7 +41,7 @@
 - [x] Compress product and request image uploads before storage in the creation flow.
 - [x] Replace legacy Bangladesh-only request and carry address selectors with China-first global origin and destination fields.
 - [x] Resolve guest-marketplace loading recovery in the Android WebView without changing the required 1 cm white top spacer.
-- [ ] Build and verify the final Android APK against the BridgeX custom domain after the production web release.
+- [x] Build and verify the final Android APK against the BridgeX custom domain after the production web release.
 - [x] Display authenticated request-media images reliably in public marketplace posts without exposing private storage objects.
 - [ ] Complete Facebook login only after a Meta App ID and App Secret are supplied; keep unavailable providers clearly disabled rather than presenting broken login actions.
 - [ ] Keep Apple login disabled until an Apple Developer Program membership and Apple sign-in credentials are available; explain the paid prerequisite clearly.

@@ -1,29 +1,84 @@
 import { StatusBar } from "expo-status-bar";
-import { useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { ActivityIndicator, Pressable, StyleSheet, Text, View } from "react-native";
 import { WebView } from "react-native-webview";
 
-const DEFAULT_BRIDGEX_URL = "https://bridgex-q2h5.onrender.com/access";
-const configuredBridgeXUrl = process.env.EXPO_PUBLIC_BRIDGEX_URL?.trim();
-const BRIDGEX_URL = configuredBridgeXUrl && /^https:\/\/[a-z0-9.-]+/i.test(configuredBridgeXUrl)
-  ? configuredBridgeXUrl
-  : DEFAULT_BRIDGEX_URL;
+const DEFAULT_BRIDGEX_URL = "https://bridgex.abdullahbinfahad.info/marketplace?guest=1";
+// Android dp uses a 160-dpi baseline: 160 / 2.54 is approximately one physical centimetre.
+const ONE_CENTIMETER_DP = 160 / 2.54;
+// A fixed public marketplace URL prevents an old build-time environment value from reopening the access page and trapping guests in onboarding.
+const BRIDGEX_URL = DEFAULT_BRIDGEX_URL;
+
+function toGuestMarketplaceUrl(url: string) {
+  try {
+    const parsed = new URL(url);
+    parsed.pathname = "/marketplace";
+    parsed.search = "?guest=1";
+    parsed.hash = "";
+    return parsed.toString();
+  } catch {
+    return DEFAULT_BRIDGEX_URL;
+  }
+}
 
 export default function App() {
   const webView = useRef<WebView>(null);
+  const loadingTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const [webUri, setWebUri] = useState(BRIDGEX_URL);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const retry = () => { setError(null); setLoading(true); webView.current?.reload(); };
+  const [usingGuestFallback, setUsingGuestFallback] = useState(BRIDGEX_URL === DEFAULT_BRIDGEX_URL);
+  const guestFallbackUrl = useMemo(() => toGuestMarketplaceUrl(BRIDGEX_URL), []);
+
+  const clearLoadingTimeout = () => {
+    if (loadingTimeout.current) {
+      clearTimeout(loadingTimeout.current);
+      loadingTimeout.current = null;
+    }
+  };
+
+  const finishLoading = () => {
+    clearLoadingTimeout();
+    setLoading(false);
+  };
+
+  const retry = () => {
+    setError(null);
+    setLoading(true);
+    setUsingGuestFallback(true);
+    setWebUri(`${guestFallbackUrl}&retry=${Date.now()}`);
+  };
+
+  useEffect(() => () => clearLoadingTimeout(), []);
 
   return <View style={styles.container}>
-    <StatusBar style="dark" backgroundColor="#f7f5ef" translucent={false} />
+    <StatusBar style="dark" />
+    <View style={styles.topSpacer} />
     <WebView
+      key={webUri}
       ref={webView}
-      source={{ uri: BRIDGEX_URL }}
+      source={{ uri: webUri }}
       style={styles.webView}
-      onLoadStart={() => { setLoading(true); setError(null); }}
-      onLoadEnd={() => setLoading(false)}
-      onError={event => { setLoading(false); setError(String(event.nativeEvent.code)); }}
+      onLoadStart={() => {
+        clearLoadingTimeout();
+        setLoading(true);
+        setError(null);
+        loadingTimeout.current = setTimeout(finishLoading, 1500);
+      }}
+      onLoadEnd={finishLoading}
+      onLoadProgress={(event) => {
+        if (event.nativeEvent.progress >= 0.12) finishLoading();
+      }}
+      onError={(event) => {
+        clearLoadingTimeout();
+        if (!webUri.startsWith(guestFallbackUrl)) {
+          setUsingGuestFallback(true);
+          setWebUri(guestFallbackUrl);
+          return;
+        }
+        setLoading(false);
+        setError(String(event.nativeEvent.code));
+      }}
       javaScriptEnabled
       domStorageEnabled
       geolocationEnabled
@@ -31,16 +86,19 @@ export default function App() {
       mediaPlaybackRequiresUserAction
       sharedCookiesEnabled
       thirdPartyCookiesEnabled
+      cacheEnabled
+      cacheMode="LOAD_DEFAULT"
       setSupportMultipleWindows={false}
       originWhitelist={["https://*", "http://*"]}
     />
-    {loading && !error && <View style={styles.loading}><ActivityIndicator color="#2d8d62" /><Text style={styles.loadingText}>Loading BridgeX…</Text></View>}
-    {error && <View style={styles.error}><Text style={styles.errorTitle}>Connection unavailable</Text><Text style={styles.errorCopy}>BridgeX could not load the marketplace. Check your internet connection, then try again.</Text><Pressable onPress={retry} style={({ pressed }) => [styles.retry, pressed && styles.pressed]}><Text style={styles.retryText}>Reload BridgeX</Text></Pressable></View>}
+    {loading && !error && <View style={styles.loading}><ActivityIndicator color="#2d8d62" /><Text style={styles.loadingText}>{usingGuestFallback ? "Opening BridgeX marketplace…" : "Loading BridgeX…"}</Text></View>}
+    {error && <View style={styles.error}><Text style={styles.errorTitle}>Connection unavailable</Text><Text style={styles.errorCopy}>BridgeX could not load the marketplace. Check your internet connection, then try again.</Text><Pressable onPress={retry} style={({ pressed }) => [styles.retry, pressed && styles.pressed]}><Text style={styles.retryText}>Open guest marketplace</Text></Pressable></View>}
   </View>;
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: "#f7f5ef" },
+  container: { flex: 1, backgroundColor: "#ffffff" },
+  topSpacer: { backgroundColor: "#ffffff", height: ONE_CENTIMETER_DP },
   webView: { flex: 1, backgroundColor: "#f7f5ef" },
   loading: { alignItems: "center", backgroundColor: "rgba(247,245,239,0.95)", bottom: 0, gap: 10, justifyContent: "center", left: 0, position: "absolute", right: 0, top: 0 },
   loadingText: { color: "#526063", fontSize: 13, fontWeight: "700" },
