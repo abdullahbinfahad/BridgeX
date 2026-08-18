@@ -113,3 +113,8 @@
 - [x] Present the Super Admin control-panel navigation label and premium indicator as one accessible yellow-highlighted line.
 - [x] Add a role-protected administrator chat-review route and panel for all protected conversations, with audit-safe operational visibility.
 - [x] Add secure, audited administrator password-reset assistance that sends a member reset link without exposing, recovering, or reporting any password.
+- [x] Add sender-confirmed per-order receipt and release, then clear released-post media storage while retaining protected completed-order history.
+- [x] Provide a completed-orders page that preserves order references, counterpart and milestone history after public post media is removed.
+- [x] Redesign administrator chat review into a paginated conversation index showing both participant names, verification states, latest message, and a selected full transcript.
+- [x] Add public member profile pages with safe identity fields, verification status, and that member’s currently public posts.
+- [x] Improve marketplace gallery cards and detail galleries for multiple photos and video playback, and use 40-item pagination for large public feeds.

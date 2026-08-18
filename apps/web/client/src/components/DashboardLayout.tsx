@@ -4,7 +4,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useAuth } from "@/_core/hooks/useAuth";
-import { BarChart3, BadgeCheck, Bell, BookOpenCheck, CircleDollarSign, FileText, LayoutDashboard, LogOut, MessageSquareText, PackageCheck, PanelLeft, Pencil, Plane, Settings, ShieldAlert, ShieldCheck, UserRound, Users } from "lucide-react";
+import { BarChart3, BadgeCheck, Bell, BookOpenCheck, CheckCircle2, CircleDollarSign, FileText, LayoutDashboard, LogOut, MessageSquareText, PackageCheck, PanelLeft, Pencil, Plane, Settings, ShieldAlert, ShieldCheck, UserRound, Users } from "lucide-react";
 import { useState } from "react";
 import { useLocation } from "wouter";
 
@@ -12,7 +12,7 @@ type LayoutMode = "member" | "admin";
 type Props = { children: React.ReactNode; mode?: LayoutMode; preview?: boolean };
 
 const memberMenu = [
-  [LayoutDashboard, "Overview", "/dashboard"], [PackageCheck, "My requests", "/dashboard/requests"], [Plane, "My carry space", "/dashboard/listings"], [Pencil, "Manage posts", "/dashboard/manage-posts"], [BookOpenCheck, "Offers", "/dashboard/offers"], [MessageSquareText, "Deals & chat", "/dashboard/deals"], [Bell, "Notifications", "/notifications"], [FileText, "Orders", "/dashboard/orders"], [CircleDollarSign, "Wallet", "/dashboard/wallet"], [BadgeCheck, "Verification", "/dashboard/verification"], [ShieldAlert, "Safety report", "/report-incident"], [MessageSquareText, "Reviews", "/dashboard/reviews"], [Settings, "Settings", "/dashboard/settings"],
+  [LayoutDashboard, "Overview", "/dashboard"], [PackageCheck, "My requests", "/dashboard/requests"], [Plane, "My carry space", "/dashboard/listings"], [Pencil, "Manage posts", "/dashboard/manage-posts"], [BookOpenCheck, "Offers", "/dashboard/offers"], [MessageSquareText, "Deals & chat", "/dashboard/deals"], [Bell, "Notifications", "/notifications"], [FileText, "Orders", "/dashboard/orders"], [CheckCircle2, "Completed orders", "/dashboard/completed"], [CircleDollarSign, "Wallet", "/dashboard/wallet"], [BadgeCheck, "Verification", "/dashboard/verification"], [ShieldAlert, "Safety report", "/report-incident"], [MessageSquareText, "Reviews", "/dashboard/reviews"], [Settings, "Settings", "/dashboard/settings"],
 ] as const;
 const adminMenu = [[LayoutDashboard, "Overview", "/admin"], [BadgeCheck, "Verification queue", "/admin/verification"], [FileText, "Orders & payments", "/admin/orders"], [ShieldAlert, "Reports", "/admin/reports"], [Users, "Users", "/admin/users"], [BarChart3, "Analytics", "/admin/analytics"]] as const;
 
