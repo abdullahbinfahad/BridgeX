@@ -13,13 +13,14 @@ import Access from "./pages/Access";
 import OfferPage from "./pages/OfferPage";
 import Onboarding from "./pages/Onboarding";
 import { useAuth } from "@/_core/hooks/useAuth";
+import AdminControl from "./pages/AdminControl";
 
 function AdminRoute() {
   const { user, loading } = useAuth();
   if (loading) return <div className="grid min-h-screen place-items-center bg-[#f7f5ef] text-sm font-semibold text-[#637073]">Loading administrator controls…</div>;
   if (!user) return <Access />;
   if (user.role !== "admin") return <div className="grid min-h-screen place-items-center bg-[#f7f5ef] px-5"><div className="max-w-md rounded-3xl bg-white p-8 text-center shadow-sm"><h1 className="font-display text-3xl font-bold">Administrator access required</h1><p className="mt-3 text-sm leading-6 text-[#637073]">This control panel is restricted to accounts granted the BridgeX administrator role.</p></div></div>;
-  return <AdminWorkspace />;
+  return <AdminControl />;
 }
 
 function Router() {
