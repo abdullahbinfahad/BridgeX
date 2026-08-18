@@ -11,7 +11,7 @@ import { Link, useLocation } from "wouter";
 type AccessMode = "signin" | "signup";
 
 export default function Access() {
-  const { isAuthenticated, loading } = useAuth();
+  const { user, isAuthenticated, loading } = useAuth();
   const [, setLocation] = useLocation();
   const [mode, setMode] = useState<AccessMode>("signin");
   const [name, setName] = useState("");
