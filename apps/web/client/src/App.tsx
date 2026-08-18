@@ -16,6 +16,8 @@ import Onboarding from "./pages/Onboarding";
 import { useAuth } from "@/_core/hooks/useAuth";
 import AdminControl from "./pages/AdminControl";
 import ReportIncident from "./pages/ReportIncident";
+import PostDetail from "./pages/PostDetail";
+import NotificationsPage from "./pages/NotificationsPage";
 
 function AdminRoute() {
   const { user, loading } = useAuth();
@@ -42,11 +44,13 @@ function Router() {
       <Route path={"/create-listing"} component={CreateListing} />
       <Route path={"/offer"} component={OfferPage} />
       <Route path={"/interest"} component={InterestPage} />
+      <Route path={"/post/:kind/:id"} component={PostDetail} />
       <Route path={"/access"} component={Access} />
       <Route path={"/onboarding"} component={Onboarding} />
       <Route path={"/report-incident"} component={ReportIncident} />
       <Route path={"/dashboard"} component={Workspace} />
       <Route path={"/dashboard/:section"} component={Workspace} />
+      <Route path={"/notifications"} component={NotificationsPage} />
       <Route path={"/admin"} component={AdminRoute} />
       <Route path={"/admin/:section"} component={AdminRoute} />
       <Route path={"/404"} component={NotFound} />

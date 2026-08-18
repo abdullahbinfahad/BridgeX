@@ -58,5 +58,11 @@
 - [x] Remove remaining homepage sample posts and dashboard sample order stages, retaining only live records or explicit empty states.
 - [x] Make selected-request offers create real pending workflow records and enforce sign-in where required.
 - [x] Add a separate signed-in interest workflow for carry-space listings rather than misleading users with a non-functional action.
+- [x] Add a Workspace shortcut below the public profile menu’s Edit profile action.
+- [x] Add real post-detail pages with complete post data, multiple compressed images, optional compressed video, and clear request/listing actions.
+- [x] Add post-owner workspace inboxes that show received offers and carry-listing interests with participant details and actionable states.
+- [x] Replace remaining mobile public copy with concise Post item wording and resolve Android WebView loading for every navigation and login path.
+- [x] Add searchable administrator tables and working suspend, approve, reject, and remove actions with role-safe authorization.
+- [ ] Add in-app web and Android-accessible notifications for account, post, offer, interest, verification, order, and administrator updates. (In-app centre and Android registration are implemented; Firebase FCM V1 credentials are still required for background-device delivery.)
 - [x] Replace protected-order milestones with sender and traveler perspectives for match, China pickup, handoff, transit, delivery, and release.
 - [x] Replace remaining Bangladesh-only marketplace headings with the requested generic carry-marketplace wording.

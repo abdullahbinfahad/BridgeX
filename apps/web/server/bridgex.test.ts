@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { BANGLADESH_DISTRICTS, canAdvanceEscrowStage, citiesForDistrict } from "../shared/bridgex";
 import { canSubmitIncidentReport, hasCompleteVerificationPacket, hasRequiredProfileLocations, orderUpdateForAdminAction, signedInDestination } from "../shared/bridgeXControls";
+import { validatePostMediaSelection } from "../client/src/lib/fileUpload";
 
 describe("BridgeX marketplace rules", () => {
   it("includes Bangladesh districts used by delivery-address selectors", () => {
@@ -51,5 +52,12 @@ describe("BridgeX marketplace rules", () => {
     expect(hasRequiredProfileLocations(complete)).toBe(true);
     expect(hasRequiredProfileLocations({ ...complete, currentCountry: "China" })).toBe(false);
     expect(hasRequiredProfileLocations({ ...complete, currentCountry: "China", chinaAddress: "Tianhe District, Guangzhou" })).toBe(true);
+  });
+
+  it("allows a post gallery of up to five images and one short video only", () => {
+    expect(validatePostMediaSelection([{ type: "image/jpeg" }, { type: "image/png" }, { type: "video/mp4" }])).toBeNull();
+    expect(validatePostMediaSelection(Array.from({ length: 6 }, () => ({ type: "image/jpeg" })))).toBe("Choose up to five images.");
+    expect(validatePostMediaSelection([{ type: "video/mp4" }, { type: "video/webm" }])).toBe("Choose only one short video.");
+    expect(validatePostMediaSelection([{ type: "application/pdf" }])).toBe("Choose only JPG, PNG, WEBP, MP4, or WebM files.");
   });
 });

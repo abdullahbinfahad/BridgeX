@@ -21,6 +21,7 @@
       },
       "permissions": [
         "INTERNET",
+        "POST_NOTIFICATIONS",
         "ACCESS_FINE_LOCATION",
         "ACCESS_COARSE_LOCATION",
         "CAMERA",
@@ -36,6 +37,9 @@
     "web": {
       "favicon": "./assets/favicon.png"
     },
+    "plugins": [
+      "expo-notifications"
+    ],
     "owner": "abdullahbinfahad"
   }
 }
