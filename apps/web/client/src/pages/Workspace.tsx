@@ -8,6 +8,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { startLogin } from "@/const";
 import { supabase } from "@/lib/supabase";
+import GlobalVerification from "@/pages/GlobalVerification";
 import { trpc } from "@/lib/trpc";
 import {
   AlertTriangle, ArrowRight, BadgeCheck, Banknote, CheckCircle2,
@@ -89,7 +90,7 @@ function SettingsView() { return <div><p className="text-xs font-bold uppercase 
 
 export default function Workspace() {
   const [location] = useLocation(); const preview = new URLSearchParams(window.location.search).get("preview") === "1"; const section = location.split("/")[2] ?? "overview";
-  const content = section === "verification" ? <SupabaseVerificationView /> : section === "wallet" ? <WalletView /> : section === "orders" ? <OrdersView /> : section === "offers" ? <OfferManager /> : section === "settings" ? <SettingsView /> : section === "requests" || section === "listings" || section === "reviews" ? <EmptyWorkspace type={section} /> : <Overview />;
+  const content = section === "verification" ? <GlobalVerification /> : section === "wallet" ? <WalletView /> : section === "orders" ? <OrdersView /> : section === "offers" ? <OfferManager /> : section === "settings" ? <SettingsView /> : section === "requests" || section === "listings" || section === "reviews" ? <EmptyWorkspace type={section} /> : <Overview />;
   return <DashboardLayout preview={preview}>{content}</DashboardLayout>;
 }
 
