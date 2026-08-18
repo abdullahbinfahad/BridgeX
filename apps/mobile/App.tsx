@@ -38,6 +38,7 @@ export default function App() {
       mediaPlaybackRequiresUserAction
       sharedCookiesEnabled
       thirdPartyCookiesEnabled
+      setSupportMultipleWindows={false}
       originWhitelist={["https://*", "http://*"]}
     />
     {loading && <View style={styles.loading}><ActivityIndicator color="#2d8d62" /><Text style={styles.loadingText}>Loading BridgeX…</Text></View>}
