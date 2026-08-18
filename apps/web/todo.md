@@ -64,14 +64,14 @@
 - [x] Replace remaining mobile public copy with concise Post item wording and resolve Android WebView loading for every navigation and login path.
 - [x] Add searchable administrator tables and working suspend, approve, reject, and remove actions with role-safe authorization.
 - [ ] Add in-app web and Android-accessible notifications for account, post, offer, interest, verification, order, and administrator updates. (In-app centre and Android registration are implemented; Firebase FCM V1 credentials are still required for background-device delivery.)
-- [ ] Restore guest-visible live marketplace posts while preventing guests from offering, showing interest, posting, uploading, or viewing protected member details.
-- [ ] Create a protected matched-deal record when an owner accepts an offer or interest, with post owners’ required delivery country, exact address, and phone data available only to the matched counterpart.
-- [ ] Add matched-member chat with administrator oversight by participant and conversation, keeping all messages private to the match and administrators.
-- [ ] Add workspace counts and detail views for incoming interests, accepted offers, matched deals, messages, and address-sharing state.
-- [ ] Restrict city notification broadcasts to members in the same current city and retain direct notifications only for a member’s own offers, interests, orders, and account updates.
-- [ ] Remove matched or released posts from the public marketplace and retain only protected deal records required for completion, support, and administration.
+- [x] Restore guest-visible live marketplace posts while preventing guests from offering, showing interest, posting, uploading, or viewing protected member details.
+- [x] Create a protected matched-deal record when an owner accepts an offer or interest, with post owners’ required delivery country, exact address, and phone data available only to the matched counterpart.
+- [x] Add matched-member chat with administrator oversight by participant and conversation, keeping all messages private to the match and administrators.
+- [x] Add workspace counts and detail views for incoming interests, accepted offers, matched deals, messages, and address-sharing state.
+- [x] Restrict city notification broadcasts to members in the same current city and retain direct notifications only for a member’s own offers, interests, orders, and account updates.
+- [x] Remove matched or released posts from the public marketplace and retain only protected deal records required for completion, support, and administration.
 - [ ] Remove unavailable-provider wording below sign-in, add estimated delivery beside departure dates, and keep multi-image plus compressed-video post media clear and functional.
 - [ ] Make administrator suspend controls discoverable, provide an authorized future-admin promotion path, and enable chat review from the administrator panel.
-- [ ] Improve marketplace client performance through leaner queries, efficient media loading, and route-aware code delivery.
+- [x] Improve marketplace client performance through leaner queries, efficient media loading, and route-aware code delivery.
 - [x] Replace protected-order milestones with sender and traveler perspectives for match, China pickup, handoff, transit, delivery, and release.
 - [x] Replace remaining Bangladesh-only marketplace headings with the requested generic carry-marketplace wording.
