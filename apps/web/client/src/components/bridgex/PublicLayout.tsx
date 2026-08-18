@@ -39,7 +39,7 @@ export default function PublicLayout({ children }: { children: React.ReactNode }
           </div>
           <div className="grid grid-cols-2 gap-8 sm:grid-cols-3">
             <div><p className="mb-3 text-xs font-bold uppercase tracking-[0.16em] text-[#8fa39a]">Explore</p><div className="grid gap-2.5 text-sm text-[#d6ddd7]"><Link href="/marketplace">Marketplace</Link><Link href="/how-it-works">How it works</Link><Link href="/safety">Safety & trust</Link></div></div>
-            <div><p className="mb-3 text-xs font-bold uppercase tracking-[0.16em] text-[#8fa39a]">Company</p><div className="grid gap-2.5 text-sm text-[#d6ddd7]"><Link href="/about">About BridgeX</Link><Link href="/contact">Contact</Link><Link href="/faq">FAQ</Link></div></div>
+            <div><p className="mb-3 text-xs font-bold uppercase tracking-[0.16em] text-[#8fa39a]">Company</p><div className="grid gap-2.5 text-sm text-[#d6ddd7]"><Link href="/about">About BridgeX</Link><Link href="/contact">Contact</Link><Link href="/faq">FAQ</Link><a href="https://expo.dev/artifacts/eas/_uziPR-b1Yc23vpCa8j7PVPbZ_1zEkByfESrA7cHCqI.apk" target="_blank" rel="noreferrer">Download Android APK</a></div></div>
             <div><p className="mb-3 text-xs font-bold uppercase tracking-[0.16em] text-[#8fa39a]">Legal</p><div className="grid gap-2.5 text-sm text-[#d6ddd7]"><Link href="/terms">Terms</Link><Link href="/privacy">Privacy</Link><Link href="/dashboard">My account</Link></div></div>
           </div>
         </div>
