@@ -2,19 +2,19 @@ import { supabase } from "@/lib/supabase";
 import { useCallback, useEffect, useState } from "react";
 
 type UseAuthOptions = { redirectOnUnauthenticated?: boolean; redirectPath?: string };
+type BridgeXUser = { id: string; email?: string; user_metadata?: Record<string, unknown>; role?: "member" | "admin" } | null;
 
 export function useAuth(options?: UseAuthOptions) {
-  const [user, setUser] = useState<any>(null);
+  const [user, setUser] = useState<BridgeXUser>(null);
   const [loading, setLoading] = useState(true);
-  useEffect(() => {
-    supabase.auth.getUser().then(({ data }) => { setUser(data.user); setLoading(false); });
-    const { data: listener } = supabase.auth.onAuthStateChange((_event, session) => setUser(session?.user ?? null));
-    return () => listener.subscription.unsubscribe();
+  const hydrate = useCallback(async () => {
+    const { data } = await supabase.auth.getUser();
+    if (!data.user) { setUser(null); setLoading(false); return; }
+    const { data: profile } = await supabase.from("users").select("role").eq("id", data.user.id).maybeSingle();
+    setUser({ ...data.user, role: profile?.role === "admin" ? "admin" : "member" }); setLoading(false);
   }, []);
-  useEffect(() => {
-    if (!options?.redirectOnUnauthenticated || loading || user || typeof window === "undefined") return;
-    window.location.href = options.redirectPath ?? "/access";
-  }, [loading, options?.redirectOnUnauthenticated, options?.redirectPath, user]);
+  useEffect(() => { void hydrate(); const { data: listener } = supabase.auth.onAuthStateChange(() => { void hydrate(); }); return () => listener.subscription.unsubscribe(); }, [hydrate]);
+  useEffect(() => { if (!options?.redirectOnUnauthenticated || loading || user || typeof window === "undefined") return; window.location.href = options.redirectPath ?? "/access"; }, [loading, options?.redirectOnUnauthenticated, options?.redirectPath, user]);
   const logout = useCallback(async () => { await supabase.auth.signOut(); setUser(null); }, []);
-  return { user, loading, error: null, isAuthenticated: Boolean(user), refresh: async () => { const { data } = await supabase.auth.getUser(); setUser(data.user); }, logout };
+  return { user, loading, error: null, isAuthenticated: Boolean(user), refresh: hydrate, logout };
 }
