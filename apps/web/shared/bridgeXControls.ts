@@ -12,6 +12,10 @@ export function canSubmitIncidentReport(category: string, description: string, c
   return INCIDENT_CATEGORIES.some(([value]) => value === category) && description.trim().length >= 20 && consentConfirmed;
 }
 
+export function signedInDestination(onboardingComplete: boolean) {
+  return onboardingComplete ? "/dashboard" : "/onboarding";
+}
+
 export const ORDER_ADMIN_ACTIONS = [
   ["fund", "Mark escrow funded"],
   ["hold", "Place escrow on hold"],

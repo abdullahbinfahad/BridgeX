@@ -3,6 +3,7 @@ import { Brand } from "@/components/bridgex/Brand";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { supabase } from "@/lib/supabase";
+import { signedInDestination } from "@shared/bridgeXControls";
 import { ArrowLeft, CheckCircle2, Chrome, Eye, Loader2, ShieldCheck } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Link, useLocation } from "wouter";
@@ -22,8 +23,8 @@ export default function Access() {
   const [googleStarting, setGoogleStarting] = useState(false);
 
   useEffect(() => {
-    if (!loading && isAuthenticated) setLocation("/onboarding");
-  }, [isAuthenticated, loading, setLocation]);
+    if (!loading && isAuthenticated) setLocation(signedInDestination(Boolean(user?.onboardingComplete)));
+  }, [isAuthenticated, loading, setLocation, user?.onboardingComplete]);
 
   const reportError = (message: string) => {
     setFailed(true);
@@ -156,34 +157,40 @@ export default function Access() {
               </button>
             </div>
 
-            {mode === "signup" && (
+            <form onSubmit={(event) => { event.preventDefault(); void submit(); }}>
+              {mode === "signup" && (
+                <Input
+                  className="mt-5 h-11 rounded-xl"
+                  placeholder="Display name"
+                  value={name}
+                  onChange={(event) => setName(event.target.value)}
+                />
+              )}
               <Input
-                className="mt-5 h-11 rounded-xl"
-                placeholder="Display name"
-                value={name}
-                onChange={(event) => setName(event.target.value)}
+                className="mt-3 h-11 rounded-xl"
+                type="email"
+                autoComplete="email"
+                placeholder="Email address"
+                value={email}
+                onChange={(event) => setEmail(event.target.value)}
               />
-            )}
-            <Input
-              className="mt-3 h-11 rounded-xl"
-              type="email"
-              placeholder="Email address"
-              value={email}
-              onChange={(event) => setEmail(event.target.value)}
-            />
-            <Input
-              className="mt-3 h-11 rounded-xl"
-              type="password"
-              minLength={8}
-              placeholder="Password (at least 8 characters)"
-              value={password}
-              onChange={(event) => setPassword(event.target.value)}
-            />
-            <Button disabled={sending || googleStarting} onClick={submit} className="mt-3 h-11 w-full rounded-xl bg-[#172126] font-bold">
-              {sending ? "Please wait…" : mode === "signin" ? "Sign in securely" : "Create secure account"}
-            </Button>
+              <Input
+                className="mt-3 h-11 rounded-xl"
+                type="password"
+                autoComplete={mode === "signin" ? "current-password" : "new-password"}
+                minLength={8}
+                placeholder="Password (at least 8 characters)"
+                value={password}
+                onChange={(event) => setPassword(event.target.value)}
+              />
+              <Button type="submit" disabled={sending || googleStarting} className="mt-3 h-11 w-full rounded-xl bg-[#172126] font-bold">
+                {sending ? "Please wait…" : mode === "signin" ? "Sign in securely" : "Create secure account"}
+              </Button>
+            </form>
 
             {notice && <p className={`mt-3 text-sm ${failed ? "text-[#a64236]" : "text-[#176447]"}`}>{notice}</p>}
+
+            <p className="mt-4 rounded-xl bg-[#f4faf5] p-3 text-xs leading-5 text-[#526063]">Email/password and Google are active. Facebook requires a Meta App ID and App Secret; Apple requires Apple Developer Program credentials, so neither is shown as a broken sign-in button.</p>
 
             <Button
               onClick={() => setLocation("/marketplace?guest=1")}

@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { BANGLADESH_DISTRICTS, canAdvanceEscrowStage, citiesForDistrict } from "../shared/bridgex";
-import { canSubmitIncidentReport, orderUpdateForAdminAction } from "../shared/bridgeXControls";
+import { canSubmitIncidentReport, orderUpdateForAdminAction, signedInDestination } from "../shared/bridgeXControls";
 
 describe("BridgeX marketplace rules", () => {
   it("includes Bangladesh districts used by delivery-address selectors", () => {
@@ -32,5 +32,10 @@ describe("BridgeX marketplace rules", () => {
     expect(orderUpdateForAdminAction("fund")).toEqual({ escrow_status: "funded" });
     expect(orderUpdateForAdminAction("release")).toEqual({ escrow_status: "released", fulfillment_status: "completed" });
     expect(orderUpdateForAdminAction("dispute")).toEqual({ escrow_status: "disputed", fulfillment_status: "disputed" });
+  });
+
+  it("sends completed members to their dashboard while new members continue profile setup", () => {
+    expect(signedInDestination(true)).toBe("/dashboard");
+    expect(signedInDestination(false)).toBe("/onboarding");
   });
 });
