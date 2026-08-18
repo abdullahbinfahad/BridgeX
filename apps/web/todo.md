@@ -34,3 +34,11 @@
 - [x] Expand the admin management workspace to manage users, verification requests, data, posts, orders, payments, reports, and system controls.
 - [x] Document the BridgeX frontend-to-backend data flow and integration process in concise Bengali.
 - [x] Fix the mobile app error caused by an undefined BridgeX web domain and validate the repaired runtime connection.
+- [x] Enable the free Google OAuth login provider in Supabase and present a working Google sign-in action on the Access page.
+- [ ] Document Facebook and Apple sign-in prerequisites without presenting either unavailable provider as active.
+- [x] Add a signed-in user incident-report form with category, detailed description, and compressed evidence upload to the live Supabase report data.
+- [x] Add live order and escrow management controls to the administrator workspace.
+- [x] Compress product and request image uploads before storage in the creation flow.
+- [x] Replace legacy Bangladesh-only request and carry address selectors with China-first global origin and destination fields.
+- [x] Resolve guest-marketplace loading recovery in the Android WebView without changing the required 1 cm white top spacer.
+- [ ] Build and verify the final Android APK against the BridgeX custom domain after the production web release.

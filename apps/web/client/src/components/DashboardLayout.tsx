@@ -13,7 +13,7 @@ type LayoutMode = "member" | "admin";
 type Props = { children: React.ReactNode; mode?: LayoutMode; preview?: boolean };
 
 const memberMenu = [
-  [LayoutDashboard, "Overview", "/dashboard"], [PackageCheck, "My requests", "/dashboard/requests"], [Plane, "My carry space", "/dashboard/listings"], [BookOpenCheck, "Offers", "/dashboard/offers"], [FileText, "Orders", "/dashboard/orders"], [CircleDollarSign, "Wallet", "/dashboard/wallet"], [BadgeCheck, "Verification", "/dashboard/verification"], [MessageSquareText, "Reviews", "/dashboard/reviews"], [Settings, "Settings", "/dashboard/settings"],
+  [LayoutDashboard, "Overview", "/dashboard"], [PackageCheck, "My requests", "/dashboard/requests"], [Plane, "My carry space", "/dashboard/listings"], [BookOpenCheck, "Offers", "/dashboard/offers"], [FileText, "Orders", "/dashboard/orders"], [CircleDollarSign, "Wallet", "/dashboard/wallet"], [BadgeCheck, "Verification", "/dashboard/verification"], [ShieldAlert, "Safety report", "/report-incident"], [MessageSquareText, "Reviews", "/dashboard/reviews"], [Settings, "Settings", "/dashboard/settings"],
 ] as const;
 const adminMenu = [[LayoutDashboard, "Overview", "/admin"], [BadgeCheck, "Verification queue", "/admin/verification"], [FileText, "Orders & payments", "/admin/orders"], [ShieldAlert, "Reports", "/admin/reports"], [Users, "Users", "/admin/users"], [BarChart3, "Analytics", "/admin/analytics"]] as const;
 

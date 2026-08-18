@@ -14,6 +14,7 @@ import OfferPage from "./pages/OfferPage";
 import Onboarding from "./pages/Onboarding";
 import { useAuth } from "@/_core/hooks/useAuth";
 import AdminControl from "./pages/AdminControl";
+import ReportIncident from "./pages/ReportIncident";
 
 function AdminRoute() {
   const { user, loading } = useAuth();
@@ -41,6 +42,7 @@ function Router() {
       <Route path={"/offer"} component={OfferPage} />
       <Route path={"/access"} component={Access} />
       <Route path={"/onboarding"} component={Onboarding} />
+      <Route path={"/report-incident"} component={ReportIncident} />
       <Route path={"/dashboard"} component={Workspace} />
       <Route path={"/dashboard/:section"} component={Workspace} />
       <Route path={"/admin"} component={AdminRoute} />
