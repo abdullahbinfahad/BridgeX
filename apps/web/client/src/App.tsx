@@ -1,23 +1,12 @@
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
-import NotFound from "@/pages/NotFound";
 import { Route, Switch } from "wouter";
+import { lazy, Suspense } from "react";
 import ErrorBoundary from "./components/ErrorBoundary";
 import { ThemeProvider } from "./contexts/ThemeContext";
-import Home from "./pages/Home";
-import Marketplace from "./pages/Marketplace";
-import { FaqPage, HowItWorks, SafetyPage, StandardPage } from "./pages/MarketingPages";
-import { CreateListing, CreateRequest } from "./pages/CreateFlow";
-import Workspace from "./pages/Workspace";
-import Access from "./pages/Access";
-import OfferPage from "./pages/OfferPage";
-import InterestPage from "./pages/InterestPage";
-import Onboarding from "./pages/Onboarding";
 import { useAuth } from "@/_core/hooks/useAuth";
-import AdminControl from "./pages/AdminControl";
-import ReportIncident from "./pages/ReportIncident";
-import PostDetail from "./pages/PostDetail";
-import NotificationsPage from "./pages/NotificationsPage";
+
+const Home = lazy(() => import("./pages/Home")); const Marketplace = lazy(() => import("./pages/Marketplace")); const Access = lazy(() => import("./pages/Access")); const Workspace = lazy(() => import("./pages/Workspace")); const OfferPage = lazy(() => import("./pages/OfferPage")); const InterestPage = lazy(() => import("./pages/InterestPage")); const Onboarding = lazy(() => import("./pages/Onboarding")); const AdminControl = lazy(() => import("./pages/AdminControl")); const ReportIncident = lazy(() => import("./pages/ReportIncident")); const PostDetail = lazy(() => import("./pages/PostDetail")); const NotificationsPage = lazy(() => import("./pages/NotificationsPage")); const NotFound = lazy(() => import("./pages/NotFound")); const HowItWorks = lazy(() => import("./pages/MarketingPages").then(module => ({ default: module.HowItWorks }))); const SafetyPage = lazy(() => import("./pages/MarketingPages").then(module => ({ default: module.SafetyPage }))); const FaqPage = lazy(() => import("./pages/MarketingPages").then(module => ({ default: module.FaqPage }))); const StandardPage = lazy(() => import("./pages/MarketingPages").then(module => ({ default: module.StandardPage }))); const CreateRequest = lazy(() => import("./pages/CreateFlow").then(module => ({ default: module.CreateRequest }))); const CreateListing = lazy(() => import("./pages/CreateFlow").then(module => ({ default: module.CreateListing })));
 
 function AdminRoute() {
   const { user, loading } = useAuth();
@@ -74,7 +63,7 @@ function App() {
       >
         <TooltipProvider>
           <Toaster />
-          <Router />
+          <Suspense fallback={<div className="grid min-h-screen place-items-center bg-[#f7f5ef] text-sm font-semibold text-[#637073]">Loading BridgeX…</div>}><Router /></Suspense>
         </TooltipProvider>
       </ThemeProvider>
     </ErrorBoundary>

@@ -190,8 +190,6 @@ export default function Access() {
 
             {notice && <p className={`mt-3 text-sm ${failed ? "text-[#a64236]" : "text-[#176447]"}`}>{notice}</p>}
 
-            <p className="mt-4 rounded-xl bg-[#f4faf5] p-3 text-xs leading-5 text-[#526063]">Email/password and Google are active. Facebook requires a Meta App ID and App Secret; Apple requires Apple Developer Program credentials, so neither is shown as a broken sign-in button.</p>
-
             <Button
               onClick={() => setLocation("/marketplace?guest=1")}
               variant="outline"
