@@ -108,3 +108,8 @@
 - [x] Repair administrator protected-order action controls and make marketplace cards compact, image-forward, and efficient for large live-post volumes.
 - [x] Surface account, deal, post, order, and system notifications in the Messages inbox list.
 - [x] Diagnose the installed Android WebView startup flow so the app opens the BridgeX homepage promptly and exposes sign-in rather than remaining on a loading overlay.
+- [x] Hide the optional verification callout for members whose verification has already been approved.
+- [x] Ensure verification status appears beside poster names across homepage feed cards and public post-detail pages.
+- [x] Present the Super Admin control-panel navigation label and premium indicator as one accessible yellow-highlighted line.
+- [x] Add a role-protected administrator chat-review route and panel for all protected conversations, with audit-safe operational visibility.
+- [x] Add secure, audited administrator password-reset assistance that sends a member reset link without exposing, recovering, or reporting any password.

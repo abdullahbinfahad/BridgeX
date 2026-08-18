@@ -4,7 +4,7 @@ import { Brand } from "@/components/bridgex/Brand";
 import { VerifiedBadge } from "@/components/bridgex/VerifiedBadge";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/lib/supabase";
-import { LogOut, Menu, MessageSquareText, Plane, Plus, Settings, ShieldCheck, UserRound } from "lucide-react";
+import { Crown, LogOut, Menu, MessageSquareText, Plane, Plus, Settings, ShieldCheck, UserRound } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Link, useLocation } from "wouter";
 
@@ -31,7 +31,7 @@ function AccountMenu({ mobile = false }: { mobile?: boolean }) {
   const workspaceLink = <button onClick={() => go("/dashboard")} className="flex w-full items-center gap-2 rounded-xl px-3 py-2.5 text-sm font-bold hover:bg-[#f0ede5]"><UserRound className="size-4" />Workspace</button>;
   const editLink = <button onClick={() => go("/dashboard/settings")} className="flex w-full items-center gap-2 rounded-xl px-3 py-2.5 text-sm font-bold hover:bg-[#f0ede5]"><Settings className="size-4" />Edit profile</button>;
   const messagesLink = <button onClick={() => go("/dashboard/deals")} className="flex w-full items-center gap-2 rounded-xl px-3 py-2.5 text-sm font-bold hover:bg-[#f0ede5]"><MessageSquareText className="size-4" />Messages</button>;
-  const adminLink = user.role === "admin" || user.role === "super_admin" ? <button onClick={() => go("/admin")} className="flex w-full items-center gap-2 rounded-xl px-3 py-2.5 text-sm font-bold hover:bg-[#f0ede5]"><ShieldCheck className="size-4" />{user.role === "super_admin" ? "Super Admin control panel" : "Admin control panel"}</button> : null;
+  const adminLink = user.role === "admin" || user.role === "super_admin" ? <button onClick={() => go(user.role === "super_admin" ? "/admin/super" : "/admin")} className={`flex w-full items-center gap-2 rounded-xl px-3 py-2.5 text-sm font-bold hover:bg-[#f0ede5] ${user.role === "super_admin" ? "bg-[#fff1ce] text-[#805700] hover:bg-[#ffe7a3]" : ""}`}>{user.role === "super_admin" ? <Crown className="size-4 shrink-0" /> : <ShieldCheck className="size-4" />}<span className="truncate">{user.role === "super_admin" ? "Super Admin control panel" : "Admin control panel"}</span></button> : null;
   const signOutLink = <button onClick={signOut} className="flex w-full items-center gap-2 rounded-xl px-3 py-2.5 text-sm font-bold text-[#9b4b3e] hover:bg-[#fdf0ed]"><LogOut className="size-4" />Sign out</button>;
   const memberHead = <button onClick={() => go("/dashboard")} className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left hover:bg-[#f0ede5]"><Avatar className="size-8"><AvatarImage src={user.avatarUrl} alt="Profile photo" /><AvatarFallback className="bg-[#dff5ea] text-xs font-bold text-[#176447]">{initial}</AvatarFallback></Avatar><span className="min-w-0"><span className="flex items-center gap-1 truncate text-sm font-bold">{displayName(user)}</span><span className="mt-1 block truncate text-xs text-[#687579]">{user.verificationStatus === "approved" ? <VerifiedBadge /> : user.email}</span></span></button>;
   if (mobile) return <div className="mt-2 rounded-xl bg-white p-2">{memberHead}{editLink}{workspaceLink}{messagesLink}{adminLink}{signOutLink}</div>;
