@@ -53,9 +53,10 @@
 - [x] Add profile editing with optional avatar upload and a stable fallback based on the Google or email account identity.
 - [x] Require National ID and Passport for verification, and require Student ID only when the member declares student status; retain complete current-location and home-location data.
 - [x] Update marketplace wording to remove Bangladesh-only phrasing and use polished global carrying-goods copy.
-- [ ] Confirm administrator roles and access routes for abdullahbinfahad.abf@gmail.com and abdullahbinfahad.abf@proton.me.
+- [x] Confirm administrator roles and access routes for abdullahbinfahad.abf@gmail.com and abdullahbinfahad.abf@proton.me.
 - [ ] Verify that the deployed authenticated public shell reads the active Supabase session and replaces Log in with profile navigation.
 - [x] Remove remaining homepage sample posts and dashboard sample order stages, retaining only live records or explicit empty states.
-- [x] Make offer and interest actions create real pending workflow records and enforce sign-in where required.
+- [x] Make selected-request offers create real pending workflow records and enforce sign-in where required.
+- [x] Add a separate signed-in interest workflow for carry-space listings rather than misleading users with a non-functional action.
 - [x] Replace protected-order milestones with sender and traveler perspectives for match, China pickup, handoff, transit, delivery, and release.
 - [x] Replace remaining Bangladesh-only marketplace headings with the requested generic carry-marketplace wording.

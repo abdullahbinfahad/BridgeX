@@ -11,6 +11,7 @@ import { CreateListing, CreateRequest } from "./pages/CreateFlow";
 import Workspace from "./pages/Workspace";
 import Access from "./pages/Access";
 import OfferPage from "./pages/OfferPage";
+import InterestPage from "./pages/InterestPage";
 import Onboarding from "./pages/Onboarding";
 import { useAuth } from "@/_core/hooks/useAuth";
 import AdminControl from "./pages/AdminControl";
@@ -40,6 +41,7 @@ function Router() {
       <Route path={"/create-request"} component={CreateRequest} />
       <Route path={"/create-listing"} component={CreateListing} />
       <Route path={"/offer"} component={OfferPage} />
+      <Route path={"/interest"} component={InterestPage} />
       <Route path={"/access"} component={Access} />
       <Route path={"/onboarding"} component={Onboarding} />
       <Route path={"/report-incident"} component={ReportIncident} />

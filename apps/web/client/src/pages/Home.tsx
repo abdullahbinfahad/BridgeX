@@ -21,7 +21,7 @@ export default function Home() {
       ]);
       if (!alive) return;
       const requestPosts: FeedPost[] = (requests.data ?? []).map(item => ({ id: item.id, type: "Item request", title: item.title, route: `${item.purchase_country} → ${item.destination_country ?? "Destination"}, ${item.destination_city}`, details: `${item.weight_kg} kg · Budget ৳ ${Number(item.budget_bdt).toLocaleString()}`, createdAt: item.created_at, href: `/offer?request=${item.id}`, action: "Make an offer" }));
-      const listingPosts: FeedPost[] = (listings.data ?? []).map(item => ({ id: item.id, type: "Carry space", title: "Carry space available", route: `${item.origin_city}, ${item.origin_country} → ${item.destination_city}, ${item.destination_country ?? "Destination"}`, details: `${item.available_weight_kg} kg · ৳ ${Number(item.price_bdt).toLocaleString()}${item.pricing_mode === "per_kg" ? " / kg" : ""}`, createdAt: item.created_at, href: "/marketplace", action: "View carry listing" }));
+const listingPosts: FeedPost[] = (listings.data ?? []).map(item => ({ id: item.id, type: "Carry space", title: "Carry space available", route: `${item.origin_city}, ${item.origin_country} → ${item.destination_city}, ${item.destination_country ?? "Destination"}`, details: `${item.available_weight_kg} kg · ৳ ${Number(item.price_bdt).toLocaleString()}${item.pricing_mode === "per_kg" ? " / kg" : ""}`, createdAt: item.created_at, href: `/interest?listing=${item.id}`, action: "Send interest" }));
       setFeed([...requestPosts, ...listingPosts].sort((left, right) => new Date(right.createdAt).getTime() - new Date(left.createdAt).getTime()).slice(0, 3));
       setLoading(false);
     })();
