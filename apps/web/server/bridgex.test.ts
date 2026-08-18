@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { BANGLADESH_DISTRICTS, canAdvanceEscrowStage, citiesForDistrict } from "../shared/bridgex";
 import { canSubmitIncidentReport, hasCompleteVerificationPacket, hasRequiredProfileLocations, normalizePostCategories, orderUpdateForAdminAction, signedInDestination } from "../shared/bridgeXControls";
-import { validatePostMediaSelection } from "../client/src/lib/fileUpload";
+import { appendUniqueMedia, validatePostMediaSelection } from "../client/src/lib/fileUpload";
 
 describe("BridgeX marketplace rules", () => {
   it("includes Bangladesh districts used by delivery-address selectors", () => {
@@ -63,5 +63,11 @@ describe("BridgeX marketplace rules", () => {
     expect(validatePostMediaSelection(Array.from({ length: 6 }, () => ({ type: "image/jpeg" })))).toBe("Choose up to five images.");
     expect(validatePostMediaSelection([{ type: "video/mp4" }, { type: "video/webm" }])).toBe("Choose only one short video.");
     expect(validatePostMediaSelection([{ type: "application/pdf" }])).toBe("Choose only JPG, PNG, WEBP, MP4, or WebM files.");
+  });
+
+  it("appends later media selections without duplicating an already selected file", () => {
+    const first = { name: "one.jpg", size: 10, lastModified: 1 };
+    const second = { name: "two.jpg", size: 20, lastModified: 2 };
+    expect(appendUniqueMedia([first], [first, second])).toEqual([first, second]);
   });
 });

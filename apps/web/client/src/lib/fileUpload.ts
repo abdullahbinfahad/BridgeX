@@ -89,6 +89,19 @@ export async function compressVideoForUpload(file: File) {
 
 export type PreparedPostMedia = { file: File; kind: "image" | "video" };
 
+export type MediaFileIdentity = { name: string; size: number; lastModified: number };
+
+/** Appends newly selected files while ignoring the exact same browser file selection. */
+export function appendUniqueMedia<T extends MediaFileIdentity>(existing: T[], incoming: T[]) {
+  const seen = new Set(existing.map(file => `${file.name}:${file.size}:${file.lastModified}`));
+  return [...existing, ...incoming.filter(file => {
+    const key = `${file.name}:${file.size}:${file.lastModified}`;
+    if (seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  })];
+}
+
 export function validatePostMediaSelection(files: Array<{ type: string }>) {
   const images = files.filter(file => file.type.startsWith("image/"));
   const videos = files.filter(file => file.type.startsWith("video/"));

@@ -3,6 +3,7 @@ import DashboardLayout from "@/components/DashboardLayout";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
@@ -11,13 +12,13 @@ import { supabase } from "@/lib/supabase";
 import GlobalVerification from "@/pages/GlobalVerification";
 import Deals from "@/pages/Deals";
 import ManagePosts from "@/pages/ManagePosts";
-import { Banknote, CheckCircle2, ChevronRight, FileUp, MapPin, PackageCheck, Plane, ShieldCheck, WalletCards } from "lucide-react";
+import { Banknote, CheckCircle2, ChevronRight, EllipsisVertical, FileUp, MapPin, PackageCheck, Plane, ShieldCheck, WalletCards } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { Link, useLocation } from "wouter";
 
 type MemberRequest = { id: string; title: string; status: string; purchase_country: string; destination_country: string | null; destination_city: string; created_at: string };
 type MemberListing = { id: string; origin_country: string; origin_city: string; destination_country: string | null; destination_city: string; status: string; departure_at: string; available_weight_kg: number };
-type MemberOrder = { id: string; reference: string; sender_id: string; traveler_id: string; amount_bdt: number; escrow_status: string; fulfillment_status: string; updated_at: string; last_traveler_update_at?: string | null; reminder_days?: number };
+type MemberOrder = { id: string; match_id: string | null; reference: string; sender_id: string; traveler_id: string; amount_bdt: number; escrow_status: string; fulfillment_status: string; updated_at: string; last_traveler_update_at?: string | null; reminder_days?: number; match?: { sender_delivery_address: string; traveler_pickup_address: string } | null };
 type MemberData = { requests: MemberRequest[]; listings: MemberListing[]; orders: MemberOrder[]; loading: boolean; error: string };
 
 const emptyMemberData: MemberData = { requests: [], listings: [], orders: [], loading: true, error: "" };
@@ -36,11 +37,12 @@ function useMemberData(userId?: string): MemberData {
       const [requests, listings, orders] = await Promise.all([
         supabase.from("send_requests").select("id,title,status,purchase_country,destination_country,destination_city,created_at").eq("user_id", userId).order("created_at", { ascending: false }).limit(50),
         supabase.from("carry_listings").select("id,origin_country,origin_city,destination_country,destination_city,status,departure_at,available_weight_kg").eq("user_id", userId).order("departure_at", { ascending: true }).limit(50),
-        supabase.from("orders").select("id,reference,sender_id,traveler_id,amount_bdt,escrow_status,fulfillment_status,updated_at,last_traveler_update_at,reminder_days").or(`sender_id.eq.${userId},traveler_id.eq.${userId}`).order("updated_at", { ascending: false }).limit(50),
+        supabase.from("orders").select("id,match_id,reference,sender_id,traveler_id,amount_bdt,escrow_status,fulfillment_status,updated_at,last_traveler_update_at,reminder_days").or(`sender_id.eq.${userId},traveler_id.eq.${userId}`).order("updated_at", { ascending: false }).limit(50),
       ]);
       if (!alive) return;
-      const error = requests.error?.message || listings.error?.message || orders.error?.message || "";
-      setData({ requests: (requests.data ?? []) as MemberRequest[], listings: (listings.data ?? []) as MemberListing[], orders: (orders.data ?? []) as MemberOrder[], loading: false, error });
+      const rawOrders = (orders.data ?? []) as MemberOrder[]; const matchIds = rawOrders.map(order => order.match_id).filter((id): id is string => Boolean(id)); const matchResult = matchIds.length ? await supabase.from("matches").select("id,sender_delivery_address,traveler_pickup_address").in("id", matchIds) : { data: [], error: null }; const matchById = new Map((matchResult.data ?? []).map((match: any) => [match.id, match]));
+      const error = requests.error?.message || listings.error?.message || orders.error?.message || matchResult.error?.message || "";
+      setData({ requests: (requests.data ?? []) as MemberRequest[], listings: (listings.data ?? []) as MemberListing[], orders: rawOrders.map(order => ({ ...order, match: order.match_id ? matchById.get(order.match_id) ?? null : null })), loading: false, error });
     })();
     return () => { alive = false; };
   }, [userId]);
@@ -81,16 +83,27 @@ function EmptyOrderSummary() {
   return <div className="rounded-3xl border border-dashed border-[#172126]/18 bg-white p-8"><Banknote className="size-7 text-[#2d8d62]" /><h2 className="mt-5 text-lg font-bold">No protected orders yet.</h2><p className="mt-2 max-w-md text-sm leading-6 text-[#637073]">When a sender and traveler confirm a match, the protected order and its escrow status will appear here.</p><Link href="/marketplace"><Button variant="outline" className="mt-6 rounded-xl bg-white font-bold">Browse marketplace</Button></Link></div>;
 }
 
+function PostActions({ kind, id, status }: { kind: "request" | "listing"; id: string; status: string }) {
+  const remove = async () => { if (!window.confirm("Delete this open post? This cannot be undone.")) return; const table = kind === "request" ? "send_requests" : "carry_listings"; const { error } = await supabase.from(table).delete().eq("id", id); if (error) return window.alert(error.message); window.location.reload(); };
+  return <DropdownMenu><DropdownMenuTrigger asChild><Button size="icon" variant="outline" className="size-9 rounded-lg bg-white" aria-label="Post actions"><EllipsisVertical className="size-4" /></Button></DropdownMenuTrigger><DropdownMenuContent align="end"><DropdownMenuItem onSelect={() => window.location.assign(`/post/${kind}/${id}`)}>Open post</DropdownMenuItem><DropdownMenuItem onSelect={() => window.location.assign(`/dashboard/manage-posts?edit=${encodeURIComponent(id)}`)}>Edit post</DropdownMenuItem>{status === "open" && <DropdownMenuItem className="text-[#9b4b3e] focus:text-[#9b4b3e]" onSelect={() => void remove()}>Delete post</DropdownMenuItem>}</DropdownMenuContent></DropdownMenu>;
+}
+
+function TravelerOrderUpdate({ order }: { order: MemberOrder }) {
+  const { user } = useAuth(); const [busy, setBusy] = useState(false); const isTraveler = order.traveler_id === user?.id; if (!isTraveler) return null;
+  const update = async (status: string) => { setBusy(true); const { error } = await supabase.rpc("update_bridgex_traveler_order", { p_order_id: order.id, p_fulfillment_status: status }); setBusy(false); if (error) return window.alert(error.message); window.location.reload(); };
+  return <div className="mt-3 flex flex-wrap gap-1.5">{[["china_pickup", "Pickup"], ["received", "Received"], ["in_transit", "Transit"], ["delivered", "Delivered"]].map(([value, label]) => <Button key={value} disabled={busy || order.fulfillment_status === value} onClick={() => void update(value)} size="sm" variant="outline" className="h-8 rounded-lg bg-white text-xs">{label}</Button>)}</div>;
+}
+
 function MyRequests({ data }: { data: MemberData }) {
-  return <ListPage title="My item requests" copy="These are requests posted from your BridgeX account." action="Post a request" href="/create-request">{data.requests.length ? data.requests.map(item => <article key={item.id} className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-[#172126]/8 bg-white p-4"><div><p className="font-bold">{item.title}</p><p className="mt-1 text-sm text-[#667477]">{item.purchase_country} → {item.destination_country ?? "Destination pending"} · {item.destination_city}</p></div><Badge className="bg-[#e7f4ea] text-[#176447] hover:bg-[#e7f4ea]">{statusLabel(item.status)}</Badge></article>) : <EmptyContent copy="You have not posted an item request yet." href="/create-request" label="Post your first request" />}</ListPage>;
+  return <ListPage title="My item requests" copy="Open a post for its complete details, then use the menu to edit or delete your open request." action="Post a request" href="/create-request">{data.requests.length ? data.requests.map(item => <article key={item.id} className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-[#172126]/8 bg-white p-4"><Link href={`/post/request/${item.id}`} className="min-w-0 flex-1"><p className="font-bold hover:text-[#176447]">{item.title}</p><p className="mt-1 text-sm text-[#667477]">{item.purchase_country} → {item.destination_country ?? "Destination pending"} · {item.destination_city}</p></Link><div className="flex items-center gap-2"><Badge className="bg-[#e7f4ea] text-[#176447] hover:bg-[#e7f4ea]">{statusLabel(item.status)}</Badge><PostActions kind="request" id={item.id} status={item.status} /></div></article>) : <EmptyContent copy="You have not posted an item request yet." href="/create-request" label="Post your first request" />}</ListPage>;
 }
 
 function MyListings({ data }: { data: MemberData }) {
-  return <ListPage title="My carry space" copy="These listings show routes and capacity published from your BridgeX account." action="List space" href="/create-listing">{data.listings.length ? data.listings.map(item => <article key={item.id} className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-[#172126]/8 bg-white p-4"><div><p className="font-bold">{item.origin_city}, {item.origin_country} → {item.destination_city}, {item.destination_country ?? "Destination pending"}</p><p className="mt-1 text-sm text-[#667477]">{item.available_weight_kg} kg · Departure {new Date(item.departure_at).toLocaleDateString()}</p></div><Badge className="bg-[#e7f4ea] text-[#176447] hover:bg-[#e7f4ea]">{statusLabel(item.status)}</Badge></article>) : <EmptyContent copy="You have not listed carry space yet." href="/create-listing" label="List carry space" />}</ListPage>;
+  return <ListPage title="My carry space" copy="Open a listing for its route and media, then use the menu to edit or delete your open carry-space post." action="List space" href="/create-listing">{data.listings.length ? data.listings.map(item => <article key={item.id} className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-[#172126]/8 bg-white p-4"><Link href={`/post/listing/${item.id}`} className="min-w-0 flex-1"><p className="font-bold hover:text-[#176447]">{item.origin_city}, {item.origin_country} → {item.destination_city}, {item.destination_country ?? "Destination pending"}</p><p className="mt-1 text-sm text-[#667477]">{item.available_weight_kg} kg · Departure {new Date(item.departure_at).toLocaleDateString()}</p></Link><div className="flex items-center gap-2"><Badge className="bg-[#e7f4ea] text-[#176447] hover:bg-[#e7f4ea]">{statusLabel(item.status)}</Badge><PostActions kind="listing" id={item.id} status={item.status} /></div></article>) : <EmptyContent copy="You have not listed carry space yet." href="/create-listing" label="List carry space" />}</ListPage>;
 }
 
 function Orders({ data }: { data: MemberData }) {
-  return <ListPage title="Protected orders" copy="Only orders where you are the sender or traveler appear here." action="Explore marketplace" href="/marketplace">{data.orders.length ? data.orders.map(order => <article key={order.id} className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-[#172126]/8 bg-white p-4"><div><p className="font-bold">{order.reference}</p><p className="mt-1 text-sm text-[#667477]">{formatMoney(order.amount_bdt)} · {statusLabel(order.fulfillment_status)} · Updated {new Date(order.updated_at).toLocaleDateString()}</p></div><Badge className="bg-[#e7f4ea] text-[#176447] hover:bg-[#e7f4ea]">{statusLabel(order.escrow_status)}</Badge></article>) : <EmptyContent copy="No protected order is connected to your account yet." href="/marketplace" label="Explore marketplace" />}</ListPage>;
+  const { user } = useAuth(); return <ListPage title="Protected orders" copy="Only orders where you are the sender or traveler appear here. Travelers can update delivery status from this list." action="Explore marketplace" href="/marketplace">{data.orders.length ? data.orders.map(order => { const travelerView = order.traveler_id === user?.id; const location = travelerView ? order.match?.sender_delivery_address : order.match?.traveler_pickup_address; return <article key={order.id} className="flex flex-wrap items-start justify-between gap-3 rounded-2xl border border-[#172126]/8 bg-white p-4"><div className="min-w-0 flex-1"><p className="font-bold">{order.reference}</p><p className="mt-1 text-sm text-[#667477]">{formatMoney(order.amount_bdt)} · {statusLabel(order.fulfillment_status)} · Updated {new Date(order.updated_at).toLocaleDateString()}</p><p className="mt-2 flex items-start gap-1.5 text-xs font-semibold leading-5 text-[#526063]"><MapPin className="mt-0.5 size-3.5 shrink-0 text-[#2d8d62]" />{travelerView ? "Delivery destination" : "Traveler pickup location"}: {location || "Open the protected deal to complete or review this address."}</p><TravelerOrderUpdate order={order} /></div><div className="flex items-center gap-2"><Badge className="bg-[#e7f4ea] text-[#176447] hover:bg-[#e7f4ea]">{statusLabel(order.escrow_status)}</Badge>{order.match_id && <Link href={`/dashboard/deals?match=${order.match_id}`}><Button size="sm" variant="outline" className="rounded-lg bg-white">Open</Button></Link>}</div></article>; }) : <EmptyContent copy="No protected order is connected to your account yet." href="/marketplace" label="Explore marketplace" />}</ListPage>;
 }
 
 function Wallet({ data }: { data: MemberData }) {

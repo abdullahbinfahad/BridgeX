@@ -98,3 +98,13 @@
 - [x] Replace row-based verification review with person-grouped review that opens a member’s profile, all submitted documents, and approve/reject decision controls.
 - [x] Display a verification badge wherever an approved member’s identity is shown.
 - [x] Make Active orders, My requests, Carry listings, and Escrow activity dashboard cards open detailed management views for the signed-in member.
+- [x] Separate send-post classification into a single-select service type and a comprehensive multi-select product-category catalog.
+- [x] Fix the request and carry media picker so successive selections append eligible files instead of replacing the existing gallery selection.
+- [x] Keep the messages landing screen to a high-density inbox list, and open each counterpart’s full deal history, contacts, order count, and chat on selection.
+- [x] Add counterpart-specific pickup/delivery addresses, one-click traveler milestone updates, and concise protected-order actions in the member workspace.
+- [x] Add open, edit, and delete post controls to My item requests and Carry listings, including a compact overflow action menu beside each list record.
+- [x] Show post-owner identity with an approved Verified badge or an explicit yellow Not verified badge in public post cards and details.
+- [x] Improve verification-person review completion feedback and return navigation to the Verification tab.
+- [x] Repair administrator protected-order action controls and make marketplace cards compact, image-forward, and efficient for large live-post volumes.
+- [x] Surface account, deal, post, order, and system notifications in the Messages inbox list.
+- [ ] Diagnose the installed Android WebView startup flow so the app opens the BridgeX homepage promptly and exposes sign-in rather than remaining on a loading overlay.
