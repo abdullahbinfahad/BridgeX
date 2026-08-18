@@ -16,6 +16,19 @@ export function signedInDestination(onboardingComplete: boolean) {
   return onboardingComplete ? "/dashboard" : "/onboarding";
 }
 
+export function hasCompleteVerificationPacket(documentKinds: string[], isStudent: boolean, institutionName: string) {
+  const hasNationalId = documentKinds.includes("national_id");
+  const hasPassport = documentKinds.includes("passport");
+  const hasStudentId = documentKinds.includes("student_id");
+  return hasNationalId && hasPassport && (!isStudent || (hasStudentId && institutionName.trim().length > 0));
+}
+
+export function hasRequiredProfileLocations(profile: { currentCountry?: string | null; currentCity?: string | null; currentAddress?: string | null; homeCountry?: string | null; homeCity?: string | null; chinaAddress?: string | null }) {
+  const hasCoreLocations = Boolean(profile.currentCountry?.trim() && profile.currentCity?.trim() && profile.currentAddress?.trim() && profile.homeCountry?.trim() && profile.homeCity?.trim());
+  const needsChinaAddress = profile.currentCountry?.trim().toLowerCase() === "china";
+  return hasCoreLocations && (!needsChinaAddress || Boolean(profile.chinaAddress?.trim()));
+}
+
 export const ORDER_ADMIN_ACTIONS = [
   ["fund", "Mark escrow funded"],
   ["hold", "Place escrow on hold"],

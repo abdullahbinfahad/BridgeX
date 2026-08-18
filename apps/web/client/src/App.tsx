@@ -8,7 +8,7 @@ import Home from "./pages/Home";
 import Marketplace from "./pages/Marketplace";
 import { FaqPage, HowItWorks, SafetyPage, StandardPage } from "./pages/MarketingPages";
 import { CreateListing, CreateRequest } from "./pages/CreateFlow";
-import Workspace, { AdminWorkspace } from "./pages/Workspace";
+import Workspace from "./pages/Workspace";
 import Access from "./pages/Access";
 import OfferPage from "./pages/OfferPage";
 import Onboarding from "./pages/Onboarding";

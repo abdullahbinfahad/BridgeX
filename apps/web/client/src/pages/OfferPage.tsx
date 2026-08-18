@@ -1,18 +1,50 @@
+import { useAuth } from "@/_core/hooks/useAuth";
 import PublicLayout from "@/components/bridgex/PublicLayout";
-import { VerifiedBadge } from "@/components/bridgex/VerifiedBadge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { useAuth } from "@/_core/hooks/useAuth";
-import { startLogin } from "@/const";
-import { trpc } from "@/lib/trpc";
+import { supabase } from "@/lib/supabase";
 import { ArrowLeft, CalendarDays, CheckCircle2, CircleDollarSign, Plane, ShieldCheck } from "lucide-react";
-import { useState } from "react";
-import { Link } from "wouter";
+import { useEffect, useState } from "react";
+import { Link, useLocation } from "wouter";
+
+type Request = { id: string; title: string; purchase_country: string; destination_country: string | null; destination_city: string; weight_kg: number; budget_bdt: number; status: string; user_id: string };
 
 export default function OfferPage() {
-  const auth = useAuth(); const [amount, setAmount] = useState(""); const [date, setDate] = useState(""); const [note, setNote] = useState(""); const offer = trpc.offers.create.useMutation();
-  const submit = (event: React.FormEvent) => { event.preventDefault(); if (!auth.isAuthenticated) return startLogin(); offer.mutate({ requestId: 1, amountBdt: amount, note: note || undefined, estimatedDeliveryAt: date ? new Date(date) : undefined }); };
-  return <PublicLayout><main className="px-5 py-10 lg:px-8 lg:py-14"><div className="mx-auto max-w-[900px]"><Link href="/marketplace" className="inline-flex items-center gap-2 text-sm font-bold text-[#176447]"><ArrowLeft className="size-4" />Back to marketplace</Link><div className="mt-7 grid gap-5 lg:grid-cols-[0.85fr_1.15fr]"><aside className="rounded-3xl bg-[#172126] p-7 text-[#f7f5ef]"><span className="grid size-11 place-items-center rounded-2xl bg-[#2d8d62]"><Plane className="size-5" /></span><p className="mt-7 text-xs font-bold uppercase tracking-[0.15em] text-[#91e7bc]">Request · Open</p><h1 className="mt-3 font-display text-3xl font-bold tracking-[-0.05em]">Small electronics order</h1><div className="mt-5 grid gap-3 text-sm text-[#c3d0c9]"><p>Shenzhen → Dhaka</p><p>1.2 kg estimated weight</p><p>Sender budget: ৳ 8,500</p></div><div className="mt-8 rounded-2xl bg-white/8 p-4"><div className="flex items-center gap-2"><ShieldCheck className="size-4 text-[#91e7bc]" /><p className="text-sm font-bold">Escrow begins after selection</p></div><p className="mt-2 text-xs leading-5 text-[#c3d0c9]">The sender compares offers. After selecting a traveler, the agreed amount is funded to BridgeX escrow.</p></div></aside><form onSubmit={submit} className="rounded-3xl border border-[#172126]/8 bg-white p-7"><p className="text-xs font-bold uppercase tracking-[0.16em] text-[#2d8d62]">Traveler offer</p><h2 className="mt-2 font-display text-3xl font-bold tracking-[-0.05em]">Make a clear proposal.</h2><p className="mt-3 text-sm leading-6 text-[#657275]">Explain your price, expected arrival, and any item-specific conditions before the sender decides.</p><div className="mt-7 grid gap-5"><div><Label>Service amount (BDT)</Label><div className="mt-2 flex h-11 items-center rounded-xl border border-[#d9d7cf] bg-[#faf9f5] px-3"><CircleDollarSign className="size-4 text-[#637073]" /><Input required inputMode="decimal" value={amount} onChange={e => setAmount(e.target.value)} placeholder="e.g. 850" className="border-0 bg-transparent shadow-none focus-visible:ring-0" /></div></div><div><Label>Estimated arrival</Label><div className="mt-2 flex h-11 items-center rounded-xl border border-[#d9d7cf] bg-[#faf9f5] px-3"><CalendarDays className="size-4 text-[#637073]" /><Input type="datetime-local" value={date} onChange={e => setDate(e.target.value)} className="border-0 bg-transparent shadow-none focus-visible:ring-0" /></div></div><div><Label>Offer note</Label><Textarea value={note} onChange={e => setNote(e.target.value)} placeholder="Share route timing, available capacity, and any important conditions." className="mt-2 min-h-28 rounded-xl" /></div><Button disabled={offer.isPending} className="h-11 rounded-xl bg-[#172126] font-bold">{offer.isPending ? "Submitting offer…" : "Submit offer"}</Button>{offer.isSuccess && <div className="rounded-xl bg-[#dff5ea] px-3 py-2 text-sm font-bold text-[#176447]"><CheckCircle2 className="mr-1 inline size-4" />Offer submitted. The sender can now compare it in their workspace.</div>}</div></form></div></div></main></PublicLayout>;
+  const { user, isAuthenticated } = useAuth();
+  const [, setLocation] = useLocation();
+  const [request, setRequest] = useState<Request | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [amount, setAmount] = useState("");
+  const [date, setDate] = useState("");
+  const [note, setNote] = useState("");
+  const [status, setStatus] = useState<"idle" | "sending" | "sent" | "error">("idle");
+  const [message, setMessage] = useState("");
+  const requestId = new URLSearchParams(window.location.search).get("request");
+
+  useEffect(() => {
+    if (!requestId) { setLoading(false); return; }
+    void (async () => {
+      const { data, error } = await supabase.from("send_requests").select("id,title,purchase_country,destination_country,destination_city,weight_kg,budget_bdt,status,user_id").eq("id", requestId).eq("status", "open").maybeSingle();
+      if (error) { setMessage(error.message); setStatus("error"); }
+      setRequest(data as Request | null); setLoading(false);
+    })();
+  }, [requestId]);
+
+  const submit = async (event: React.FormEvent) => {
+    event.preventDefault();
+    if (!isAuthenticated || !user) return setLocation("/access");
+    if (!request) return setMessage("Choose an open item request from the marketplace first.");
+    if (request.user_id === user.id) return setMessage("You cannot make an offer on your own request.");
+    const numericAmount = Number(amount);
+    if (!Number.isFinite(numericAmount) || numericAmount <= 0) return setMessage("Enter a valid service amount.");
+    setStatus("sending"); setMessage("");
+    const { error } = await supabase.from("offers").insert({ request_id: request.id, traveler_id: user.id, amount_bdt: numericAmount, estimated_delivery_at: date ? new Date(date).toISOString() : null, note: note.trim() || null, status: "pending" });
+    if (error) { setStatus("error"); return setMessage(error.code === "23505" ? "You already have a pending offer on this request." : error.message); }
+    setStatus("sent"); setMessage("Offer submitted. The sender can compare it in their workspace.");
+  };
+
+  const unavailable = !loading && !request;
+  return <PublicLayout><main className="px-5 py-10 lg:px-8 lg:py-14"><div className="mx-auto max-w-[900px]"><Link href="/marketplace" className="inline-flex items-center gap-2 text-sm font-bold text-[#176447]"><ArrowLeft className="size-4" />Back to marketplace</Link><div className="mt-7 grid gap-5 lg:grid-cols-[0.85fr_1.15fr]"><aside className="rounded-3xl bg-[#172126] p-7 text-[#f7f5ef]"><span className="grid size-11 place-items-center rounded-2xl bg-[#2d8d62]"><Plane className="size-5" /></span><p className="mt-7 text-xs font-bold uppercase tracking-[0.15em] text-[#91e7bc]">{loading ? "Loading request" : request ? "Open item request" : "Request unavailable"}</p><h1 className="mt-3 font-display text-3xl font-bold tracking-[-0.05em]">{loading ? "Loading…" : request?.title ?? "Choose a marketplace request"}</h1>{request && <div className="mt-5 grid gap-3 text-sm text-[#c3d0c9]"><p>{request.purchase_country} → {request.destination_country ?? "Destination"}, {request.destination_city}</p><p>{request.weight_kg} kg estimated weight</p><p>Sender budget: ৳ {Number(request.budget_bdt).toLocaleString()}</p></div>}<div className="mt-8 rounded-2xl bg-white/8 p-4"><div className="flex items-center gap-2"><ShieldCheck className="size-4 text-[#91e7bc]" /><p className="text-sm font-bold">Escrow begins after matching</p></div><p className="mt-2 text-xs leading-5 text-[#c3d0c9]">The sender compares real traveler offers. After a match, both people can follow the protected handoff and delivery stages.</p></div></aside><form onSubmit={submit} className="rounded-3xl border border-[#172126]/8 bg-white p-7"><p className="text-xs font-bold uppercase tracking-[0.16em] text-[#2d8d62]">Traveler offer</p><h2 className="mt-2 font-display text-3xl font-bold tracking-[-0.05em]">Make a clear proposal.</h2><p className="mt-3 text-sm leading-6 text-[#657275]">Explain your price, expected arrival, and any item-specific conditions before the sender decides.</p>{unavailable ? <div className="mt-7 rounded-2xl bg-[#f6f4ee] p-5"><p className="text-sm font-semibold text-[#637073]">Select a current open request from the marketplace to make an offer.</p><Link href="/marketplace"><Button type="button" className="mt-4 rounded-xl bg-[#172126] font-bold">Browse open requests</Button></Link></div> : <div className="mt-7 grid gap-5"><div><Label>Service amount (BDT)</Label><div className="mt-2 flex h-11 items-center rounded-xl border border-[#d9d7cf] bg-[#faf9f5] px-3"><CircleDollarSign className="size-4 text-[#637073]" /><Input required inputMode="decimal" value={amount} onChange={event => setAmount(event.target.value)} placeholder="e.g. 850" className="border-0 bg-transparent shadow-none focus-visible:ring-0" /></div></div><div><Label>Estimated arrival</Label><div className="mt-2 flex h-11 items-center rounded-xl border border-[#d9d7cf] bg-[#faf9f5] px-3"><CalendarDays className="size-4 text-[#637073]" /><Input type="datetime-local" value={date} onChange={event => setDate(event.target.value)} className="border-0 bg-transparent shadow-none focus-visible:ring-0" /></div></div><div><Label>Offer note</Label><Textarea value={note} onChange={event => setNote(event.target.value)} placeholder="Share route timing, available capacity, and any important conditions." className="mt-2 min-h-28 rounded-xl" /></div><Button disabled={status === "sending" || loading} className="h-11 rounded-xl bg-[#172126] font-bold">{status === "sending" ? "Submitting offer…" : "Submit offer"}</Button>{message && <div className={`rounded-xl px-3 py-2 text-sm font-bold ${status === "sent" ? "bg-[#dff5ea] text-[#176447]" : "bg-[#f8e8e5] text-[#9b4b3e]"}`}>{status === "sent" && <CheckCircle2 className="mr-1 inline size-4" />}{message}</div>}</div>}</form></div></div></main></PublicLayout>;
 }

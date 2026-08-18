@@ -48,3 +48,14 @@
 - [x] Make Step 2 identity verification skippable after global-profile saving while leaving the member active and visibly not verified.
 - [ ] Diagnose the active Android build configuration and eliminate any remaining WebView loading stall before distributing the replacement APK.
 - [x] Allow each authenticated BridgeX user to create their own initial profile during onboarding under row-level security.
+- [x] Replace placeholder member-workspace counts, orders, wallet activity, and greeting with the logged-in member’s live Supabase data and truthful empty states.
+- [x] Replace the public Log in menu state after authentication with an account avatar, profile menu, and sign-out action.
+- [x] Add profile editing with optional avatar upload and a stable fallback based on the Google or email account identity.
+- [x] Require National ID and Passport for verification, and require Student ID only when the member declares student status; retain complete current-location and home-location data.
+- [x] Update marketplace wording to remove Bangladesh-only phrasing and use polished global carrying-goods copy.
+- [ ] Confirm administrator roles and access routes for abdullahbinfahad.abf@gmail.com and abdullahbinfahad.abf@proton.me.
+- [ ] Verify that the deployed authenticated public shell reads the active Supabase session and replaces Log in with profile navigation.
+- [x] Remove remaining homepage sample posts and dashboard sample order stages, retaining only live records or explicit empty states.
+- [x] Make offer and interest actions create real pending workflow records and enforce sign-in where required.
+- [x] Replace protected-order milestones with sender and traveler perspectives for match, China pickup, handoff, transit, delivery, and release.
+- [x] Replace remaining Bangladesh-only marketplace headings with the requested generic carry-marketplace wording.

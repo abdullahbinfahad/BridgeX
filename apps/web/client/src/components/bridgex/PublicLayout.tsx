@@ -1,8 +1,10 @@
+import { useAuth } from "@/_core/hooks/useAuth";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Brand } from "@/components/bridgex/Brand";
 import { Button } from "@/components/ui/button";
-import { ArrowUpRight, Menu, Plane, Plus, ShieldCheck } from "lucide-react";
+import { ArrowUpRight, LogOut, Menu, Plane, Plus, Settings, ShieldCheck, UserRound } from "lucide-react";
 import { useState } from "react";
-import { Link } from "wouter";
+import { Link, useLocation } from "wouter";
 
 const navigation = [
   { label: "Marketplace", href: "/marketplace" },
@@ -10,40 +12,21 @@ const navigation = [
   { label: "Safety", href: "/safety" },
 ];
 
+const displayName = (user: ReturnType<typeof useAuth>["user"]) => user?.name || user?.email?.split("@")[0] || "Member";
+
+function AccountMenu({ mobile = false }: { mobile?: boolean }) {
+  const { user, isAuthenticated, logout } = useAuth();
+  const [, setLocation] = useLocation();
+  const [open, setOpen] = useState(false);
+  if (!isAuthenticated || !user) return mobile ? <Link href="/access" className="rounded-lg px-3 py-2.5 text-sm font-bold hover:bg-[#ece8dd]">Log in or create account</Link> : <Link href="/access"><Button variant="ghost" size="sm" className="ml-1 font-semibold text-[#354145] hover:bg-[#e9e4d8]">Log in</Button></Link>;
+  const initial = displayName(user).charAt(0).toUpperCase();
+  const go = (path: string) => { setOpen(false); setLocation(path); };
+  const signOut = async () => { await logout(); setOpen(false); setLocation("/"); };
+  if (mobile) return <div className="mt-2 rounded-xl bg-white p-2"><button onClick={() => go("/dashboard")} className="flex w-full items-center gap-3 rounded-lg px-2 py-2 text-left"><Avatar className="size-9"><AvatarImage src={user.avatarUrl} alt="Profile photo" /><AvatarFallback className="bg-[#dff5ea] font-bold text-[#176447]">{initial}</AvatarFallback></Avatar><span><span className="block text-sm font-bold">{displayName(user)}</span><span className="block text-xs text-[#687579]">View profile and workspace</span></span></button><button onClick={() => go("/dashboard/settings")} className="flex w-full items-center gap-2 rounded-lg px-2 py-2.5 text-sm font-bold hover:bg-[#f0ede5]"><Settings className="size-4" />Edit profile</button>{user.role === "admin" && <button onClick={() => go("/admin")} className="flex w-full items-center gap-2 rounded-lg px-2 py-2.5 text-sm font-bold hover:bg-[#f0ede5]"><ShieldCheck className="size-4" />Admin control panel</button>}<button onClick={signOut} className="flex w-full items-center gap-2 rounded-lg px-2 py-2.5 text-sm font-bold text-[#9b4b3e] hover:bg-[#fdf0ed]"><LogOut className="size-4" />Sign out</button></div>;
+  return <div className="relative"><button aria-expanded={open} onClick={() => setOpen(value => !value)} className="flex items-center gap-2 rounded-xl px-2 py-1.5 hover:bg-[#e9e4d8]"><Avatar className="size-8 border border-[#dce6df]"><AvatarImage src={user.avatarUrl} alt="Profile photo" /><AvatarFallback className="bg-[#dff5ea] text-xs font-bold text-[#176447]">{initial}</AvatarFallback></Avatar><span className="max-w-28 truncate text-sm font-bold text-[#354145]">{displayName(user)}</span></button>{open && <div className="absolute right-0 top-[calc(100%+8px)] z-50 w-60 rounded-2xl border border-[#172126]/10 bg-white p-2 shadow-xl"><button onClick={() => go("/dashboard")} className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left hover:bg-[#f0ede5]"><Avatar className="size-8"><AvatarImage src={user.avatarUrl} alt="Profile photo" /><AvatarFallback className="bg-[#dff5ea] text-xs font-bold text-[#176447]">{initial}</AvatarFallback></Avatar><span className="min-w-0"><span className="block truncate text-sm font-bold">{displayName(user)}</span><span className="block truncate text-xs text-[#687579]">{user.email}</span></span></button><div className="my-1 border-t border-[#172126]/8" /><button onClick={() => go("/dashboard/settings")} className="flex w-full items-center gap-2 rounded-xl px-3 py-2.5 text-sm font-bold hover:bg-[#f0ede5]"><Settings className="size-4" />Edit profile</button>{user.role === "admin" && <button onClick={() => go("/admin")} className="flex w-full items-center gap-2 rounded-xl px-3 py-2.5 text-sm font-bold hover:bg-[#f0ede5]"><ShieldCheck className="size-4" />Admin control panel</button>}<button onClick={signOut} className="flex w-full items-center gap-2 rounded-xl px-3 py-2.5 text-sm font-bold text-[#9b4b3e] hover:bg-[#fdf0ed]"><LogOut className="size-4" />Sign out</button></div>}</div>;
+}
+
 export default function PublicLayout({ children }: { children: React.ReactNode }) {
   const [menuOpen, setMenuOpen] = useState(false);
-  return (
-    <div className="min-h-screen overflow-x-clip bg-[#f7f5ef] text-[#172126]">
-      <header className="sticky top-0 z-50 border-b border-[#172126]/7 bg-[#f7f5ef]/90 backdrop-blur-xl">
-        <div className="mx-auto flex h-[72px] max-w-[1344px] items-center justify-between px-5 lg:px-8">
-          <Link href="/"><Brand /></Link>
-          <nav className="hidden items-center gap-7 lg:flex">
-            {navigation.map(item => <Link key={item.href} href={item.href} className="text-sm font-semibold text-[#546063] transition-colors hover:text-[#172126]">{item.label}</Link>)}
-          </nav>
-          <div className="hidden items-center gap-2 lg:flex">
-            <Link href="/create-listing"><Button variant="ghost" className="font-semibold text-[#354145] hover:bg-[#e9e4d8]"><Plane className="mr-1.5 size-4" />List space</Button></Link>
-            <Link href="/create-request"><Button className="rounded-xl bg-[#172126] px-5 font-bold text-[#f7f5ef] shadow-none hover:bg-[#2a383e]"><Plus className="mr-1 size-4" />Post item</Button></Link>
-            <Link href="/access"><Button variant="ghost" size="sm" className="ml-1 font-semibold text-[#354145] hover:bg-[#e9e4d8]">Log in</Button></Link>
-          </div>
-          <button aria-label="Open navigation" onClick={() => setMenuOpen(value => !value)} className="grid size-10 place-items-center rounded-xl bg-[#ece8dd] lg:hidden"><Menu className="size-5" /></button>
-        </div>
-        {menuOpen && <div className="border-t border-[#172126]/7 bg-[#f7f5ef] px-5 py-4 lg:hidden"><div className="mx-auto grid max-w-[1344px] gap-1"><Link href="/create-request" onClick={() => setMenuOpen(false)}><Button className="mb-2 w-full rounded-xl bg-[#172126] font-bold"><Plus className="mr-2 size-4" />Post an item request</Button></Link><Link href="/create-listing" onClick={() => setMenuOpen(false)}><Button variant="outline" className="mb-2 w-full rounded-xl bg-white font-bold"><Plane className="mr-2 size-4" />List carry space</Button></Link>{navigation.map(item => <Link key={item.href} href={item.href} onClick={() => setMenuOpen(false)} className="rounded-lg px-3 py-2.5 text-sm font-bold hover:bg-[#ece8dd]">{item.label}</Link>)}<Link href="/access" onClick={() => setMenuOpen(false)} className="rounded-lg px-3 py-2.5 text-sm font-bold hover:bg-[#ece8dd]">Log in or create account</Link></div></div>}
-      </header>
-      {children}
-      <footer className="border-t border-[#172126]/8 bg-[#172126] text-[#f7f5ef]">
-        <div className="mx-auto grid max-w-[1344px] gap-10 px-5 py-12 lg:grid-cols-[1.15fr_2fr] lg:px-8">
-          <div>
-            <Brand className="text-[#f7f5ef] [&>span:last-child]:text-[#f7f5ef]" />
-            <p className="mt-4 max-w-sm text-sm leading-6 text-[#d6ddd7]">A trusted cross-border carry-and-deliver marketplace built around verified people and protected escrow.</p>
-            <div className="mt-5 inline-flex items-center gap-2 rounded-full border border-white/15 px-3 py-1.5 text-xs font-semibold text-[#e2eee7]"><ShieldCheck className="size-4 text-[#79d8a8]" /> Funds move only through escrow</div>
-          </div>
-          <div className="grid grid-cols-2 gap-8 sm:grid-cols-3">
-            <div><p className="mb-3 text-xs font-bold uppercase tracking-[0.16em] text-[#8fa39a]">Explore</p><div className="grid gap-2.5 text-sm text-[#d6ddd7]"><Link href="/marketplace">Marketplace</Link><Link href="/how-it-works">How it works</Link><Link href="/safety">Safety & trust</Link></div></div>
-            <div><p className="mb-3 text-xs font-bold uppercase tracking-[0.16em] text-[#8fa39a]">Company</p><div className="grid gap-2.5 text-sm text-[#d6ddd7]"><Link href="/about">About BridgeX</Link><Link href="/contact">Contact</Link><Link href="/faq">FAQ</Link><a href="https://expo.dev/artifacts/eas/_uziPR-b1Yc23vpCa8j7PVPbZ_1zEkByfESrA7cHCqI.apk" target="_blank" rel="noreferrer">Download Android APK</a></div></div>
-            <div><p className="mb-3 text-xs font-bold uppercase tracking-[0.16em] text-[#8fa39a]">Legal</p><div className="grid gap-2.5 text-sm text-[#d6ddd7]"><Link href="/terms">Terms</Link><Link href="/privacy">Privacy</Link><Link href="/dashboard">My account</Link></div></div>
-          </div>
-        </div>
-      </footer>
-    </div>
-  );
+  return <div className="min-h-screen overflow-x-clip bg-[#f7f5ef] text-[#172126]"><header className="sticky top-0 z-50 border-b border-[#172126]/7 bg-[#f7f5ef]/90 backdrop-blur-xl"><div className="mx-auto flex h-[72px] max-w-[1344px] items-center justify-between px-5 lg:px-8"><Link href="/"><Brand /></Link><nav className="hidden items-center gap-7 lg:flex">{navigation.map(item => <Link key={item.href} href={item.href} className="text-sm font-semibold text-[#546063] transition-colors hover:text-[#172126]">{item.label}</Link>)}</nav><div className="hidden items-center gap-2 lg:flex"><Link href="/create-listing"><Button variant="ghost" className="font-semibold text-[#354145] hover:bg-[#e9e4d8]"><Plane className="mr-1.5 size-4" />List space</Button></Link><Link href="/create-request"><Button className="rounded-xl bg-[#172126] px-5 font-bold text-[#f7f5ef] shadow-none hover:bg-[#2a383e]"><Plus className="mr-1 size-4" />Post item</Button></Link><AccountMenu /></div><button aria-label="Open navigation" onClick={() => setMenuOpen(value => !value)} className="grid size-10 place-items-center rounded-xl bg-[#ece8dd] lg:hidden"><Menu className="size-5" /></button></div>{menuOpen && <div className="border-t border-[#172126]/7 bg-[#f7f5ef] px-5 py-4 lg:hidden"><div className="mx-auto grid max-w-[1344px] gap-1"><Link href="/create-request" onClick={() => setMenuOpen(false)}><Button className="mb-2 w-full rounded-xl bg-[#172126] font-bold"><Plus className="mr-2 size-4" />Post an item request</Button></Link><Link href="/create-listing" onClick={() => setMenuOpen(false)}><Button variant="outline" className="mb-2 w-full rounded-xl bg-white font-bold"><Plane className="mr-2 size-4" />List carry space</Button></Link>{navigation.map(item => <Link key={item.href} href={item.href} onClick={() => setMenuOpen(false)} className="rounded-lg px-3 py-2.5 text-sm font-bold hover:bg-[#ece8dd]">{item.label}</Link>)}<AccountMenu mobile /></div></div>}</header>{children}<footer className="border-t border-[#172126]/8 bg-[#172126] text-[#f7f5ef]"><div className="mx-auto grid max-w-[1344px] gap-10 px-5 py-12 lg:grid-cols-[1.15fr_2fr] lg:px-8"><div><Brand className="text-[#f7f5ef] [&>span:last-child]:text-[#f7f5ef]" /><p className="mt-4 max-w-sm text-sm leading-6 text-[#d6ddd7]">A global marketplace for people carrying goods, matching senders with verified travelers and protected order workflows.</p><div className="mt-5 inline-flex items-center gap-2 rounded-full border border-white/15 px-3 py-1.5 text-xs font-semibold text-[#e2eee7]"><ShieldCheck className="size-4 text-[#79d8a8]" /> Funds move only through escrow</div></div><div className="grid grid-cols-2 gap-8 sm:grid-cols-3"><div><p className="mb-3 text-xs font-bold uppercase tracking-[0.16em] text-[#8fa39a]">Explore</p><div className="grid gap-2.5 text-sm text-[#d6ddd7]"><Link href="/marketplace">Marketplace</Link><Link href="/how-it-works">How it works</Link><Link href="/safety">Safety & trust</Link></div></div><div><p className="mb-3 text-xs font-bold uppercase tracking-[0.16em] text-[#8fa39a]">Company</p><div className="grid gap-2.5 text-sm text-[#d6ddd7]"><Link href="/about">About BridgeX</Link><Link href="/contact">Contact</Link><Link href="/faq">FAQ</Link><a href="https://expo.dev/accounts/abdullahbinfahad/projects/bridgex/builds/3e218bd6-607e-4a58-9455-8c5feb2594b4" target="_blank" rel="noreferrer">Download Android APK</a></div></div><div><p className="mb-3 text-xs font-bold uppercase tracking-[0.16em] text-[#8fa39a]">Legal</p><div className="grid gap-2.5 text-sm text-[#d6ddd7]"><Link href="/terms">Terms</Link><Link href="/privacy">Privacy</Link><Link href="/dashboard">My account</Link></div></div></div></div></footer></div>;
 }

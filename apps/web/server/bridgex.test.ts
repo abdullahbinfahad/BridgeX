@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { BANGLADESH_DISTRICTS, canAdvanceEscrowStage, citiesForDistrict } from "../shared/bridgex";
-import { canSubmitIncidentReport, orderUpdateForAdminAction, signedInDestination } from "../shared/bridgeXControls";
+import { canSubmitIncidentReport, hasCompleteVerificationPacket, hasRequiredProfileLocations, orderUpdateForAdminAction, signedInDestination } from "../shared/bridgeXControls";
 
 describe("BridgeX marketplace rules", () => {
   it("includes Bangladesh districts used by delivery-address selectors", () => {
@@ -37,5 +37,19 @@ describe("BridgeX marketplace rules", () => {
   it("sends completed members to their dashboard while new members continue profile setup", () => {
     expect(signedInDestination(true)).toBe("/dashboard");
     expect(signedInDestination(false)).toBe("/onboarding");
+  });
+
+  it("requires National ID and Passport, with Student ID only for declared students", () => {
+    expect(hasCompleteVerificationPacket(["national_id", "passport"], false, "")).toBe(true);
+    expect(hasCompleteVerificationPacket(["national_id"], false, "")).toBe(false);
+    expect(hasCompleteVerificationPacket(["national_id", "passport"], true, "BridgeX University")).toBe(false);
+    expect(hasCompleteVerificationPacket(["national_id", "passport", "student_id"], true, "BridgeX University")).toBe(true);
+  });
+
+  it("requires exact current and home locations, including China address when applicable", () => {
+    const complete = { currentCountry: "Malaysia", currentCity: "Kuala Lumpur", currentAddress: "12 Central Road", homeCountry: "Bangladesh", homeCity: "Bhola", chinaAddress: "" };
+    expect(hasRequiredProfileLocations(complete)).toBe(true);
+    expect(hasRequiredProfileLocations({ ...complete, currentCountry: "China" })).toBe(false);
+    expect(hasRequiredProfileLocations({ ...complete, currentCountry: "China", chinaAddress: "Tianhe District, Guangzhou" })).toBe(true);
   });
 });
