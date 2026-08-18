@@ -107,4 +107,4 @@
 - [x] Improve verification-person review completion feedback and return navigation to the Verification tab.
 - [x] Repair administrator protected-order action controls and make marketplace cards compact, image-forward, and efficient for large live-post volumes.
 - [x] Surface account, deal, post, order, and system notifications in the Messages inbox list.
-- [ ] Diagnose the installed Android WebView startup flow so the app opens the BridgeX homepage promptly and exposes sign-in rather than remaining on a loading overlay.
+- [x] Diagnose the installed Android WebView startup flow so the app opens the BridgeX homepage promptly and exposes sign-in rather than remaining on a loading overlay.
