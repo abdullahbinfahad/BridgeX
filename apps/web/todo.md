@@ -90,3 +90,11 @@
 - [x] Add category-specific marketplace filtering for published send requests and carry listings.
 - [x] Add an administrator verification-person detail route with identity documents, personal contact/location fields, and working approve/reject controls.
 - [x] Show administrators current phone and operational location in user details while never exposing member passwords.
+- [ ] Diagnose and eliminate the Android WebView Loading BridgeX stall, then release a tested replacement APK.
+- [x] Add technical SEO foundations for Google, Bing, Brave Search, Baidu, and QQ-compatible crawling, including metadata, sitemap, robots rules, canonical URLs, and structured data without ranking guarantees.
+- [x] Add multi-category selection to I need to send posts while retaining multiple compressed image and optional video uploads.
+- [x] Replace the remaining landing-page “I need an item” wording with “I need to send.”
+- [x] Replace the deal list with a scalable Messenger-style inbox showing counterpart names, latest message, unread state, and selected conversation detail.
+- [x] Replace row-based verification review with person-grouped review that opens a member’s profile, all submitted documents, and approve/reject decision controls.
+- [x] Display a verification badge wherever an approved member’s identity is shown.
+- [x] Make Active orders, My requests, Carry listings, and Escrow activity dashboard cards open detailed management views for the signed-in member.

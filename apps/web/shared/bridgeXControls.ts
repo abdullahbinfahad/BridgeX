@@ -29,6 +29,10 @@ export function hasRequiredProfileLocations(profile: { currentCountry?: string |
   return hasCoreLocations && (!needsChinaAddress || Boolean(profile.chinaAddress?.trim()));
 }
 
+export function normalizePostCategories(categories: string[]) {
+  return Array.from(new Set(categories.map(category => category.trim()).filter(Boolean)));
+}
+
 export const ORDER_ADMIN_ACTIONS = [
   ["fund", "Mark escrow funded"],
   ["hold", "Place escrow on hold"],

@@ -1,0 +1,10 @@
+User-agent: *
+Allow: /
+Disallow: /dashboard/
+Disallow: /admin/
+Disallow: /access
+Disallow: /onboarding
+Disallow: /create-request
+Disallow: /create-listing
+
+Sitemap: https://bridgex.abdullahbinfahad.info/sitemap.xml

@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { BANGLADESH_DISTRICTS, canAdvanceEscrowStage, citiesForDistrict } from "../shared/bridgex";
-import { canSubmitIncidentReport, hasCompleteVerificationPacket, hasRequiredProfileLocations, orderUpdateForAdminAction, signedInDestination } from "../shared/bridgeXControls";
+import { canSubmitIncidentReport, hasCompleteVerificationPacket, hasRequiredProfileLocations, normalizePostCategories, orderUpdateForAdminAction, signedInDestination } from "../shared/bridgeXControls";
 import { validatePostMediaSelection } from "../client/src/lib/fileUpload";
 
 describe("BridgeX marketplace rules", () => {
@@ -52,6 +52,10 @@ describe("BridgeX marketplace rules", () => {
     expect(hasRequiredProfileLocations(complete)).toBe(true);
     expect(hasRequiredProfileLocations({ ...complete, currentCountry: "China" })).toBe(false);
     expect(hasRequiredProfileLocations({ ...complete, currentCountry: "China", chinaAddress: "Tianhe District, Guangzhou" })).toBe(true);
+  });
+
+  it("normalizes multi-category post selections without blank or duplicate values", () => {
+    expect(normalizePostCategories([" Personal item ", "Business product", "Personal item", ""])).toEqual(["Personal item", "Business product"]);
   });
 
   it("allows a post gallery of up to five images and one short video only", () => {
