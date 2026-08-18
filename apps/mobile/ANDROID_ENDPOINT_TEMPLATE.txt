@@ -1,0 +1,3 @@
+# After bridgex.abdullahbinfahad.info is live on your external host,
+# set this value in the EAS production environment or local build environment:
+EXPO_PUBLIC_BRIDGEX_URL=https://bridgex.abdullahbinfahad.info/access

@@ -147,3 +147,18 @@ Private Repository
 © 2026 Abdullah Bin Fahad. All Rights Reserved.
 
 This repository contains proprietary software under active development. Unauthorized copying, distribution, modification, or commercial use of any part of this project is prohibited without prior written permission.
+
+---
+
+## Current Application Layout
+
+| Path | Purpose |
+|---|---|
+| `apps/web` | The current React, Express, tRPC, and MySQL BridgeX application |
+| `apps/mobile` | The Android WebView client for the BridgeX application |
+| `render.yaml` | Render deployment blueprint for the Node.js application |
+| `DEPLOY_CUSTOM_DOMAIN.md` | GitHub-to-custom-domain deployment instructions |
+
+## Deploy on Your Own Domain
+
+The existing source can be deployed from GitHub to a Node-capable host. Follow [DEPLOY_CUSTOM_DOMAIN.md](./DEPLOY_CUSTOM_DOMAIN.md) to deploy the `apps/web` service on Render and connect `bridgex.abdullahbinfahad.info`.
