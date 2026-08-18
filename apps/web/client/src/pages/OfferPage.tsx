@@ -41,7 +41,7 @@ export default function OfferPage() {
     if (!Number.isFinite(numericAmount) || numericAmount <= 0) return setMessage("Enter a valid service amount.");
     setStatus("sending"); setMessage("");
     const { error } = await supabase.from("offers").insert({ request_id: request.id, traveler_id: user.id, amount_bdt: numericAmount, estimated_delivery_at: date ? new Date(date).toISOString() : null, note: note.trim() || null, status: "pending" });
-    if (error) { setStatus("error"); return setMessage(error.code === "23505" ? "You already have a pending offer on this request." : error.message); }
+    if (error) { setStatus("error"); return setMessage(error.code === "23505" ? "You already have a pending offer on this request." : /row-level security|violates row-level/i.test(error.message) ? "Restricted account: your account cannot submit offers right now. Contact BridgeX support or an administrator for a review." : error.message); }
     await supabase.from("notifications").insert({ user_id: request.user_id, actor_id: user.id, type: "offer_received", title: "New offer received", body: `A traveler submitted an offer of ৳ ${numericAmount.toLocaleString()} for ${request.title}.`, link: "/dashboard/offers", related_id: request.id });
     setStatus("sent"); setMessage("Offer submitted. The sender can compare it in their workspace.");
   };

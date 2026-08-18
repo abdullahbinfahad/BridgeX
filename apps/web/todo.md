@@ -83,3 +83,10 @@
 - [x] Automatically advance Offer and Matched order milestones after acceptance, let travelers update subsequent milestones, and show free in-app overdue-update reminders with a three-day sender and administrator attention alert whenever BridgeX is opened. (The paid Render scheduled job is intentionally not configured.)
 - [x] Improve session hydration and persistence so authenticated navigation stays smooth after route changes and refreshes.
 - [x] Rename request language to “I need to send” and expand the global request form for personal goods, family products, business products, any-country routes, item details, multiple compressed photos, and optional compressed video.
+- [x] Repair the accepted-offer order creation so its fulfillment state satisfies the live orders constraint and accepted deals always open correctly.
+- [x] Replace raw restricted-account RLS failures with a clear “Restricted account” explanation on posting and related member actions.
+- [x] Add a Messages menu entry below the profile controls and improve deal-based message navigation, contact visibility, and action feedback.
+- [x] Group incoming offers and interests beneath each of the owner’s individual post titles and expose detailed post management from active orders, requests, listings, and escrow views.
+- [x] Add category-specific marketplace filtering for published send requests and carry listings.
+- [x] Add an administrator verification-person detail route with identity documents, personal contact/location fields, and working approve/reject controls.
+- [x] Show administrators current phone and operational location in user details while never exposing member passwords.
