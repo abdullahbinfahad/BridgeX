@@ -2,7 +2,7 @@ import { supabase } from "@/lib/supabase";
 import { useCallback, useEffect, useState } from "react";
 
 type UseAuthOptions = { redirectOnUnauthenticated?: boolean; redirectPath?: string };
-type BridgeXUser = { id: string; email?: string; user_metadata?: Record<string, unknown>; role?: "member" | "admin" } | null;
+type BridgeXUser = { id: string; email?: string; user_metadata?: Record<string, unknown>; role?: "member" | "admin"; verificationStatus?: "not_submitted" | "pending_review" | "approved" | "rejected" } | null;
 
 export function useAuth(options?: UseAuthOptions) {
   const [user, setUser] = useState<BridgeXUser>(null);
@@ -10,8 +10,8 @@ export function useAuth(options?: UseAuthOptions) {
   const hydrate = useCallback(async () => {
     const { data } = await supabase.auth.getUser();
     if (!data.user) { setUser(null); setLoading(false); return; }
-    const { data: profile } = await supabase.from("users").select("role").eq("id", data.user.id).maybeSingle();
-    setUser({ ...data.user, role: profile?.role === "admin" ? "admin" : "member" }); setLoading(false);
+    const { data: profile } = await supabase.from("users").select("role,verification_status").eq("id", data.user.id).maybeSingle();
+    setUser({ ...data.user, role: profile?.role === "admin" ? "admin" : "member", verificationStatus: profile?.verification_status ?? "not_submitted" }); setLoading(false);
   }, []);
   useEffect(() => { void hydrate(); const { data: listener } = supabase.auth.onAuthStateChange(() => { void hydrate(); }); return () => listener.subscription.unsubscribe(); }, [hydrate]);
   useEffect(() => { if (!options?.redirectOnUnauthenticated || loading || user || typeof window === "undefined") return; window.location.href = options.redirectPath ?? "/access"; }, [loading, options?.redirectOnUnauthenticated, options?.redirectPath, user]);
