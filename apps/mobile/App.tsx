@@ -1,9 +1,9 @@
 import { StatusBar } from "expo-status-bar";
 import { useRef, useState } from "react";
-import { ActivityIndicator, Alert, Pressable, SafeAreaView, StyleSheet, Text, View } from "react-native";
+import { ActivityIndicator, Pressable, StyleSheet, Text, View } from "react-native";
 import { WebView } from "react-native-webview";
 
-const DEFAULT_BRIDGEX_URL = "https://bridgexmp-fcp7rl7v.manus.space/access";
+const DEFAULT_BRIDGEX_URL = "https://bridgex-q2h5.onrender.com/access";
 const configuredBridgeXUrl = process.env.EXPO_PUBLIC_BRIDGEX_URL?.trim();
 const BRIDGEX_URL = configuredBridgeXUrl && /^https:\/\/[a-z0-9.-]+/i.test(configuredBridgeXUrl)
   ? configuredBridgeXUrl
@@ -11,26 +11,19 @@ const BRIDGEX_URL = configuredBridgeXUrl && /^https:\/\/[a-z0-9.-]+/i.test(confi
 
 export default function App() {
   const webView = useRef<WebView>(null);
-  const [canGoBack, setCanGoBack] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const retry = () => { setError(null); setLoading(true); webView.current?.reload(); };
 
-  return <SafeAreaView style={styles.container}>
-    <StatusBar style="dark" />
-    <View style={styles.header}>
-      <View><Text style={styles.brand}>BridgeX</Text><Text style={styles.caption}>Carry marketplace</Text></View>
-      <View style={styles.actions}>
-        <Pressable disabled={!canGoBack} onPress={() => webView.current?.goBack()} style={({ pressed }) => [styles.action, !canGoBack && styles.disabled, pressed && styles.pressed]}><Text style={styles.actionText}>Back</Text></Pressable>
-        <Pressable onPress={() => webView.current?.reload()} style={({ pressed }) => [styles.action, pressed && styles.pressed]}><Text style={styles.actionText}>Refresh</Text></Pressable>
-      </View>
-    </View>
+  return <View style={styles.container}>
+    <StatusBar style="dark" backgroundColor="#f7f5ef" translucent={false} />
     <WebView
       ref={webView}
       source={{ uri: BRIDGEX_URL }}
       style={styles.webView}
-      onLoadStart={() => setLoading(true)}
+      onLoadStart={() => { setLoading(true); setError(null); }}
       onLoadEnd={() => setLoading(false)}
-      onNavigationStateChange={state => setCanGoBack(state.canGoBack)}
-      onError={() => Alert.alert("Connection unavailable", "BridgeX could not reach the marketplace service. Check your internet connection and try again.")}
+      onError={event => { setLoading(false); setError(String(event.nativeEvent.code)); }}
       javaScriptEnabled
       domStorageEnabled
       geolocationEnabled
@@ -41,21 +34,20 @@ export default function App() {
       setSupportMultipleWindows={false}
       originWhitelist={["https://*", "http://*"]}
     />
-    {loading && <View style={styles.loading}><ActivityIndicator color="#2d8d62" /><Text style={styles.loadingText}>Loading BridgeX…</Text></View>}
-  </SafeAreaView>;
+    {loading && !error && <View style={styles.loading}><ActivityIndicator color="#2d8d62" /><Text style={styles.loadingText}>Loading BridgeX…</Text></View>}
+    {error && <View style={styles.error}><Text style={styles.errorTitle}>Connection unavailable</Text><Text style={styles.errorCopy}>BridgeX could not load the marketplace. Check your internet connection, then try again.</Text><Pressable onPress={retry} style={({ pressed }) => [styles.retry, pressed && styles.pressed]}><Text style={styles.retryText}>Reload BridgeX</Text></Pressable></View>}
+  </View>;
 }
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: "#f7f5ef" },
-  header: { alignItems: "center", backgroundColor: "#fffdf8", borderBottomColor: "#e2e3dc", borderBottomWidth: StyleSheet.hairlineWidth, flexDirection: "row", justifyContent: "space-between", paddingHorizontal: 18, paddingVertical: 10 },
-  brand: { color: "#172126", fontSize: 20, fontWeight: "800", letterSpacing: -0.5 },
-  caption: { color: "#647174", fontSize: 10, fontWeight: "600", marginTop: 1, textTransform: "uppercase" },
-  actions: { flexDirection: "row", gap: 8 },
-  action: { backgroundColor: "#e7f4ea", borderRadius: 10, paddingHorizontal: 11, paddingVertical: 8 },
-  actionText: { color: "#176447", fontSize: 12, fontWeight: "800" },
-  disabled: { opacity: 0.35 },
-  pressed: { opacity: 0.72, transform: [{ scale: 0.97 }] },
   webView: { flex: 1, backgroundColor: "#f7f5ef" },
-  loading: { alignItems: "center", backgroundColor: "rgba(247,245,239,0.95)", bottom: 0, gap: 10, justifyContent: "center", left: 0, position: "absolute", right: 0, top: 56 },
+  loading: { alignItems: "center", backgroundColor: "rgba(247,245,239,0.95)", bottom: 0, gap: 10, justifyContent: "center", left: 0, position: "absolute", right: 0, top: 0 },
   loadingText: { color: "#526063", fontSize: 13, fontWeight: "700" },
+  error: { alignItems: "center", backgroundColor: "#f7f5ef", bottom: 0, gap: 12, justifyContent: "center", left: 0, padding: 28, position: "absolute", right: 0, top: 0 },
+  errorTitle: { color: "#172126", fontSize: 21, fontWeight: "800" },
+  errorCopy: { color: "#647174", fontSize: 14, lineHeight: 21, maxWidth: 300, textAlign: "center" },
+  retry: { backgroundColor: "#172126", borderRadius: 12, marginTop: 4, paddingHorizontal: 18, paddingVertical: 12 },
+  retryText: { color: "#f7f5ef", fontSize: 14, fontWeight: "800" },
+  pressed: { opacity: 0.8, transform: [{ scale: 0.98 }] },
 });
