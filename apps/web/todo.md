@@ -137,3 +137,10 @@
 - [x] Expand carry-interest submissions with multi-category items, quantity, weight, and a total payment offer.
 - [x] Deliver administrator contact replies as named BridgeX Admin messages and show unread notification counts beside Messages in the authenticated profile menu.
 - [ ] Display real average ratings and public completed-service review comments on live posts and public member profiles.
+- [x] Notify members of verification rejection through the web and Android-accessible notification stream, including a brief visible in-app alert.
+- [ ] Add short notification pop-ups and unread count indicators beside authenticated profile-menu destinations when relevant updates exist.
+- [ ] Hide released orders from incoming offer and interest queues while retaining appropriate protected history.
+- [ ] Keep cargo listings open for multiple interests until accepted quantities consume the available capacity, then close the listing.
+- [ ] Show complete category, quantity, and weight detail for carry-space interests in owner response views.
+- [ ] Add Select all plus mobile, laptop, camera, and available-quantity controls to traveler accepted-category selection.
+- [ ] Ensure original signed-in contact-enquiry submitters receive BridgeX Admin replies in Messages and notifications.
