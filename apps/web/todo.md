@@ -147,3 +147,6 @@
 - [x] Show complete carry-listing transport, date, accepted-category, and item-quantity details on public listing post pages.
 - [x] Add Mobile phone, Laptop, and Camera quantities plus a required delivery date to carry-interest submissions.
 - [x] Show a legal, safety, and fulfillment warning immediately before a carry-space listing is published.
+- [x] Add reliable entry notifications, optional feedback sound cues, and restrained trusted marketplace motion across the web and Android WebView experience.
+- [x] Make Workspace request and carry-listing response counts open their exact filtered offer or interest views.
+- [x] Add live unread-update badges to each relevant administrator control-panel section, including reports.

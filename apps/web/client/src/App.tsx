@@ -1,10 +1,11 @@
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { Route, Switch, useLocation } from "wouter";
-import { lazy, Suspense } from "react";
+import { lazy, Suspense, useEffect } from "react";
 import ErrorBoundary from "./components/ErrorBoundary";
 import { ThemeProvider } from "./contexts/ThemeContext";
 import { useAuth } from "@/_core/hooks/useAuth";
+import { playBridgeXFeedback } from "@/lib/feedback";
 
 const Home = lazy(() => import("./pages/Home")); const Marketplace = lazy(() => import("./pages/Marketplace")); const Access = lazy(() => import("./pages/Access")); const ResetPassword = lazy(() => import("./pages/ResetPassword")); const Workspace = lazy(() => import("./pages/Workspace")); const ReviewsPage = lazy(() => import("./pages/ReviewsPage")); const OfferPage = lazy(() => import("./pages/OfferPage")); const InterestPage = lazy(() => import("./pages/InterestPage")); const Onboarding = lazy(() => import("./pages/Onboarding")); const AdminControl = lazy(() => import("./pages/AdminControl")); const SuperAdminControl = lazy(() => import("./pages/SuperAdminControl")); const AdminChats = lazy(() => import("./pages/AdminChats")); const AdminEnquiries = lazy(() => import("./pages/AdminEnquiries")); const AdminVerificationPerson = lazy(() => import("./pages/AdminVerificationPerson")); const ReportIncident = lazy(() => import("./pages/ReportIncident")); const PostDetail = lazy(() => import("./pages/PostDetail")); const MemberProfile = lazy(() => import("./pages/MemberProfile")); const ContactPage = lazy(() => import("./pages/ContactPage")); const NotificationsPage = lazy(() => import("./pages/NotificationsPage")); const NotFound = lazy(() => import("./pages/NotFound")); const HowItWorks = lazy(() => import("./pages/MarketingPages").then(module => ({ default: module.HowItWorks }))); const SafetyPage = lazy(() => import("./pages/MarketingPages").then(module => ({ default: module.SafetyPage }))); const FaqPage = lazy(() => import("./pages/MarketingPages").then(module => ({ default: module.FaqPage }))); const StandardPage = lazy(() => import("./pages/MarketingPages").then(module => ({ default: module.StandardPage }))); const CreateRequest = lazy(() => import("./pages/CreateFlow").then(module => ({ default: module.CreateRequest }))); const CreateListing = lazy(() => import("./pages/CreateFlow").then(module => ({ default: module.CreateListing })));
 
@@ -57,6 +58,18 @@ function Router() {
   );
 }
 
+function GlobalInteractionFeedback() {
+  useEffect(() => {
+    const onInteraction = (event: PointerEvent) => {
+      const target = event.target as Element | null;
+      if (target?.closest("button,a,[role='button']")) playBridgeXFeedback("tap");
+    };
+    window.addEventListener("pointerdown", onInteraction, { passive: true });
+    return () => window.removeEventListener("pointerdown", onInteraction);
+  }, []);
+  return null;
+}
+
 // NOTE: About Theme
 // - First choose a default theme according to your design style (dark or light bg), than change color palette in index.css
 //   to keep consistent foreground/background color across components
@@ -71,6 +84,7 @@ function App() {
       >
         <TooltipProvider>
           <Toaster />
+          <GlobalInteractionFeedback />
           <Suspense fallback={<div className="grid min-h-screen place-items-center bg-[#f7f5ef] text-sm font-semibold text-[#637073]">Loading BridgeX…</div>}><Router /></Suspense>
         </TooltipProvider>
       </ThemeProvider>

@@ -136,6 +136,38 @@
 
 @layer utilities {
   .font-display { font-family: "Fraunces", Georgia, serif; }
+
+  .bridgex-accent-text {
+    background: linear-gradient(110deg, #176447 0%, #2d8d62 35%, #d79b2b 55%, #2d8d62 75%, #176447 100%);
+    background-size: 220% auto;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    animation: bridgex-accent-shift 8s linear infinite;
+  }
+
+  .bridgex-trust-surface {
+    box-shadow: 0 14px 32px rgba(23, 33, 38, 0.06), inset 0 1px 0 rgba(255, 255, 255, 0.8);
+  }
+}
+
+@keyframes bridgex-accent-shift {
+  from { background-position: 0% center; }
+  to { background-position: 220% center; }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  button, a, [role="button"] {
+    transition: transform 160ms cubic-bezier(0.23, 1, 0.32, 1), box-shadow 180ms cubic-bezier(0.23, 1, 0.32, 1), color 180ms ease, background-color 180ms ease, border-color 180ms ease;
+  }
+
+  button:active:not(:disabled), [role="button"]:active:not([aria-disabled="true"]) {
+    transform: scale(0.97);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bridgex-accent-text { animation: none; }
 }
 
 @layer components {

@@ -5,6 +5,7 @@ import { VerifiedBadge } from "@/components/bridgex/VerifiedBadge";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/lib/supabase";
 import { Crown, LogOut, Menu, MessageSquareText, Plane, Plus, Settings, ShieldCheck, UserRound } from "lucide-react";
+import { playBridgeXFeedback } from "@/lib/feedback";
 import { toast } from "sonner";
 import { useEffect, useRef, useState } from "react";
 import { Link, useLocation } from "wouter";
@@ -44,8 +45,8 @@ function AccountMenu({ mobile = false }: { mobile?: boolean }) {
       const records = (data ?? []) as NotificationRecord[];
       const next = records.reduce((counts, notification) => { counts[updateDestination(notification)] += 1; return counts; }, { ...emptyUpdateCounts });
       const nextTotal = records.length;
-      if (previousUnread.current === null && nextTotal > 0) toast.info(`You have ${nextTotal} unread BridgeX update${nextTotal === 1 ? "" : "s"}.`, { duration: 3000 });
-      if (previousUnread.current !== null && nextTotal > previousUnread.current) toast.info("You have a new BridgeX update.", { duration: 3000 });
+      if (previousUnread.current === null && nextTotal > 0) { playBridgeXFeedback("notice"); toast.info(`You have ${nextTotal} unread BridgeX update${nextTotal === 1 ? "" : "s"}.`, { duration: 3000 }); }
+      if (previousUnread.current !== null && nextTotal > previousUnread.current) { playBridgeXFeedback("notice"); toast.info("You have a new BridgeX update.", { duration: 3000 }); }
       previousUnread.current = nextTotal;
       setUpdates(next);
     };
@@ -55,11 +56,11 @@ function AccountMenu({ mobile = false }: { mobile?: boolean }) {
   }, [user?.id, open]);
   if (loading) return mobile ? <span className="rounded-lg px-3 py-2.5 text-sm font-bold text-[#748083]">Loading account…</span> : <span className="ml-2 text-sm font-semibold text-[#748083]">Loading account…</span>;
   if (!isAuthenticated || !user) return mobile ? <Link href="/access" className="rounded-lg px-3 py-2.5 text-sm font-bold hover:bg-[#ece8dd]">Log in or create account</Link> : <Link href="/access"><Button variant="ghost" size="sm" className="ml-1 font-semibold text-[#354145] hover:bg-[#e9e4d8]">Log in</Button></Link>;
-  const initial = displayName(user).charAt(0).toUpperCase(); const go = (path: string) => { setOpen(false); setLocation(path); }; const signOut = async () => { await logout(); setOpen(false); setLocation("/"); };
+  const initial = displayName(user).charAt(0).toUpperCase(); const go = (path: string, destination?: UpdateDestination) => { const count = destination ? updates[destination] : 0; if (destination && count > 0) { playBridgeXFeedback("notice"); toast.info(`${count} unread ${destination === "profile" ? "profile" : destination === "workspace" ? "workspace" : "message"} update${count === 1 ? "" : "s"} are ready for review.`, { duration: 3000 }); } setOpen(false); setLocation(path); }; const signOut = async () => { await logout(); setOpen(false); setLocation("/"); };
   const updateBadge = (count: number) => count > 0 ? <span aria-label={`${count} unread update${count === 1 ? "" : "s"}`} className="ml-auto rounded-full bg-[#176447] px-2 py-0.5 text-[11px] text-white">{count}</span> : null;
-  const workspaceLink = <button onClick={() => go("/dashboard")} className="flex w-full items-center gap-2 rounded-xl px-3 py-2.5 text-sm font-bold hover:bg-[#f0ede5]"><UserRound className="size-4" />Workspace{updateBadge(updates.workspace)}</button>;
-  const editLink = <button onClick={() => go("/dashboard/settings")} className="flex w-full items-center gap-2 rounded-xl px-3 py-2.5 text-sm font-bold hover:bg-[#f0ede5]"><Settings className="size-4" />Edit profile{updateBadge(updates.profile)}</button>;
-  const messagesLink = <button onClick={() => go("/dashboard/deals")} className="flex w-full items-center gap-2 rounded-xl px-3 py-2.5 text-sm font-bold hover:bg-[#f0ede5]"><MessageSquareText className="size-4" />Messages{updateBadge(updates.messages)}</button>;
+  const workspaceLink = <button onClick={() => go("/dashboard", "workspace")} className="flex w-full items-center gap-2 rounded-xl px-3 py-2.5 text-sm font-bold hover:bg-[#f0ede5]"><UserRound className="size-4" />Workspace{updateBadge(updates.workspace)}</button>;
+  const editLink = <button onClick={() => go("/dashboard/settings", "profile")} className="flex w-full items-center gap-2 rounded-xl px-3 py-2.5 text-sm font-bold hover:bg-[#f0ede5]"><Settings className="size-4" />Edit profile{updateBadge(updates.profile)}</button>;
+  const messagesLink = <button onClick={() => go("/dashboard/deals", "messages")} className="flex w-full items-center gap-2 rounded-xl px-3 py-2.5 text-sm font-bold hover:bg-[#f0ede5]"><MessageSquareText className="size-4" />Messages{updateBadge(updates.messages)}</button>;
   const adminLink = user.role === "admin" || user.role === "super_admin" ? <button onClick={() => go(user.role === "super_admin" ? "/admin/super" : "/admin")} className={`flex w-full items-center gap-2 rounded-xl px-3 py-2.5 text-sm font-bold hover:bg-[#f0ede5] ${user.role === "super_admin" ? "bg-[#fff1ce] text-[#805700] hover:bg-[#ffe7a3]" : ""}`}>{user.role === "super_admin" ? <Crown className="size-4 shrink-0" /> : <ShieldCheck className="size-4" />}<span className="truncate">{user.role === "super_admin" ? "Super Admin control panel" : "Admin control panel"}</span></button> : null;
   const signOutLink = <button onClick={signOut} className="flex w-full items-center gap-2 rounded-xl px-3 py-2.5 text-sm font-bold text-[#9b4b3e] hover:bg-[#fdf0ed]"><LogOut className="size-4" />Sign out</button>;
   const memberHead = <button onClick={() => go("/dashboard")} className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left hover:bg-[#f0ede5]"><Avatar className="size-8"><AvatarImage src={user.avatarUrl} alt="Profile photo" /><AvatarFallback className="bg-[#dff5ea] text-xs font-bold text-[#176447]">{initial}</AvatarFallback></Avatar><span className="min-w-0"><span className="flex items-center gap-1 truncate text-sm font-bold">{displayName(user)}</span><span className="mt-1 block truncate text-xs text-[#687579]">{user.verificationStatus === "approved" ? <VerifiedBadge /> : user.email}</span></span></button>;
