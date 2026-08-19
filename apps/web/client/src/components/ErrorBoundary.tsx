@@ -21,8 +21,19 @@ class ErrorBoundary extends Component<Props, State> {
     return { hasError: true, error };
   }
 
+  componentDidCatch(error: Error) {
+    const staleModule = /failed to fetch dynamically imported module|importing a module script failed/i.test(error.message);
+    const reloadKey = "bridgex-route-recovery";
+    if (staleModule && !sessionStorage.getItem(reloadKey)) {
+      sessionStorage.setItem(reloadKey, "1");
+      window.setTimeout(() => window.location.reload(), 100);
+    }
+  }
+
   render() {
     if (this.state.hasError) {
+      const staleModule = /failed to fetch dynamically imported module|importing a module script failed/i.test(this.state.error?.message ?? "");
+      if (staleModule) return <div className="grid min-h-screen place-items-center bg-[#f7f5ef] px-6 text-center"><div><p className="font-display text-3xl font-bold text-[#172126]">Updating BridgeX…</p><p className="mt-3 text-sm text-[#637073]">Refreshing the latest secure application files.</p></div></div>;
       return (
         <div className="flex items-center justify-center min-h-screen p-8 bg-background">
           <div className="flex flex-col items-center w-full max-w-2xl p-8">

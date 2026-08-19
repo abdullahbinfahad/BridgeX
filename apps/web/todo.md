@@ -157,3 +157,9 @@
 - [x] Improve BridgeX loading resilience and perceived performance after browser or Android refreshes.
 - [ ] Make the Android wrapper open the public BridgeX homepage reliably without a stuck loading overlay.
 - [x] Prepare and link a downloadable Windows desktop BridgeX application alongside the Android APK.
+- [x] Restore completed orders at the bottom of the Member workspace with durable loading and empty states.
+- [x] Eliminate dynamic-import route failures and improve first-load speed across public, profile, workspace, and administrator pages.
+- [x] Make acceptance of pending carry interests complete reliably and show the resulting protected deal state.
+- [x] Clear all inbox unread indicators immediately after a message or support update is opened.
+- [x] Consolidate every notification type into an Updates inbox with the newest 30 visible and let members reply to BridgeX Admin support messages.
+- [ ] Rebuild the Android client startup architecture to avoid the browser route-loading failure and provide a stable homepage-first APK.
