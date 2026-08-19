@@ -177,6 +177,17 @@ describe("BridgeX currency, cargo, support, and brand release safeguards", () =>
     expect(admin).toContain("Mark payment sent");
   });
 
+  it("allows carry listings to remain payment-pending and sends one verified-payment alert only to the relevant owner", () => {
+    const migration = read("supabase/migrations/202608191900_carry_payment_pending_and_single_payment_alert.sql");
+    expect(migration).toContain("carry_listings_status_check");
+    expect(migration).toContain("'open', 'payment_pending', 'paused', 'closed', 'released'");
+    expect(migration).toContain("IF v_payment.response_kind = 'offer' THEN");
+    expect(migration).toContain("v_payment.payer_id");
+    expect(migration).toContain("v_payment.owner_id");
+    expect(migration).toContain("review sender product details");
+    expect(migration).not.toContain("currency <> 'CNY'");
+  });
+
   it("uses signed private Supabase URLs for payment instructions instead of exposing the QR images through the public Render app", () => {
     const workspace = read("apps/web/client/src/pages/Workspace.tsx");
     const migration = read("supabase/migrations/202608191625_private_payment_instruction_read_scope.sql");

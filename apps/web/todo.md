@@ -205,3 +205,5 @@
 - [x] Remove the CNY-only restriction from manual Alipay and WeChat payment requests while preserving payment proof review.
 - [x] Add a member payment-history view covering paid, pending payment, payment-verifying, and verified payment records.
 - [x] Collect private traveler payout instructions and create an administrator payout-due notification only when a sender confirms receipt and releases an order.
+- [x] Allow carry listings to enter payment-pending during Accept · request payment without reintroducing a currency restriction.
+- [x] Send one payment-success alert only to the relevant owner, while retaining the detailed payment update in Messages for the matched participant.
