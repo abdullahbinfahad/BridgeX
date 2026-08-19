@@ -17,7 +17,7 @@ export default function ReportIncident() {
   const [category, setCategory] = useState<IncidentCategory>("suspected_fraud");
   const [description, setDescription] = useState("");
   const [orderReference, setOrderReference] = useState("");
-  const [subjectUserId, setSubjectUserId] = useState("");
+  const [subjectUserId, setSubjectUserId] = useState(() => new URLSearchParams(window.location.search).get("member") ?? "");
   const [evidence, setEvidence] = useState<File[]>([]);
   const [consent, setConsent] = useState(false);
   const [status, setStatus] = useState<"idle" | "submitting" | "sent" | "error">("idle");
@@ -107,7 +107,7 @@ export default function ReportIncident() {
                 <div className="grid gap-2"><Label>Report category</Label><select value={category} onChange={(event) => setCategory(event.target.value as IncidentCategory)} className="h-11 rounded-xl border border-[#d9d7cf] bg-[#faf9f5] px-3 text-sm">{INCIDENT_CATEGORIES.map(([value, label]) => <option key={value} value={value}>{label}</option>)}</select></div>
                 <div className="grid gap-2"><Label>Related order reference (optional)</Label><Input value={orderReference} onChange={(event) => setOrderReference(event.target.value)} placeholder="For example, BX-123456" className="h-11 rounded-xl" /></div>
               </div>
-              <div className="grid gap-2"><Label>Subject account ID (optional)</Label><Input value={subjectUserId} onChange={(event) => setSubjectUserId(event.target.value)} placeholder="Only if you know the BridgeX user ID" className="h-11 rounded-xl" /></div>
+              <div className="grid gap-2"><Label>Reported member</Label><Input value={subjectUserId} onChange={(event) => setSubjectUserId(event.target.value)} placeholder="Member ID" className="h-11 rounded-xl" readOnly={Boolean(new URLSearchParams(window.location.search).get("member"))} /><p className="text-xs text-[#687579]">When opened from a public member profile, this account is attached to the report without revealing any private member data.</p></div>
               <div className="grid gap-2"><Label>What happened?</Label><Textarea required minLength={20} value={description} onChange={(event) => setDescription(event.target.value)} placeholder="Include dates, the agreed arrangement, the concern, and any relevant order details. Do not include passwords or unnecessary identity numbers." className="min-h-36 rounded-xl" /></div>
               <label className="flex cursor-pointer items-center gap-3 rounded-2xl border border-dashed border-[#b8c8bf] bg-[#f4faf5] p-4"><span className="grid size-10 place-items-center rounded-xl bg-[#dff5ea] text-[#176447]"><FileUp className="size-5" /></span><span className="min-w-0 flex-1"><span className="block text-sm font-bold">{evidence.length ? `${evidence.length} evidence file${evidence.length > 1 ? "s" : ""} selected` : "Add evidence images"}</span><span className="mt-0.5 block text-xs text-[#71807b]">Optional JPG, PNG, or WEBP. Up to 3 files; every image is compressed in your browser before private upload.</span></span><input className="sr-only" type="file" multiple accept="image/jpeg,image/png,image/webp" onChange={(event) => selectEvidence(event.target.files)} /></label>
               <label className="flex gap-2 text-xs leading-5 text-[#5f6d6b]"><input type="checkbox" checked={consent} onChange={(event) => setConsent(event.target.checked)} />I confirm that this report is truthful to the best of my knowledge and I consent to BridgeX storing the selected evidence for authorized safety review.</label>

@@ -118,3 +118,7 @@
 - [x] Redesign administrator chat review into a paginated conversation index showing both participant names, verification states, latest message, and a selected full transcript.
 - [x] Add public member profile pages with safe identity fields, verification status, and that member’s currently public posts.
 - [x] Improve marketplace gallery cards and detail galleries for multiple photos and video playback, and use 40-item pagination for large public feeds.
+- [x] Move the Completed orders navigation item to the bottom of the Member workspace navigation.
+- [x] Add a safe signed-in incident report action from public member profiles that identifies the reported member without exposing their private data.
+- [x] Expand marketplace pages to 80 posts and show complete public request route, deadline, category, weight, size, and special-handling metadata.
+- [x] Display poster verification status inline with the poster name and retain a three-column desktop marketplace card grid.
