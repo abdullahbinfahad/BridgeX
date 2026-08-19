@@ -87,4 +87,32 @@ describe("BridgeX currency, cargo, support, and brand release safeguards", () =>
     expect(styles).toContain(".bridgex-glass-panel");
     expect(styles).toContain("@supports not ((backdrop-filter: blur(1px))");
   });
+
+  it("provides a shared logical back control for member, administrator, and public-detail pages", () => {
+    const app = read("apps/web/client/src/App.tsx");
+    expect(app).toContain("function GlobalBackButton()");
+    expect(app).toContain("<GlobalBackButton />");
+    expect(app).toContain('location.startsWith("/post/")');
+    expect(app).toContain('location.startsWith("/dashboard/deals") && hasDetailQuery');
+  });
+
+  it("renders correct participant names and live latest-message cards in administrator contact enquiries", () => {
+    const enquiries = read("apps/web/client/src/pages/AdminEnquiries.tsx");
+    const deals = read("apps/web/client/src/pages/Deals.tsx");
+    const migration = read("supabase/migrations/202608191500_contact_enquiries_realtime.sql");
+    expect(enquiries).toContain('{isMember ? selected.name : "BridgeX Admin"}');
+    expect(enquiries).toContain("latestBody");
+    expect(enquiries).toContain("totalMessages");
+    expect(enquiries).toContain('supabase.channel("admin-contact-enquiries-live")');
+    expect(deals).toContain("member-support-${selectedSupportEnquiryId}");
+    expect(migration).toContain("ADD TABLE public.contact_enquiry_messages");
+  });
+
+  it("gives profile and workspace notifications their specific title and body detail", () => {
+    const layout = read("apps/web/client/src/components/bridgex/PublicLayout.tsx");
+    expect(layout).toContain("type NotificationRecord = { id: string; type: string; link: string | null; title: string; body: string }");
+    expect(layout).toContain("const updateDetailText");
+    expect(layout).toContain("description: updateDetailText(records)");
+    expect(layout).toContain("description: description ||");
+  });
 });

@@ -183,3 +183,8 @@
 - [x] Attribute member messages in the BridgeX Admin support conversation to the actual member profile name rather than the BridgeX Admin label.
 - [x] Prevent ordinary page scrolling from triggering the green tap/click feedback sound while preserving deliberate action feedback.
 - [x] Add restrained translucent and blurred surface treatments to key web and Android-wrapper visual areas without compromising performance, contrast, or reduced-motion support.
+- [x] Add a reliable back-navigation control to BridgeX detail and workflow pages so members can return without relying on browser history.
+- [x] Correct administrator Contact enquiries to show the sender’s member name, the actual latest message preview, and an unread conversation-message count instead of labeling all text as BridgeX Admin.
+- [x] Enable live updates for administrator and member support conversations so new messages arrive without a manual page refresh.
+- [x] Replace generic profile/workspace unread notices with clear, item-specific messages that explain the underlying update.
+- [x] Strengthen key transparent blur surfaces while preserving legibility, fallback rendering, and motion accessibility.

@@ -26,29 +26,33 @@ function NativePushBridge() {
 }
 
 type UpdateDestination = "profile" | "workspace" | "messages";
-type NotificationRecord = { id: string; type: string; link: string | null };
+type NotificationRecord = { id: string; type: string; link: string | null; title: string; body: string };
 const emptyUpdateCounts: Record<UpdateDestination, number> = { profile: 0, workspace: 0, messages: 0 };
+const emptyUpdateDetails: Record<UpdateDestination, NotificationRecord[]> = { profile: [], workspace: [], messages: [] };
 const updateDestination = (notification: NotificationRecord): UpdateDestination => {
   if (notification.link?.startsWith("/dashboard/settings") || /verification|profile|account/i.test(notification.type)) return "profile";
   if (notification.link?.startsWith("/dashboard/deals") || /match|message|contact_reply/i.test(notification.type)) return "messages";
   return "workspace";
 };
+const updateDetailText = (records: NotificationRecord[]) => records.slice(0, 2).map(record => `${record.title}: ${record.body}`).join(" · ");
 
 function AccountMenu({ mobile = false }: { mobile?: boolean }) {
-  const { user, isAuthenticated, loading, logout } = useAuth(); const [, setLocation] = useLocation(); const [open, setOpen] = useState(false); const [updates, setUpdates] = useState(emptyUpdateCounts); const previousUnread = useRef<number | null>(null);
+  const { user, isAuthenticated, loading, logout } = useAuth(); const [, setLocation] = useLocation(); const [open, setOpen] = useState(false); const [updates, setUpdates] = useState(emptyUpdateCounts); const [updateDetails, setUpdateDetails] = useState(emptyUpdateDetails); const previousUnread = useRef<number | null>(null);
   useEffect(() => {
-    if (!user) { setUpdates(emptyUpdateCounts); previousUnread.current = null; return; }
+    if (!user) { setUpdates(emptyUpdateCounts); setUpdateDetails(emptyUpdateDetails); previousUnread.current = null; return; }
     let active = true;
     const loadUnreadUpdates = async () => {
-      const { data, error } = await supabase.from("notifications").select("id,type,link").eq("user_id", user.id).is("read_at", null).order("created_at", { ascending: false }).limit(150);
+      const { data, error } = await supabase.from("notifications").select("id,type,link,title,body").eq("user_id", user.id).is("read_at", null).order("created_at", { ascending: false }).limit(150);
       if (!active || error) return;
       const records = (data ?? []) as NotificationRecord[];
       const next = records.reduce((counts, notification) => { counts[updateDestination(notification)] += 1; return counts; }, { ...emptyUpdateCounts });
+      const details = records.reduce((groups, notification) => { groups[updateDestination(notification)].push(notification); return groups; }, { ...emptyUpdateDetails });
       const nextTotal = records.length;
-      if (previousUnread.current === null && nextTotal > 0) { playBridgeXFeedback("notice"); toast.info(`You have ${nextTotal} unread BridgeX update${nextTotal === 1 ? "" : "s"}.`, { duration: 3000 }); }
-      if (previousUnread.current !== null && nextTotal > previousUnread.current) { playBridgeXFeedback("notice"); toast.info("You have a new BridgeX update.", { duration: 3000 }); }
+      if (previousUnread.current === null && nextTotal > 0) { playBridgeXFeedback("notice"); toast.info(`You have ${nextTotal} unread BridgeX update${nextTotal === 1 ? "" : "s"}.`, { description: updateDetailText(records), duration: 4200 }); }
+      if (previousUnread.current !== null && nextTotal > previousUnread.current) { playBridgeXFeedback("notice"); toast.info("You have a new BridgeX update.", { description: updateDetailText(records), duration: 4200 }); }
       previousUnread.current = nextTotal;
       setUpdates(next);
+      setUpdateDetails(details);
     };
     void loadUnreadUpdates();
     const interval = window.setInterval(() => void loadUnreadUpdates(), 60000);
@@ -56,7 +60,7 @@ function AccountMenu({ mobile = false }: { mobile?: boolean }) {
   }, [user?.id, open]);
   if (loading) return mobile ? <span className="rounded-lg px-3 py-2.5 text-sm font-bold text-[#748083]">Loading account…</span> : <span className="ml-2 text-sm font-semibold text-[#748083]">Loading account…</span>;
   if (!isAuthenticated || !user) return mobile ? <Link href="/access" className="rounded-lg px-3 py-2.5 text-sm font-bold hover:bg-[#ece8dd]">Log in or create account</Link> : <Link href="/access"><Button variant="ghost" size="sm" className="ml-1 font-semibold text-[#354145] hover:bg-[#e9e4d8]">Log in</Button></Link>;
-  const initial = displayName(user).charAt(0).toUpperCase(); const markDestinationRead = async (destination: UpdateDestination) => { const { data } = await supabase.from("notifications").select("id,type,link").eq("user_id", user.id).is("read_at", null).limit(150); const ids = ((data ?? []) as NotificationRecord[]).filter(notification => updateDestination(notification) === destination).map(notification => notification.id); if (!ids.length) return; await supabase.from("notifications").update({ read_at: new Date().toISOString() }).in("id", ids); setUpdates(current => ({ ...current, [destination]: 0 })); }; const go = (path: string, destination?: UpdateDestination) => { const count = destination ? updates[destination] : 0; if (destination && count > 0) { playBridgeXFeedback("notice"); toast.info(`${count} new ${destination === "profile" ? "profile" : destination === "workspace" ? "workspace" : "message"} update${count === 1 ? "" : "s"} opened.`, { duration: 3000 }); void markDestinationRead(destination); } setOpen(false); setLocation(path); }; const signOut = async () => { await logout(); setOpen(false); setLocation("/"); };
+  const initial = displayName(user).charAt(0).toUpperCase(); const markDestinationRead = async (destination: UpdateDestination) => { const { data } = await supabase.from("notifications").select("id,type,link,title,body").eq("user_id", user.id).is("read_at", null).limit(150); const ids = ((data ?? []) as NotificationRecord[]).filter(notification => updateDestination(notification) === destination).map(notification => notification.id); if (!ids.length) return; await supabase.from("notifications").update({ read_at: new Date().toISOString() }).in("id", ids); setUpdates(current => ({ ...current, [destination]: 0 })); setUpdateDetails(current => ({ ...current, [destination]: [] })); }; const go = (path: string, destination?: UpdateDestination) => { const count = destination ? updates[destination] : 0; if (destination && count > 0) { const description = updateDetailText(updateDetails[destination]); playBridgeXFeedback("notice"); toast.info(`${count} new ${destination === "profile" ? "profile" : destination === "workspace" ? "workspace" : "message"} update${count === 1 ? "" : "s"} opened.`, { description: description || "Open this section to review the latest BridgeX update.", duration: 4200 }); void markDestinationRead(destination); } setOpen(false); setLocation(path); }; const signOut = async () => { await logout(); setOpen(false); setLocation("/"); };
   const updateBadge = (count: number) => count > 0 ? <span aria-label={`${count} unread update${count === 1 ? "" : "s"}`} className="ml-auto rounded-full bg-[#176447] px-2 py-0.5 text-[11px] text-white">{count}</span> : null;
   const workspaceLink = <button onClick={() => go("/dashboard", "workspace")} className="flex w-full items-center gap-2 rounded-xl px-3 py-2.5 text-sm font-bold hover:bg-[#f0ede5]"><UserRound className="size-4" />Workspace{updateBadge(updates.workspace)}</button>;
   const editLink = <button onClick={() => go("/dashboard/settings", "profile")} className="flex w-full items-center gap-2 rounded-xl px-3 py-2.5 text-sm font-bold hover:bg-[#f0ede5]"><Settings className="size-4" />Edit profile{updateBadge(updates.profile)}</button>;
