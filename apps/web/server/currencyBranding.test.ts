@@ -169,6 +169,17 @@ describe("BridgeX currency, cargo, support, and brand release safeguards", () =>
     expect(migration).toContain("proof.payer_id = auth.uid()");
   });
 
+  it("keeps post-success reset references stable after asynchronous media work and allows payment statuses in response tables", () => {
+    const createFlow = read("apps/web/client/src/pages/CreateFlow.tsx");
+    const migration = read("supabase/migrations/202608191640_payment_response_statuses.sql");
+    expect(createFlow).toContain("const formElement = event.currentTarget");
+    expect(createFlow).toContain("formElement.reset()");
+    expect(createFlow).not.toContain("event.currentTarget.reset()");
+    expect(migration).toContain("'pending_payment', 'payment_verifying'");
+    expect(migration).toContain("offers_status_check");
+    expect(migration).toContain("listing_interests_status_check");
+  });
+
   it("renders sender payment proof instructions and routes administrators to a screenshot review detail page", () => {
     const workspace = read("apps/web/client/src/pages/Workspace.tsx");
     const admin = read("apps/web/client/src/pages/AdminControl.tsx");

@@ -199,3 +199,5 @@
 - [x] Add a sender Pending payments workspace view with payment amount, QR instructions, screenshot upload, and payment-verifying status.
 - [x] Add a dedicated administrator Payment verification list and payment-detail page with payment proof, order context, review actions, and an auditable verified or rejected decision.
 - [x] Create the protected match, counterpart details, workspace order, and system/chat notifications only after a payment is verified by an authorized administrator.
+- [x] Prevent post-success handling from calling a null form reset method after the post has already been saved.
+- [x] Fix offer and carry-interest payment-start state transitions so they satisfy the live response-table check constraints and create payment requests successfully.

@@ -30,6 +30,14 @@ ALTER TABLE public.carry_listings
 CREATE INDEX IF NOT EXISTS bridgex_payment_proofs_payer_status_idx ON public.bridgex_payment_proofs (payer_id, status, created_at DESC);
 CREATE INDEX IF NOT EXISTS bridgex_payment_proofs_status_idx ON public.bridgex_payment_proofs (status, submitted_at DESC);
 
+ALTER TABLE public.offers DROP CONSTRAINT IF EXISTS offers_status_check;
+ALTER TABLE public.offers ADD CONSTRAINT offers_status_check
+  CHECK (status IN ('pending', 'pending_payment', 'payment_verifying', 'accepted', 'rejected', 'withdrawn'));
+
+ALTER TABLE public.listing_interests DROP CONSTRAINT IF EXISTS listing_interests_status_check;
+ALTER TABLE public.listing_interests ADD CONSTRAINT listing_interests_status_check
+  CHECK (status IN ('pending', 'pending_payment', 'payment_verifying', 'accepted', 'rejected', 'withdrawn'));
+
 CREATE OR REPLACE FUNCTION public.enforce_bridgex_manual_qr_cny()
 RETURNS trigger
 LANGUAGE plpgsql
