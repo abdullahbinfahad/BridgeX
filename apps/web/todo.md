@@ -177,3 +177,5 @@
 - [x] Serve a compressed local BridgeX logo asset with lightweight dimensions instead of relying on an external GitHub image request.
 - [x] Add contextual visual feedback effects alongside the existing distinct action sound cues, respecting reduced-motion settings.
 - [x] Research a compliant third-party integration path for Chinese payment methods, including Alipay, WeChat Pay, and UnionPay, without enabling payments until merchant credentials and provider approval are available.
+- [x] Prevent a member from seeing accepted-deal messages or Inbox conversations belonging to another same-name account, while retaining authorized administrator safety review access.
+- [x] Reduce the Android wrapper’s white top spacer to approximately 0.5 cm and use the BridgeX application background color.

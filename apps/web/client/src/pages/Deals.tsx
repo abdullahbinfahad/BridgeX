@@ -48,7 +48,7 @@ export default function Deals() {
     setLoading(true);
     setNotice("");
     const [matchResult, orderResult, notificationResult] = await Promise.all([
-      supabase.from("matches").select("id,match_type,sender_id,traveler_id,status,sender_name,traveler_name,sender_phone,sender_delivery_address,traveler_phone,traveler_pickup_address,sender_last_read_at,traveler_last_read_at,last_message_body,last_message_at,last_message_sender_id,accepted_at").order("last_message_at", { ascending: false, nullsFirst: false }).order("accepted_at", { ascending: false }).limit(250),
+      supabase.from("matches").select("id,match_type,sender_id,traveler_id,status,sender_name,traveler_name,sender_phone,sender_delivery_address,traveler_phone,traveler_pickup_address,sender_last_read_at,traveler_last_read_at,last_message_body,last_message_at,last_message_sender_id,accepted_at").or(`sender_id.eq.${user.id},traveler_id.eq.${user.id}`).order("last_message_at", { ascending: false, nullsFirst: false }).order("accepted_at", { ascending: false }).limit(250),
       supabase.from("orders").select("id,match_id,reference,sender_id,traveler_id,fulfillment_status,escrow_status,updated_at").or(`sender_id.eq.${user.id},traveler_id.eq.${user.id}`).order("updated_at", { ascending: false }).limit(500),
       supabase.from("notifications").select("id,type,title,body,link,related_id,created_at,read_at").eq("user_id", user.id).order("created_at", { ascending: false }).limit(150),
     ]);

@@ -37,11 +37,24 @@ describe("BridgeX currency, cargo, support, and brand release safeguards", () =>
     expect(deals).toContain("support=${encodeURIComponent(update.related_id || update.id)}");
   });
 
+  it("keeps the member Inbox limited to the signed-in deal participant even when that member is an administrator", () => {
+    const deals = read("apps/web/client/src/pages/Deals.tsx");
+    expect(deals).toContain(".or(`sender_id.eq.${user.id},traveler_id.eq.${user.id}`)");
+    expect(deals).toContain("matches").toContain("orders");
+  });
+
   it("uses the supplied logo for shared web branding, browser favicon, and mobile app configuration", () => {
     expect(read("apps/web/client/src/components/bridgex/Brand.tsx")).toContain("/bridgex-logo.webp");
     expect(read("apps/web/client/index.html")).toContain("/favicon.ico");
     expect(read("apps/mobile/app.json")).toContain("./assets/icon.png");
     expect(read("apps/mobile/app.json")).toContain('"versionCode": 5');
+  });
+
+  it("uses the compact 0.5 cm application-color Android top spacer in the next native build", () => {
+    const mobileApp = read("apps/mobile/App.tsx");
+    expect(mobileApp).toContain("const HALF_CENTIMETER_DP = 160 / 2.54 / 2");
+    expect(mobileApp).toContain("backgroundColor: \"#f7f5ef\", height: HALF_CENTIMETER_DP");
+    expect(mobileApp).toContain("?app=android&build=5");
   });
 
   it("pairs sound categories with lightweight visual feedback cues that respect motion preferences", () => {
