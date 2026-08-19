@@ -1,0 +1,144 @@
+{
+  "project_info": {
+    "title": "BridgeX",
+    "created": 1787169748.018,
+    "last_updated": 1787169953.029,
+    "total_slides": 12
+  },
+  "slides": [
+    {
+      "id": "cover",
+      "state": "edited",
+      "pageNum": 1
+    },
+    {
+      "id": "matching_problem",
+      "state": "edited",
+      "pageNum": 2
+    },
+    {
+      "id": "protected_execution",
+      "state": "edited",
+      "pageNum": 3
+    },
+    {
+      "id": "two_sided_workflow",
+      "state": "edited",
+      "pageNum": 4
+    },
+    {
+      "id": "trust_controls",
+      "state": "edited",
+      "pageNum": 5
+    },
+    {
+      "id": "payment_proof",
+      "state": "edited",
+      "pageNum": 6
+    },
+    {
+      "id": "delivery_payout",
+      "state": "edited",
+      "pageNum": 7
+    },
+    {
+      "id": "privacy",
+      "state": "edited",
+      "pageNum": 8
+    },
+    {
+      "id": "china_global",
+      "state": "edited",
+      "pageNum": 9
+    },
+    {
+      "id": "fee_model",
+      "state": "edited",
+      "pageNum": 10
+    },
+    {
+      "id": "build_scale",
+      "state": "edited",
+      "pageNum": 11
+    },
+    {
+      "id": "closing",
+      "state": "edited",
+      "pageNum": 12
+    }
+  ],
+  "outline": [
+    {
+      "id": "cover",
+      "title": "BridgeX",
+      "summary": "A global goods-carrying marketplace connecting senders with verified travelers and available carry capacity.",
+      "image_plan": "Use a suitable image if needed"
+    },
+    {
+      "id": "matching_problem",
+      "title": "Cross-border delivery is a matching problem",
+      "summary": "Present the problem BridgeX addresses: route-specific delivery needs and unused traveler capacity.",
+      "image_plan": "Use a suitable image if needed"
+    },
+    {
+      "id": "protected_execution",
+      "title": "Public discovery. Protected execution.",
+      "summary": "Explain public browsing and progressive release of sensitive data through protected matches.",
+      "image_plan": "Use a suitable image if needed"
+    },
+    {
+      "id": "two_sided_workflow",
+      "title": "Two-sided marketplace, one clear workflow",
+      "summary": "Show the sender request and traveler capacity paths converging at offers and interests.",
+      "image_plan": "Use a suitable image if needed"
+    },
+    {
+      "id": "trust_controls",
+      "title": "Trust is built through visible controls",
+      "summary": "Describe verification, real reviews, reporting, and administrative oversight.",
+      "image_plan": "Use a suitable image if needed"
+    },
+    {
+      "id": "payment_proof",
+      "title": "Payment proof protects the match opening",
+      "summary": "Explain payment proof, admin review, and protected match opening without overstating settlement certainty.",
+      "image_plan": "Use a suitable image if needed"
+    },
+    {
+      "id": "delivery_payout",
+      "title": "Delivery and payout have a recorded end state",
+      "summary": "Show traveler delivery updates, sender release, payout due review, and traveler receipt confirmation.",
+      "image_plan": "Use a suitable image if needed"
+    },
+    {
+      "id": "privacy",
+      "title": "Privacy is part of trust",
+      "summary": "Describe public card data, private storage, scoped access, and progressive disclosure.",
+      "image_plan": "Use a suitable image if needed"
+    },
+    {
+      "id": "china_global",
+      "title": "China-first, globally responsible",
+      "summary": "Explain China-first routes, user compliance responsibility, and boundaries around Customs and carrier rules.",
+      "image_plan": "Use a suitable image if needed"
+    },
+    {
+      "id": "fee_model",
+      "title": "A 5% service fee requires clear records",
+      "summary": "Present discreet fee disclosure and the roadmap for gross-to-net transaction records.",
+      "image_plan": "Use a suitable image if needed"
+    },
+    {
+      "id": "build_scale",
+      "title": "Built now. Strengthen before scale.",
+      "summary": "Summarize working capabilities and operational safeguards required for responsible growth.",
+      "image_plan": "Use a suitable image if needed"
+    },
+    {
+      "id": "closing",
+      "title": "Build the trusted route, not just the marketplace",
+      "summary": "Close with BridgeX’s purpose and responsible user action guidance.",
+      "image_plan": "Use a suitable image if needed"
+    }
+  ]
+}

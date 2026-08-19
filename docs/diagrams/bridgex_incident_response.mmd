@@ -1,0 +1,14 @@
+flowchart TD
+  I[Report dispute suspicious payment or unsafe listing] --> T{Immediate danger or clearly prohibited}
+  T -->|Yes| R[Restrict post or account and preserve case evidence]
+  T -->|No| Q[Classify severity and assign case owner]
+  R --> E[Administrator evidence review]
+  Q --> E
+  E --> D{Decision}
+  D -->|No violation| C[Close with documented reason]
+  D -->|Fixable issue| F[Request correction or additional verification]
+  D -->|Policy violation| S[Suspend remove or escalate]
+  F --> N[Notify affected members]
+  S --> N
+  C --> N
+  N --> A[Write immutable audit record]

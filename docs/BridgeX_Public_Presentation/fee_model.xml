@@ -1,0 +1,19 @@
+<slide id="fee_model">
+  <background color="paper"/>
+  <shape id="top-hairline" type="line" x="80" y="72" width="1120" height="0" stroke="brand" stroke-width="2"/>
+  <text id="slide-number" x="80" y="111" width="50" height="24" font="caption" size="14" color="brand">09</text>
+  <text id="slide-title" x="80" y="150" width="960" height="60" font="heading" size="43" color="ink">A 5% service fee requires <span color="brand">clear records.</span></text>
+  <text id="fee-metric" x="110" y="286" width="350" height="120" font="display" size="108" color="brand" wrap="false">5%</text>
+  <text id="fee-caption" x="115" y="430" width="360" height="80" font="body" size="21" color="muted" line-height="1.4">Disclose the service fee inside the protected payment experience, where transaction context is visible.</text>
+  <shape id="record-top" type="line" x="665" y="330" width="470" height="0" stroke="hairline" stroke-width="1"/>
+  <shape id="record-mid-one" type="line" x="665" y="400" width="470" height="0" stroke="hairline" stroke-width="1"/>
+  <shape id="record-mid-two" type="line" x="665" y="470" width="470" height="0" stroke="hairline" stroke-width="1"/>
+  <shape id="record-bottom" type="line" x="665" y="540" width="470" height="0" stroke="hairline" stroke-width="1"/>
+  <text id="record-one-label" x="690" y="350" width="200" height="24" font="body" size="18" color="ink">Gross agreed amount</text>
+  <text id="record-one-detail" x="905" y="350" width="200" height="24" font="caption" size="15" color="muted" align="right">Payment request reference</text>
+  <text id="record-two-label" x="690" y="420" width="200" height="24" font="body" size="18" color="ink">Fee rate and fee amount</text>
+  <text id="record-two-detail" x="905" y="420" width="200" height="24" font="caption" size="15" color="muted" align="right">Versioned service rule</text>
+  <text id="record-three-label" x="690" y="490" width="200" height="24" font="body" size="18" color="ink">Net traveler payout</text>
+  <text id="record-three-detail" x="905" y="490" width="200" height="24" font="caption" size="15" color="muted" align="right">Receipt and reversal state</text>
+  <text id="page-number" x="1160" y="664" width="40" height="20" font="caption" size="12" color="muted" align="right">10</text>
+</slide>

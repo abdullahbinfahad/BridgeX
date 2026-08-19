@@ -1,0 +1,23 @@
+<slide id="two_sided_workflow">
+  <background color="paper"/>
+  <shape id="top-hairline" type="line" x="80" y="72" width="1120" height="0" stroke="brand" stroke-width="2"/>
+  <text id="slide-number" x="80" y="111" width="50" height="24" font="caption" size="14" color="brand">03</text>
+  <text id="slide-title" x="80" y="150" width="800" height="60" font="heading" size="43" color="ink">Two-sided marketplace, <span color="brand">one clear workflow.</span></text>
+  <shape id="sender-line" type="elbow" x="322" y="346" width="318" height="137" stroke="hairline" stroke-width="3" arrow-end="arrow"/>
+  <shape id="traveler-line" type="elbow" x="958" y="346" width="-318" height="137" stroke="hairline" stroke-width="3" arrow-end="arrow"/>
+  <shape id="match-line" type="line" x="640" y="540" width="0" height="76" stroke="hairline" stroke-width="3" arrow-end="arrow"/>
+  <shape id="sender-node" type="rect" x="145" y="276" width="250" height="140" corner-radius="20" fill="surface"/>
+  <icon id="sender-icon" name="package" x="180" y="307" width="38" height="38" color="ink"/>
+  <text id="sender-title" x="180" y="358" width="180" height="24" font="body" size="20" color="ink" align="center">I need to send</text>
+  <text id="sender-copy" x="166" y="388" width="208" height="25" font="caption" size="14" color="muted" align="center">Post route, item, timing, budget.</text>
+  <shape id="traveler-node" type="rect" x="885" y="276" width="250" height="140" corner-radius="20" fill="surface"/>
+  <icon id="traveler-icon" name="plane" x="920" y="307" width="38" height="38" color="ink"/>
+  <text id="traveler-title" x="920" y="358" width="180" height="24" font="body" size="20" color="ink" align="center">I have carry space</text>
+  <text id="traveler-copy" x="906" y="388" width="208" height="25" font="caption" size="14" color="muted" align="center">Post capacity, route, dates, price.</text>
+  <shape id="match-node" type="ellipse" x="535" y="442" width="210" height="126" fill="brand"/>
+  <icon id="match-icon" name="handshake" x="615" y="461" width="48" height="48" color="paper"/>
+  <text id="match-label" x="560" y="514" width="160" height="27" font="body" size="18" color="paper" align="center">Offer or interest</text>
+  <shape id="outcome-node" type="rect" x="490" y="612" width="300" height="54" corner-radius="14" fill="ink"/>
+  <text id="outcome-label" x="490" y="612" width="300" height="54" font="body" size="17" color="paper" align="center" anchor="middle">Protected deal and recorded completion</text>
+  <text id="page-number" x="1160" y="664" width="40" height="20" font="caption" size="12" color="muted" align="right">04</text>
+</slide>

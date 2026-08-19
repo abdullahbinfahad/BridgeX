@@ -1,0 +1,20 @@
+<slide id="matching_problem">
+  <background color="paper"/>
+  <shape id="top-hairline" type="line" x="80" y="72" width="1120" height="0" stroke="brand" stroke-width="2"/>
+  <text id="slide-number" x="80" y="111" width="50" height="24" font="caption" size="14" color="brand">01</text>
+  <text id="slide-title" x="80" y="150" width="520" height="120" font="heading" size="46" color="ink" line-height="1.05">Cross-border delivery is a <span color="brand">matching</span> problem.</text>
+  <text id="slide-body" x="84" y="310" width="475" height="210" font="body" size="21" color="muted" line-height="1.45"><p>Senders need route-specific help.</p><p>Travelers often have unused capacity.</p><p>BridgeX creates a controlled place to discover the fit.</p></text>
+  <shape id="route-connector-left" type="line" x="800" y="340" width="150" height="0" stroke="hairline" stroke-width="3" arrow-end="arrow"/>
+  <shape id="route-connector-right" type="line" x="1010" y="340" width="150" height="0" stroke="hairline" stroke-width="3" arrow-end="arrow"/>
+  <shape id="sender-node" type="ellipse" x="700" y="262" width="170" height="156" fill="surface" stroke="ink" stroke-width="1"/>
+  <icon id="sender-icon" name="package" x="760" y="286" width="48" height="48" color="ink"/>
+  <text id="sender-label" x="715" y="345" width="140" height="50" font="body" size="18" color="ink" align="center">Sender need</text>
+  <shape id="match-node" type="ellipse" x="930" y="252" width="130" height="176" fill="brand"/>
+  <icon id="match-icon" name="handshake" x="972" y="283" width="46" height="46" color="paper"/>
+  <text id="match-label" x="943" y="350" width="104" height="45" font="body" size="16" color="paper" align="center">Protected match</text>
+  <shape id="traveler-node" type="ellipse" x="1160" y="262" width="170" height="156" fill="surface" stroke="ink" stroke-width="1"/>
+  <icon id="traveler-icon" name="plane" x="1220" y="286" width="48" height="48" color="ink"/>
+  <text id="traveler-label" x="1175" y="345" width="140" height="50" font="body" size="18" color="ink" align="center">Traveler capacity</text>
+  <text id="diagram-caption" x="704" y="484" width="470" height="42" font="caption" size="15" color="muted" align="center">Discovery is public; execution becomes protected only when a fit is selected.</text>
+  <text id="page-number" x="1160" y="664" width="40" height="20" font="caption" size="12" color="muted" align="right">02</text>
+</slide>

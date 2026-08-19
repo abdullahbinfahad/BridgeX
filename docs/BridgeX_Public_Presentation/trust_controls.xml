@@ -1,0 +1,23 @@
+<slide id="trust_controls">
+  <background color="paper"/>
+  <shape id="top-hairline" type="line" x="80" y="72" width="1120" height="0" stroke="brand" stroke-width="2"/>
+  <text id="slide-number" x="80" y="111" width="50" height="24" font="caption" size="14" color="brand">04</text>
+  <text id="slide-title" x="80" y="150" width="780" height="60" font="heading" size="43" color="ink">Trust is built through <span color="brand">visible controls.</span></text>
+  <text id="slide-subtitle" x="82" y="229" width="780" height="46" font="body" size="20" color="muted">Trust signals do not remove risk. They make accountability, review, and safe escalation visible.</text>
+  <shape id="separator-one" type="line" x="340" y="325" width="0" height="238" stroke="hairline" stroke-width="1"/>
+  <shape id="separator-two" type="line" x="620" y="325" width="0" height="238" stroke="hairline" stroke-width="1"/>
+  <shape id="separator-three" type="line" x="900" y="325" width="0" height="238" stroke="hairline" stroke-width="1"/>
+  <icon id="verify-icon" name="shield-check" x="178" y="335" width="56" height="56" color="brand"/>
+  <text id="verify-title" x="108" y="416" width="195" height="28" font="body" size="20" color="ink" align="center">Verification</text>
+  <text id="verify-copy" x="105" y="456" width="200" height="62" font="caption" size="15" color="muted" align="center">Identity review produces a clear platform trust signal.</text>
+  <icon id="review-icon" name="star" x="458" y="335" width="56" height="56" color="ink"/>
+  <text id="review-title" x="388" y="416" width="195" height="28" font="body" size="20" color="ink" align="center">Real reviews</text>
+  <text id="review-copy" x="385" y="456" width="200" height="62" font="caption" size="15" color="muted" align="center">Ratings follow completed protected orders, not claims.</text>
+  <icon id="report-icon" name="file-text" x="738" y="335" width="56" height="56" color="ink"/>
+  <text id="report-title" x="668" y="416" width="195" height="28" font="body" size="20" color="ink" align="center">Reports</text>
+  <text id="report-copy" x="665" y="456" width="200" height="62" font="caption" size="15" color="muted" align="center">Members can create a structured safety escalation.</text>
+  <icon id="admin-icon" name="users" x="1018" y="335" width="56" height="56" color="ink"/>
+  <text id="admin-title" x="948" y="416" width="195" height="28" font="body" size="20" color="ink" align="center">Admin review</text>
+  <text id="admin-copy" x="945" y="456" width="200" height="62" font="caption" size="15" color="muted" align="center">Authorized teams review evidence, decisions, and queues.</text>
+  <text id="page-number" x="1160" y="664" width="40" height="20" font="caption" size="12" color="muted" align="right">05</text>
+</slide>

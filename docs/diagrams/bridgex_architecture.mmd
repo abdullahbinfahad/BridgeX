@@ -1,0 +1,17 @@
+flowchart LR
+  G[Guest browser] --> P[Public marketplace]
+  M[Authenticated member] --> P
+  P --> A[Supabase Auth]
+  M --> W[React member workspace]
+  W --> DB[(Supabase Postgres and RLS)]
+  W --> ST[Private and public Storage buckets]
+  W --> RT[Realtime channels]
+  AD[Admin and Super Admin] --> C[Control panel]
+  C --> DB
+  C --> ST
+  DB --> N[Notifications]
+  N --> W
+  DB --> O[Orders, matches, reviews]
+  DB --> PAY[Payment proofs and payout records]
+  PAY --> C
+  O --> RT

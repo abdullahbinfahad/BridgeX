@@ -1,0 +1,22 @@
+<slide id="payment_proof">
+  <background color="paper"/>
+  <shape id="top-hairline" type="line" x="80" y="72" width="1120" height="0" stroke="brand" stroke-width="2"/>
+  <text id="slide-number" x="80" y="111" width="50" height="24" font="caption" size="14" color="brand">05</text>
+  <text id="slide-title" x="80" y="150" width="540" height="125" font="heading" size="43" color="ink" line-height="1.07">Payment proof protects the <span color="brand">match opening.</span></text>
+  <text id="slide-copy" x="84" y="314" width="450" height="148" font="body" size="21" color="muted" line-height="1.45">A selected response creates a protected payment request. The sender submits evidence; an authorized administrator reviews it before the private deal opens.</text>
+  <text id="slide-boundary" x="84" y="512" width="445" height="54" font="caption" size="15" color="ink" line-height="1.3">This is payment-proof review. It is not a claim of banking, customs, or legal clearance.</text>
+  <shape id="timeline" type="line" x="772" y="275" width="0" height="295" stroke="hairline" stroke-width="3"/>
+  <shape id="phase-one" type="ellipse" x="742" y="248" width="60" height="60" fill="surface"/>
+  <icon id="phase-one-icon" name="circle-check" x="757" y="263" width="30" height="30" color="ink"/>
+  <text id="phase-one-text" x="830" y="253" width="300" height="50" font="body" size="19" color="ink"><p>Response selected</p><p font="caption" size="14" color="muted">Protected request created</p></text>
+  <shape id="phase-two" type="ellipse" x="742" y="342" width="60" height="60" fill="surface"/>
+  <icon id="phase-two-icon" name="file-text" x="757" y="357" width="30" height="30" color="ink"/>
+  <text id="phase-two-text" x="830" y="347" width="300" height="50" font="body" size="19" color="ink"><p>Proof submitted</p><p font="caption" size="14" color="muted">Status: payment verifying</p></text>
+  <shape id="phase-three" type="ellipse" x="742" y="436" width="60" height="60" fill="surface"/>
+  <icon id="phase-three-icon" name="search" x="757" y="451" width="30" height="30" color="ink"/>
+  <text id="phase-three-text" x="830" y="441" width="300" height="50" font="body" size="19" color="ink"><p>Admin review</p><p font="caption" size="14" color="muted">Evidence and transaction context checked</p></text>
+  <shape id="phase-four" type="ellipse" x="742" y="530" width="60" height="60" fill="brand"/>
+  <icon id="phase-four-icon" name="lock" x="757" y="545" width="30" height="30" color="paper"/>
+  <text id="phase-four-text" x="830" y="535" width="300" height="50" font="body" size="19" color="ink"><p>Protected match opens</p><p font="caption" size="14" color="muted">Deal details and chat become available</p></text>
+  <text id="page-number" x="1160" y="664" width="40" height="20" font="caption" size="12" color="muted" align="right">06</text>
+</slide>

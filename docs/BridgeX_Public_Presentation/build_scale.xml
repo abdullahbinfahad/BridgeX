@@ -1,0 +1,22 @@
+<slide id="build_scale">
+  <background color="paper"/>
+  <shape id="top-hairline" type="line" x="80" y="72" width="1120" height="0" stroke="brand" stroke-width="2"/>
+  <text id="slide-number" x="80" y="111" width="50" height="24" font="caption" size="14" color="brand">10</text>
+  <text id="slide-title" x="80" y="150" width="1030" height="60" font="heading" size="43" color="ink">Built now. <span color="brand">Strengthen before scale.</span></text>
+  <text id="slide-subtitle" x="82" y="230" width="900" height="48" font="body" size="20" color="muted">BridgeX already has the critical workflow building blocks. Responsible growth requires making its operating controls measurable and repeatable.</text>
+  <shape id="roadmap-line" type="line" x="250" y="400" width="780" height="0" stroke="hairline" stroke-width="3"/>
+  <shape id="node-one" type="ellipse" x="165" y="340" width="170" height="120" fill="brand"/>
+  <icon id="node-one-icon" name="circle-check" x="226" y="360" width="48" height="48" color="paper"/>
+  <text id="node-one-title" x="180" y="414" width="140" height="24" font="body" size="18" color="paper" align="center">Working foundation</text>
+  <text id="node-one-copy" x="135" y="492" width="230" height="70" font="caption" size="15" color="muted" align="center">Marketplace, posts, responses, protected deals, review, admin control, payments and payouts.</text>
+  <shape id="node-two" type="ellipse" x="545" y="340" width="170" height="120" fill="surface" stroke="ink" stroke-width="1"/>
+  <icon id="node-two-icon" name="clipboard-list" x="606" y="360" width="48" height="48" color="ink"/>
+  <text id="node-two-title" x="560" y="414" width="140" height="24" font="body" size="18" color="ink" align="center">Measure operations</text>
+  <text id="node-two-copy" x="515" y="492" width="230" height="70" font="caption" size="15" color="muted" align="center">Fee ledger, queue ownership, audit trails, SLA timing, notification delivery and abuse signals.</text>
+  <shape id="node-three" type="ellipse" x="925" y="340" width="170" height="120" fill="ink"/>
+  <icon id="node-three-icon" name="shield-check" x="986" y="360" width="48" height="48" color="paper"/>
+  <text id="node-three-title" x="940" y="414" width="140" height="24" font="body" size="18" color="paper" align="center">Scale responsibly</text>
+  <text id="node-three-copy" x="895" y="492" width="230" height="70" font="caption" size="15" color="muted" align="center">Risk-based verification, mobile release gates, compliance matrix, and third-party provider diligence.</text>
+  <text id="evidence-line" x="80" y="610" width="850" height="22" font="caption" size="14" color="ink">Current audit evidence: 42 database migrations, 9 test files, 55 passing automated checks.</text>
+  <text id="page-number" x="1160" y="664" width="40" height="20" font="caption" size="12" color="muted" align="right">11</text>
+</slide>

@@ -1,0 +1,19 @@
+<slide id="privacy">
+  <background color="paper"/>
+  <shape id="top-hairline" type="line" x="80" y="72" width="1120" height="0" stroke="brand" stroke-width="2"/>
+  <text id="slide-number" x="80" y="111" width="50" height="24" font="caption" size="14" color="brand">07</text>
+  <text id="slide-title" x="80" y="150" width="500" height="115" font="heading" size="43" color="ink" line-height="1.06">Privacy is part of <span color="brand">trust.</span></text>
+  <text id="slide-copy" x="84" y="307" width="425" height="154" font="body" size="21" color="muted" line-height="1.45">Marketplace cards should help people decide whether a route fits. Private contact, evidence, and payment details should appear only when the workflow requires them.</text>
+  <text id="slide-detail" x="84" y="510" width="410" height="55" font="caption" size="15" color="ink">Verification is a platform signal, not permission to expose someone’s private life.</text>
+  <shape id="public-area" type="rect" x="640" y="290" width="510" height="110" corner-radius="18" fill="surface"/>
+  <icon id="public-icon" name="globe" x="680" y="323" width="42" height="42" color="ink"/>
+  <text id="public-title" x="748" y="309" width="330" height="26" font="body" size="20" color="ink">Public marketplace</text>
+  <text id="public-copy" x="748" y="344" width="350" height="45" font="caption" size="15" color="muted">Route, item context, capacity, rating, and platform verification signal.</text>
+  <shape id="protected-area" type="rect" x="640" y="448" width="510" height="110" corner-radius="18" fill="#2d8d6218" stroke="brand" stroke-width="1"/>
+  <icon id="protected-icon" name="lock" x="680" y="481" width="42" height="42" color="brand"/>
+  <text id="protected-title" x="748" y="467" width="330" height="26" font="body" size="20" color="ink">Protected match</text>
+  <text id="protected-copy" x="748" y="502" width="350" height="45" font="caption" size="15" color="muted">Exact address, phone, payment proof, payout instructions, and direct deal chat.</text>
+  <shape id="privacy-divider" type="line" x="895" y="400" width="0" height="48" stroke="brand" stroke-width="2"/>
+  <icon id="privacy-lock" name="shield-check" x="871" y="400" width="48" height="48" color="brand"/>
+  <text id="page-number" x="1160" y="664" width="40" height="20" font="caption" size="12" color="muted" align="right">08</text>
+</slide>

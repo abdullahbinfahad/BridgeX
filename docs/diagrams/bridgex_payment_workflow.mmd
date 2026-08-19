@@ -1,0 +1,13 @@
+flowchart TD
+  R[Post owner selects eligible offer or interest] --> Q[Create protected payment request]
+  Q --> S[Sender views Payment history]
+  S --> U[Send transfer and upload proof]
+  U --> V[Status: payment verifying]
+  V --> A[Authorized administrator reviews proof]
+  A -->|Reject| X[Return to payment request with reason]
+  A -->|Verify| M[Protected match opens]
+  M --> D[Traveler updates delivery progress]
+  D --> L[Sender confirms receipt and release]
+  L --> P[Traveler payout becomes due]
+  P --> Z[Administrator records payout sent]
+  Z --> F[Traveler confirms payout received]

@@ -1,0 +1,13 @@
+<design>
+  <size width="1280" height="720"></size>
+  <color name="brand" value="#2d8d62"/>
+  <color name="ink" value="#172126"/>
+  <color name="paper" value="#f7f5ef"/>
+  <color name="surface" value="#edeae1"/>
+  <color name="muted" value="#5c6b73"/>
+  <color name="hairline" value="#dcd8c9"/>
+  <font name="display" family="Fraunces" size="52"/>
+  <font name="heading" family="Fraunces" size="32"/>
+  <font name="body" family="DM Sans" size="18"/>
+  <font name="caption" family="DM Sans" size="14"/>
+</design>

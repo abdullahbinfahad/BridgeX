@@ -1,0 +1,13 @@
+<slide id="closing">
+  <background color="paper"/>
+  <shape id="top-hairline" type="line" x="80" y="72" width="1120" height="0" stroke="brand" stroke-width="2"/>
+  <text id="closing-eyebrow" x="80" y="128" width="1120" height="24" font="body" size="14" color="brand" align="center">BRIDGEX</text>
+  <text id="closing-title" x="150" y="222" width="980" height="130" font="display" size="56" color="ink" align="center" line-height="1.08"><p>Build the <span color="brand">trusted route,</span></p><p>not just the marketplace.</p></text>
+  <text id="closing-copy" x="245" y="424" width="790" height="63" font="body" size="21" color="muted" align="center" line-height="1.4">Use verified members. Describe goods accurately. Follow every applicable law and carrier rule.</text>
+  <shape id="route-left" type="curve" x="480" y="590" width="160" height="-30" stroke="ink" stroke-width="2"/>
+  <shape id="route-right" type="curve" x="640" y="560" width="160" height="30" stroke="brand" stroke-width="2"/>
+  <shape id="route-node-left" type="ellipse" x="468" y="578" width="24" height="24" fill="ink"/>
+  <shape id="route-node-mid" type="ellipse" x="628" y="548" width="24" height="24" fill="brand"/>
+  <shape id="route-node-right" type="ellipse" x="788" y="578" width="24" height="24" fill="brand"/>
+  <text id="page-number" x="1160" y="664" width="40" height="20" font="caption" size="12" color="muted" align="right">12</text>
+</slide>

@@ -1,0 +1,10 @@
+{
+  "entry": "main.typ",
+  "metadata": {
+    "author": "Manus AI",
+    "subtitle": "Illustrated engineering, operations, and security guide",
+    "title": "BridgeX Developer Manual — Core Edition"
+  },
+  "mode": "report",
+  "theme": "report-theme.typ"
+}

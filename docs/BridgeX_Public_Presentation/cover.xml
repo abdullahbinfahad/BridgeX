@@ -1,0 +1,15 @@
+<slide id="cover">
+  <background color="paper"/>
+  <shape id="top-hairline" type="line" x="80" y="72" width="1120" height="0" stroke="brand" stroke-width="2"/>
+  <text id="cover-eyebrow" x="82" y="126" width="420" height="28" font="body" size="14" color="brand" wrap="false">GLOBAL GOODS-CARRYING MARKETPLACE</text>
+  <text id="cover-title" x="80" y="206" width="820" height="185" font="display" size="70" color="ink" line-height="1.02"><p>BridgeX</p><p color="brand">Carry more trust.</p></text>
+  <text id="cover-subtitle" x="84" y="436" width="610" height="70" font="body" size="23" color="muted" line-height="1.35">A protected marketplace connecting senders with verified travelers and available carry capacity.</text>
+  <text id="cover-context" x="82" y="610" width="430" height="26" font="body" size="14" color="ink" wrap="false">PUBLIC PRESENTATION · AUGUST 2026</text>
+  <shape id="route-line-one" type="curve" x="845" y="532" width="300" height="-72" stroke="ink" stroke-width="2"/>
+  <shape id="route-line-two" type="curve" x="845" y="532" width="300" height="66" stroke="brand" stroke-width="2"/>
+  <shape id="route-node-origin" type="ellipse" x="832" y="519" width="26" height="26" fill="ink"/>
+  <shape id="route-node-top" type="ellipse" x="1132" y="447" width="26" height="26" fill="brand"/>
+  <shape id="route-node-bottom" type="ellipse" x="1132" y="585" width="26" height="26" fill="brand"/>
+  <icon id="route-plane" name="plane" x="972" y="503" width="42" height="42" color="brand"/>
+  <text id="cover-page" x="1160" y="664" width="40" height="20" font="caption" size="12" color="muted" align="right">01</text>
+</slide>

@@ -1,0 +1,22 @@
+<slide id="protected_execution">
+  <background color="paper"/>
+  <shape id="top-hairline" type="line" x="80" y="72" width="1120" height="0" stroke="brand" stroke-width="2"/>
+  <text id="slide-number" x="80" y="111" width="50" height="24" font="caption" size="14" color="brand">02</text>
+  <text id="slide-title" x="80" y="150" width="760" height="60" font="heading" size="43" color="ink">Public discovery. <span color="brand">Protected execution.</span></text>
+  <text id="slide-subtitle" x="82" y="231" width="790" height="50" font="body" size="20" color="muted">BridgeX reveals enough to make a good match, then limits sensitive details to the people and roles that need them.</text>
+  <shape id="step-one-circle" type="ellipse" x="145" y="366" width="100" height="100" fill="surface"/>
+  <icon id="step-one-icon" name="search" x="171" y="392" width="48" height="48" color="ink"/>
+  <text id="step-one-title" x="95" y="500" width="200" height="28" font="body" size="20" color="ink" align="center">1. Public discovery</text>
+  <text id="step-one-copy" x="90" y="538" width="210" height="55" font="caption" size="15" color="muted" align="center">Routes, item context, capacity, verification signal, and ratings.</text>
+  <shape id="arrow-one" type="line" x="320" y="415" width="160" height="0" stroke="hairline" stroke-width="3" arrow-end="arrow"/>
+  <shape id="step-two-circle" type="ellipse" x="530" y="366" width="100" height="100" fill="surface"/>
+  <icon id="step-two-icon" name="clipboard-list" x="556" y="392" width="48" height="48" color="ink"/>
+  <text id="step-two-title" x="475" y="500" width="210" height="28" font="body" size="20" color="ink" align="center">2. Controlled response</text>
+  <text id="step-two-copy" x="470" y="538" width="220" height="55" font="caption" size="15" color="muted" align="center">Offers and interests are reviewed in the owner’s protected workspace.</text>
+  <shape id="arrow-two" type="line" x="708" y="415" width="160" height="0" stroke="hairline" stroke-width="3" arrow-end="arrow"/>
+  <shape id="step-three-circle" type="ellipse" x="920" y="366" width="100" height="100" fill="brand"/>
+  <icon id="step-three-icon" name="lock" x="946" y="392" width="48" height="48" color="paper"/>
+  <text id="step-three-title" x="858" y="500" width="225" height="28" font="body" size="20" color="ink" align="center">3. Protected match</text>
+  <text id="step-three-copy" x="850" y="538" width="240" height="55" font="caption" size="15" color="muted" align="center">Private contact details and deal chat open only after verified acceptance.</text>
+  <text id="page-number" x="1160" y="664" width="40" height="20" font="caption" size="12" color="muted" align="right">03</text>
+</slide>

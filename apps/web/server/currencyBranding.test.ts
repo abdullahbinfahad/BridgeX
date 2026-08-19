@@ -134,7 +134,7 @@ describe("BridgeX currency, cargo, support, and brand release safeguards", () =>
 
   it("keeps administrator-control notifications out of the member Workspace count", () => {
     const layout = read("apps/web/client/src/components/bridgex/PublicLayout.tsx");
-    expect(layout).toContain('type UpdateDestination = "profile" | "workspace" | "messages" | "admin"');
+    expect(layout).toContain('type UpdateDestination = "profile" | "workspace" | "messages" | "payments" | "admin"');
     expect(layout).toContain('return "admin"');
     expect(layout).toContain('go(user.role === "super_admin" ? "/admin/super" : "/admin", "admin")');
     expect(layout).toContain("updateBadge(updates.admin)");

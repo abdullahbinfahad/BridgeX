@@ -1,0 +1,16 @@
+<slide id="china_global">
+  <background color="paper"/>
+  <shape id="top-hairline" type="line" x="80" y="72" width="1120" height="0" stroke="brand" stroke-width="2"/>
+  <text id="slide-number" x="80" y="111" width="50" height="24" font="caption" size="14" color="brand">08</text>
+  <text id="slide-title" x="80" y="150" width="920" height="60" font="heading" size="43" color="ink">China-first, <span color="brand">globally responsible.</span></text>
+  <text id="slide-subtitle" x="82" y="230" width="900" height="48" font="body" size="20" color="muted">BridgeX is designed for China-connected routes while keeping responsibility with the people who describe, carry, and receive goods.</text>
+  <shape id="china-column" type="rect" x="100" y="326" width="475" height="245" corner-radius="20" fill="surface"/>
+  <icon id="china-icon" name="map-pin" x="145" y="363" width="46" height="46" color="ink"/>
+  <text id="china-heading" x="220" y="363" width="270" height="27" font="body" size="22" color="ink">China-first route focus</text>
+  <text id="china-copy" x="145" y="425" width="370" height="106" font="body" size="17" color="muted" line-height="1.42"><p>China origin and destination routes.</p><p>Traveler capacity and item needs in one marketplace.</p><p>City-level routing information for better matching.</p></text>
+  <shape id="global-column" type="rect" x="705" y="326" width="475" height="245" corner-radius="20" fill="#2d8d6218" stroke="brand" stroke-width="1"/>
+  <icon id="global-icon" name="shield-check" x="750" y="363" width="46" height="46" color="brand"/>
+  <text id="global-heading" x="825" y="363" width="280" height="27" font="body" size="22" color="ink">Global responsibility</text>
+  <text id="global-copy" x="750" y="425" width="370" height="106" font="body" size="17" color="muted" line-height="1.42"><p>Accurate item descriptions and lawful behavior.</p><p>Compliance with customs, airline, carrier, and destination requirements.</p><p>No claim of customs approval or legal clearance.</p></text>
+  <text id="page-number" x="1160" y="664" width="40" height="20" font="caption" size="12" color="muted" align="right">09</text>
+</slide>

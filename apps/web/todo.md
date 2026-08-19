@@ -212,3 +212,7 @@
 - [x] Add direct Payment history links alongside the signed-in profile, Edit profile, Workspace, and Messages navigation shortcuts.
 - [x] Replace sensitive payment-processing copy with discreet acceptance-status wording.
 - [x] Repair five-star selection and written review submission for completed orders.
+- [x] Add a payment-specific notification shortcut and unread count beside the signed-in profile, Workspace, and Messages shortcuts.
+- [x] Add a discreet 5% platform service fee disclosure at appropriate payment and service-status touchpoints.
+- [x] Audit member, administrator, payment, messaging, storage, and review workflows; document weaknesses and improvement priorities.
+- [x] Produce public presentation content, a research/report package, and structured illustrated developer documentation for BridgeX.
