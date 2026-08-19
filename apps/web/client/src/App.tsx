@@ -60,12 +60,12 @@ function Router() {
 
 function GlobalInteractionFeedback() {
   useEffect(() => {
-    const onInteraction = (event: PointerEvent) => {
+    const onInteraction = (event: MouseEvent) => {
       const target = event.target as Element | null;
-      if (target?.closest("button,a,[role='button']")) playBridgeXFeedback("tap");
+      if (!event.defaultPrevented && target?.closest("button,a,[role='button']")) playBridgeXFeedback("tap");
     };
-    window.addEventListener("pointerdown", onInteraction, { passive: true });
-    return () => window.removeEventListener("pointerdown", onInteraction);
+    window.addEventListener("click", onInteraction, { passive: true });
+    return () => window.removeEventListener("click", onInteraction);
   }, []);
   return null;
 }

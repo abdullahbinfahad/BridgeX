@@ -120,6 +120,7 @@
   body {
     @apply bg-background text-foreground;
     font-family: "DM Sans", sans-serif;
+    background-image: radial-gradient(circle at 8% 6%, rgba(211, 246, 228, 0.72), transparent 30rem), radial-gradient(circle at 94% 12%, rgba(226, 163, 63, 0.13), transparent 27rem);
   }
   button:not(:disabled),
   [role="button"]:not([aria-disabled="true"]),
@@ -148,6 +149,24 @@
 
   .bridgex-trust-surface {
     box-shadow: 0 14px 32px rgba(23, 33, 38, 0.06), inset 0 1px 0 rgba(255, 255, 255, 0.8);
+  }
+
+  .bridgex-app-shell {
+    background-image: linear-gradient(180deg, rgba(247, 245, 239, 0.84), rgba(247, 245, 239, 0.97));
+  }
+
+  .bridgex-glass-panel {
+    background-color: rgba(255, 255, 255, 0.72);
+    box-shadow: 0 16px 36px rgba(23, 33, 38, 0.07), inset 0 1px 0 rgba(255, 255, 255, 0.78);
+    backdrop-filter: blur(16px) saturate(135%);
+    -webkit-backdrop-filter: blur(16px) saturate(135%);
+  }
+
+  .bridgex-glass-dark {
+    background-color: rgba(255, 255, 255, 0.07);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.11);
+    backdrop-filter: blur(12px) saturate(120%);
+    -webkit-backdrop-filter: blur(12px) saturate(120%);
   }
 }
 
@@ -192,6 +211,10 @@
 
 @media (prefers-reduced-motion: reduce) {
   .bridgex-accent-text { animation: none; }
+}
+
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .bridgex-glass-panel { background-color: rgba(255, 255, 255, 0.94); }
 }
 
 @keyframes bridgex-feedback-cue {

@@ -66,4 +66,25 @@ describe("BridgeX currency, cargo, support, and brand release safeguards", () =>
     expect(styles).toContain(".bridgex-feedback-cue--success");
     expect(styles).toContain("prefers-reduced-motion: reduce");
   });
+
+  it("uses the completed Android v1.0.5 build link alongside the Windows download entry", () => {
+    const layout = read("apps/web/client/src/components/bridgex/PublicLayout.tsx");
+    expect(layout).toContain("builds/1ecca5d1-5f3e-4ac5-8dc5-b22781d0ea5c");
+    expect(layout).toContain("BridgeX-Windows-x64.zip");
+  });
+
+  it("labels a signed-in member’s private support reply with that member’s own profile name", () => {
+    const deals = read("apps/web/client/src/pages/Deals.tsx");
+    expect(deals).toContain('const memberName = user?.name || user?.email?.split("@")[0] || "Member"');
+    expect(deals).toContain('{message.sender_id === user?.id ? memberName : "BridgeX Admin"}');
+  });
+
+  it("uses completed click events rather than pointer-down events for global tap feedback and applies glass treatments with a fallback", () => {
+    const app = read("apps/web/client/src/App.tsx");
+    const styles = read("apps/web/client/src/index.css");
+    expect(app).toContain('window.addEventListener("click", onInteraction, { passive: true })');
+    expect(app).not.toContain('window.addEventListener("pointerdown", onInteraction');
+    expect(styles).toContain(".bridgex-glass-panel");
+    expect(styles).toContain("@supports not ((backdrop-filter: blur(1px))");
+  });
 });

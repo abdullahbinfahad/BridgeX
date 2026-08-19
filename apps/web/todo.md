@@ -179,3 +179,7 @@
 - [x] Research a compliant third-party integration path for Chinese payment methods, including Alipay, WeChat Pay, and UnionPay, without enabling payments until merchant credentials and provider approval are available.
 - [x] Prevent a member from seeing accepted-deal messages or Inbox conversations belonging to another same-name account, while retaining authorized administrator safety review access.
 - [x] Reduce the Android wrapper’s white top spacer to approximately 0.5 cm and use the BridgeX application background color.
+- [x] Update every public Android APK download entry to the completed BridgeX v1.0.5 build and retain a working Windows desktop download entry.
+- [x] Attribute member messages in the BridgeX Admin support conversation to the actual member profile name rather than the BridgeX Admin label.
+- [x] Prevent ordinary page scrolling from triggering the green tap/click feedback sound while preserving deliberate action feedback.
+- [x] Add restrained translucent and blurred surface treatments to key web and Android-wrapper visual areas without compromising performance, contrast, or reduced-motion support.
