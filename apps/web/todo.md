@@ -144,3 +144,5 @@
 - [x] Show complete category, quantity, and weight detail for carry-space interests in owner response views.
 - [x] Add Select all plus mobile, laptop, camera, and available-quantity controls to traveler accepted-category selection.
 - [x] Ensure original signed-in contact-enquiry submitters receive BridgeX Admin replies in Messages and notifications.
+- [x] Show complete carry-listing transport, date, accepted-category, and item-quantity details on public listing post pages.
+- [x] Add Mobile phone, Laptop, and Camera quantities plus a required delivery date to carry-interest submissions.
