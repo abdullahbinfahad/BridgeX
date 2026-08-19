@@ -5,6 +5,7 @@ ROOT = Path(__file__).resolve().parents[1]
 SOURCE = Path("/home/ubuntu/webdev-static-assets/bridgex-logo.png")
 WEB_PUBLIC = ROOT / "apps/web/client/public"
 MOBILE_ASSETS = ROOT / "apps/mobile/assets"
+ANDROID_RES = ROOT / "apps/mobile/android/app/src/main/res"
 
 IVORY = (247, 245, 239, 255)
 
@@ -25,6 +26,16 @@ def centered_logo(canvas_size: int, logo_size: int) -> Image.Image:
     offset = (canvas_size - logo_size) // 2
     canvas.alpha_composite(logo, (offset, offset))
     return canvas
+
+
+def legacy_icon(size: int) -> Image.Image:
+    canvas = Image.new("RGBA", (size, size), IVORY)
+    canvas.alpha_composite(centered_logo(size, round(size * 0.84)))
+    return canvas
+
+
+def adaptive_foreground(size: int) -> Image.Image:
+    return centered_logo(size, round(size * 0.67))
 
 
 WEB_PUBLIC.mkdir(parents=True, exist_ok=True)
@@ -51,3 +62,27 @@ monochrome.save(MOBILE_ASSETS / "android-icon-monochrome.png", "PNG", optimize=T
 
 # Keep the mobile web favicon aligned with the new supplied mark.
 scaled_logo(192).save(MOBILE_ASSETS / "favicon.png", "PNG", optimize=True)
+
+# The repository contains a committed Android directory, so EAS uses these native
+# resources rather than regenerating them from app.json. Keep every density in sync.
+DENSITIES = {
+    "mdpi": (48, 108),
+    "hdpi": (72, 162),
+    "xhdpi": (96, 216),
+    "xxhdpi": (144, 324),
+    "xxxhdpi": (192, 432),
+}
+
+for density, (launcher_size, adaptive_size) in DENSITIES.items():
+    target = ANDROID_RES / f"mipmap-{density}"
+    target.mkdir(parents=True, exist_ok=True)
+    launcher = legacy_icon(launcher_size).convert("RGB")
+    launcher.save(target / "ic_launcher.webp", "WEBP", quality=88, method=6)
+    launcher.save(target / "ic_launcher_round.webp", "WEBP", quality=88, method=6)
+    foreground = adaptive_foreground(adaptive_size)
+    foreground.save(target / "ic_launcher_foreground.webp", "WEBP", quality=88, method=6)
+    Image.new("RGB", (adaptive_size, adaptive_size), IVORY[:3]).save(target / "ic_launcher_background.webp", "WEBP", quality=88, method=6)
+    mask = foreground.getchannel("A")
+    monochrome = Image.new("RGBA", (adaptive_size, adaptive_size), (255, 255, 255, 0))
+    monochrome.putalpha(mask)
+    monochrome.save(target / "ic_launcher_monochrome.webp", "WEBP", quality=88, method=6)

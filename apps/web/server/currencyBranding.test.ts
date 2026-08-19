@@ -55,6 +55,8 @@ describe("BridgeX currency, cargo, support, and brand release safeguards", () =>
     expect(mobileApp).toContain("const HALF_CENTIMETER_DP = 160 / 2.54 / 2");
     expect(mobileApp).toContain("backgroundColor: \"#f7f5ef\", height: HALF_CENTIMETER_DP");
     expect(mobileApp).toContain("?app=android&build=5");
+    expect(read("apps/mobile/android/app/build.gradle")).toContain("versionCode 5");
+    expect(read("apps/mobile/android/app/build.gradle")).toContain('versionName "1.0.5"');
   });
 
   it("pairs sound categories with lightweight visual feedback cues that respect motion preferences", () => {
