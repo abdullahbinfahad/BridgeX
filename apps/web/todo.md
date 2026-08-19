@@ -202,3 +202,4 @@
 - [x] Prevent post-success handling from calling a null form reset method after the post has already been saved.
 - [x] Fix offer and carry-interest payment-start state transitions so they satisfy the live response-table check constraints and create payment requests successfully.
 - [x] Allow the send-request payment-pending status used by the verified Accept & pay flow without changing unrelated request lifecycle rules.
+- [x] Remove the CNY-only restriction from manual Alipay and WeChat payment requests while preserving payment proof review.
