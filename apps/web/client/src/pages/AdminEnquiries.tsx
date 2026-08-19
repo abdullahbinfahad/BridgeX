@@ -19,13 +19,9 @@ export default function AdminEnquiries() {
   const reply = async (row: Enquiry) => {
     const body = window.prompt("Reply as BridgeX Admin:", row.reply_body ?? "");
     if (!body?.trim()) return;
-    const { error } = await supabase.from("contact_enquiries").update({ reply_body: body.trim(), replied_at: new Date().toISOString(), status: "resolved", resolved_at: new Date().toISOString() }).eq("id", row.id);
+    const { error } = await supabase.rpc("send_bridgex_contact_reply", { p_enquiry_id: row.id, p_body: body.trim() });
     if (error) return setNotice(error.message);
-    if (row.user_id) {
-      const { error: notificationError } = await supabase.from("notifications").insert({ user_id: row.user_id, type: "contact_reply", title: "BridgeX Admin", body: body.trim(), link: `/dashboard/deals?support=${encodeURIComponent(row.id)}`, related_id: row.id });
-      if (notificationError) return setNotice(`The reply was saved, but notification delivery failed: ${notificationError.message}`);
-      setNotice("Reply sent as BridgeX Admin. The signed-in enquiry submitter can open it from Messages.");
-    } else setNotice("Reply saved. This enquiry was sent as a guest, so it has no signed-in BridgeX inbox recipient.");
+    setNotice(row.user_id ? "Reply sent as BridgeX Admin. The signed-in enquiry submitter can open it from Messages." : "Reply saved. This enquiry was sent as a guest, so it has no signed-in BridgeX inbox recipient.");
     await load();
   };
 

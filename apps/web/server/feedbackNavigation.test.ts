@@ -13,7 +13,7 @@ describe("BridgeX feedback and update navigation", () => {
   });
 
   it("alerts members when they enter an unread profile, workspace, or message destination", () => {
-    expect(publicLayout).toContain("unread ${destination === \"profile\" ? \"profile\"");
+    expect(publicLayout).toContain("new ${destination === \"profile\" ? \"profile\"");
     expect(publicLayout).toContain('go("/dashboard", "workspace")');
     expect(publicLayout).toContain('go("/dashboard/settings", "profile")');
   });

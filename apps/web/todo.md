@@ -150,3 +150,10 @@
 - [x] Add reliable entry notifications, optional feedback sound cues, and restrained trusted marketplace motion across the web and Android WebView experience.
 - [x] Make Workspace request and carry-listing response counts open their exact filtered offer or interest views.
 - [x] Add live unread-update badges to each relevant administrator control-panel section, including reports.
+- [x] Show complete participant identity and available offer or interest details in every incoming response card.
+- [x] Allow a member to update or replace their interest in the same carry listing without duplicate-key errors.
+- [x] Mark notifications as read when opened and show only new unread counts, including zero, across member and administrator navigation.
+- [x] Deliver administrator enquiry replies without notification RLS failures.
+- [x] Improve BridgeX loading resilience and perceived performance after browser or Android refreshes.
+- [ ] Make the Android wrapper open the public BridgeX homepage reliably without a stuck loading overlay.
+- [x] Prepare and link a downloadable Windows desktop BridgeX application alongside the Android APK.
