@@ -188,3 +188,6 @@
 - [x] Enable live updates for administrator and member support conversations so new messages arrive without a manual page refresh.
 - [x] Replace generic profile/workspace unread notices with clear, item-specific messages that explain the underlying update.
 - [x] Strengthen key transparent blur surfaces while preserving legibility, fallback rendering, and motion accessibility.
+- [x] Consolidate all BridgeX Admin notification entries into one Inbox contact card with its newest message preview and a single unread indicator.
+- [x] Make protected user-to-user deal messages update live in both participants’ chat views without a manual refresh.
+- [x] Route administrator-control notifications to a dedicated admin count and prevent them from increasing the member Workspace notification count.

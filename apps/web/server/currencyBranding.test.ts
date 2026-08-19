@@ -34,7 +34,7 @@ describe("BridgeX currency, cargo, support, and brand release safeguards", () =>
     const deals = read("apps/web/client/src/pages/Deals.tsx");
     expect(deals).toContain("const selectedSupportEnquiryId = selectedSupport?.related_id || selectedSupport?.id || \"\"");
     expect(deals).toContain("p_enquiry_id: selectedSupportEnquiryId");
-    expect(deals).toContain("support=${encodeURIComponent(update.related_id || update.id)}");
+    expect(deals).toContain("support=${encodeURIComponent(latestSupportUpdate.related_id || latestSupportUpdate.id)}");
   });
 
   it("keeps the member Inbox limited to the signed-in deal participant even when that member is an administrator", () => {
@@ -114,5 +114,29 @@ describe("BridgeX currency, cargo, support, and brand release safeguards", () =>
     expect(layout).toContain("const updateDetailText");
     expect(layout).toContain("description: updateDetailText(records)");
     expect(layout).toContain("description: description ||");
+  });
+
+  it("consolidates BridgeX Admin Inbox updates into one latest-message card with one unread count", () => {
+    const deals = read("apps/web/client/src/pages/Deals.tsx");
+    expect(deals).toContain("const latestSupportUpdate = supportUpdates[0]");
+    expect(deals).toContain("const unreadSupportCount = supportUpdates.filter");
+    expect(deals).toContain("latestSupportUpdate.body");
+    expect(deals).toContain("{latestSupportUpdate && <section");
+  });
+
+  it("subscribes matched participants to live protected-deal messages and publishes the table to realtime", () => {
+    const deals = read("apps/web/client/src/pages/Deals.tsx");
+    const migration = read("supabase/migrations/202608191520_match_messages_realtime.sql");
+    expect(deals).toContain("protected-deal-${selected.id}");
+    expect(deals).toContain('table: "match_messages"');
+    expect(migration).toContain("ADD TABLE public.match_messages");
+  });
+
+  it("keeps administrator-control notifications out of the member Workspace count", () => {
+    const layout = read("apps/web/client/src/components/bridgex/PublicLayout.tsx");
+    expect(layout).toContain('type UpdateDestination = "profile" | "workspace" | "messages" | "admin"');
+    expect(layout).toContain('return "admin"');
+    expect(layout).toContain('go(user.role === "super_admin" ? "/admin/super" : "/admin", "admin")');
+    expect(layout).toContain("updateBadge(updates.admin)");
   });
 });
