@@ -112,7 +112,7 @@ describe("BridgeX currency, cargo, support, and brand release safeguards", () =>
     const layout = read("apps/web/client/src/components/bridgex/PublicLayout.tsx");
     expect(layout).toContain("type NotificationRecord = { id: string; type: string; link: string | null; title: string; body: string }");
     expect(layout).toContain("const updateDetailText");
-    expect(layout).toContain("description: updateDetailText(records)");
+    expect(layout).toContain("whitespace-pre-line");
     expect(layout).toContain("description: description ||");
   });
 
@@ -186,6 +186,22 @@ describe("BridgeX currency, cargo, support, and brand release safeguards", () =>
     expect(migration).toContain("v_payment.owner_id");
     expect(migration).toContain("review sender product details");
     expect(migration).not.toContain("currency <> 'CNY'");
+  });
+
+  it("uses an in-app release dialog, line-separated web updates, Payment history navigation, and interactive completed-order reviews", () => {
+    const workspace = read("apps/web/client/src/pages/Workspace.tsx");
+    const layout = read("apps/web/client/src/components/bridgex/PublicLayout.tsx");
+    const reviews = read("apps/web/client/src/pages/ReviewsPage.tsx");
+    expect(workspace).toContain("<AlertDialog open={open}");
+    expect(workspace).toContain("Confirm product received");
+    expect(workspace).toContain("Protected acceptance in progress");
+    expect(layout).toContain("updateDetailText");
+    expect(layout).toContain("whitespace-pre-line");
+    expect(layout).toContain('"/dashboard/payments"');
+    expect(layout).toContain("member-web-updates-");
+    expect(reviews).toContain('fulfillment_status.eq.completed');
+    expect(reviews).toContain("of 5 stars selected");
+    expect(reviews).toContain("Publishing review…");
   });
 
   it("uses signed private Supabase URLs for payment instructions instead of exposing the QR images through the public Render app", () => {

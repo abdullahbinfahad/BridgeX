@@ -4,7 +4,7 @@ import { Brand } from "@/components/bridgex/Brand";
 import { VerifiedBadge } from "@/components/bridgex/VerifiedBadge";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/lib/supabase";
-import { Crown, LogOut, Menu, MessageSquareText, Plane, Plus, Settings, ShieldCheck, UserRound } from "lucide-react";
+import { CircleDollarSign, Crown, LogOut, Menu, MessageSquareText, Plane, Plus, Settings, ShieldCheck, UserRound } from "lucide-react";
 import { playBridgeXFeedback } from "@/lib/feedback";
 import { toast } from "sonner";
 import { useEffect, useRef, useState } from "react";
@@ -32,10 +32,10 @@ const emptyUpdateDetails: Record<UpdateDestination, NotificationRecord[]> = { pr
 const updateDestination = (notification: NotificationRecord): UpdateDestination => {
   if (notification.link?.startsWith("/admin") || /support_member_reply|admin_/i.test(notification.type)) return "admin";
   if (notification.link?.startsWith("/dashboard/settings") || /verification|profile|account/i.test(notification.type)) return "profile";
-  if (notification.link?.startsWith("/dashboard/deals") || /match|message|contact_reply/i.test(notification.type)) return "messages";
+  if (notification.link?.startsWith("/dashboard/deals") || /match|message|contact_reply|payment|payout|order_update/i.test(notification.type)) return "messages";
   return "workspace";
 };
-const updateDetailText = (records: NotificationRecord[]) => records.slice(0, 2).map(record => `${record.title}: ${record.body}`).join(" · ");
+const updateDetailText = (records: NotificationRecord[]) => records.slice(0, 3).map(record => `${record.title}: ${record.body}`).join("\n\n");
 
 function AccountMenu({ mobile = false }: { mobile?: boolean }) {
   const { user, isAuthenticated, loading, logout } = useAuth(); const [, setLocation] = useLocation(); const [open, setOpen] = useState(false); const [updates, setUpdates] = useState(emptyUpdateCounts); const [updateDetails, setUpdateDetails] = useState(emptyUpdateDetails); const previousUnread = useRef<number | null>(null);
@@ -49,15 +49,16 @@ function AccountMenu({ mobile = false }: { mobile?: boolean }) {
       const next = records.reduce((counts, notification) => { counts[updateDestination(notification)] += 1; return counts; }, { ...emptyUpdateCounts });
       const details = records.reduce((groups, notification) => { groups[updateDestination(notification)].push(notification); return groups; }, { ...emptyUpdateDetails });
       const nextTotal = records.length;
-      if (previousUnread.current === null && nextTotal > 0) { playBridgeXFeedback("notice"); toast.info(`You have ${nextTotal} unread BridgeX update${nextTotal === 1 ? "" : "s"}.`, { description: updateDetailText(records), duration: 4200 }); }
-      if (previousUnread.current !== null && nextTotal > previousUnread.current) { playBridgeXFeedback("notice"); toast.info("You have a new BridgeX update.", { description: updateDetailText(records), duration: 4200 }); }
+      if (previousUnread.current === null && nextTotal > 0) { playBridgeXFeedback("notice"); toast.info(`You have ${nextTotal} unread BridgeX update${nextTotal === 1 ? "" : "s"}.`, { description: <span className="whitespace-pre-line">{updateDetailText(records)}</span>, duration: 5200 }); }
+      if (previousUnread.current !== null && nextTotal > previousUnread.current) { playBridgeXFeedback("notice"); toast.info("You have a new BridgeX update.", { description: <span className="whitespace-pre-line">{updateDetailText(records)}</span>, duration: 5200 }); }
       previousUnread.current = nextTotal;
       setUpdates(next);
       setUpdateDetails(details);
     };
     void loadUnreadUpdates();
-    const interval = window.setInterval(() => void loadUnreadUpdates(), 60000);
-    return () => { active = false; window.clearInterval(interval); };
+    const channel = supabase.channel(`member-web-updates-${user.id}`).on("postgres_changes", { event: "INSERT", schema: "public", table: "notifications", filter: `user_id=eq.${user.id}` }, (payload) => { const record = payload.new as NotificationRecord; playBridgeXFeedback("notice"); toast.info(record.title || "New BridgeX update", { description: <span className="whitespace-pre-line">{record.body}</span>, duration: 5200 }); void loadUnreadUpdates(); }).subscribe();
+    const interval = window.setInterval(() => void loadUnreadUpdates(), 15000);
+    return () => { active = false; window.clearInterval(interval); void supabase.removeChannel(channel); };
   }, [user?.id, open]);
   if (loading) return mobile ? <span className="rounded-lg px-3 py-2.5 text-sm font-bold text-[#748083]">Loading account…</span> : <span className="ml-2 text-sm font-semibold text-[#748083]">Loading account…</span>;
   if (!isAuthenticated || !user) return mobile ? <Link href="/access" className="rounded-lg px-3 py-2.5 text-sm font-bold hover:bg-[#ece8dd]">Log in or create account</Link> : <Link href="/access"><Button variant="ghost" size="sm" className="ml-1 font-semibold text-[#354145] hover:bg-[#e9e4d8]">Log in</Button></Link>;
@@ -66,11 +67,12 @@ function AccountMenu({ mobile = false }: { mobile?: boolean }) {
   const workspaceLink = <button onClick={() => go("/dashboard", "workspace")} className="flex w-full items-center gap-2 rounded-xl px-3 py-2.5 text-sm font-bold hover:bg-[#f0ede5]"><UserRound className="size-4" />Workspace{updateBadge(updates.workspace)}</button>;
   const editLink = <button onClick={() => go("/dashboard/settings", "profile")} className="flex w-full items-center gap-2 rounded-xl px-3 py-2.5 text-sm font-bold hover:bg-[#f0ede5]"><Settings className="size-4" />Edit profile{updateBadge(updates.profile)}</button>;
   const messagesLink = <button onClick={() => go("/dashboard/deals", "messages")} className="flex w-full items-center gap-2 rounded-xl px-3 py-2.5 text-sm font-bold hover:bg-[#f0ede5]"><MessageSquareText className="size-4" />Messages{updateBadge(updates.messages)}</button>;
+  const paymentLink = <button onClick={() => go("/dashboard/payments", "messages")} className="flex w-full items-center gap-2 rounded-xl px-3 py-2.5 text-sm font-bold hover:bg-[#f0ede5]"><CircleDollarSign className="size-4" />Payment history{updateBadge(updates.messages)}</button>;
   const adminLink = user.role === "admin" || user.role === "super_admin" ? <button onClick={() => go(user.role === "super_admin" ? "/admin/super" : "/admin", "admin")} className={`flex w-full items-center gap-2 rounded-xl px-3 py-2.5 text-sm font-bold hover:bg-[#f0ede5] ${user.role === "super_admin" ? "bg-[#fff1ce] text-[#805700] hover:bg-[#ffe7a3]" : ""}`}>{user.role === "super_admin" ? <Crown className="size-4 shrink-0" /> : <ShieldCheck className="size-4" />}<span className="truncate">{user.role === "super_admin" ? "Super Admin control panel" : "Admin control panel"}</span>{updateBadge(updates.admin)}</button> : null;
   const signOutLink = <button onClick={signOut} className="flex w-full items-center gap-2 rounded-xl px-3 py-2.5 text-sm font-bold text-[#9b4b3e] hover:bg-[#fdf0ed]"><LogOut className="size-4" />Sign out</button>;
   const memberHead = <button onClick={() => go("/dashboard")} className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left hover:bg-[#f0ede5]"><Avatar className="size-8"><AvatarImage src={user.avatarUrl} alt="Profile photo" /><AvatarFallback className="bg-[#dff5ea] text-xs font-bold text-[#176447]">{initial}</AvatarFallback></Avatar><span className="min-w-0"><span className="flex items-center gap-1 truncate text-sm font-bold">{displayName(user)}</span><span className="mt-1 block truncate text-xs text-[#687579]">{user.verificationStatus === "approved" ? <VerifiedBadge /> : user.email}</span></span></button>;
-  if (mobile) return <div className="mt-2 rounded-xl bg-white p-2">{memberHead}{editLink}{workspaceLink}{messagesLink}{adminLink}{signOutLink}</div>;
-  return <div className="relative"><button aria-expanded={open} onClick={() => setOpen(value => !value)} className="flex items-center gap-2 rounded-xl px-2 py-1.5 hover:bg-[#e9e4d8]"><Avatar className="size-8 border border-[#dce6df]"><AvatarImage src={user.avatarUrl} alt="Profile photo" /><AvatarFallback className="bg-[#dff5ea] text-xs font-bold text-[#176447]">{initial}</AvatarFallback></Avatar><span className="max-w-28 truncate text-sm font-bold text-[#354145]">{displayName(user)}</span></button>{open && <div className="absolute right-0 top-[calc(100%+8px)] z-50 w-60 rounded-2xl border border-[#172126]/10 bg-white p-2 shadow-xl">{memberHead}<div className="my-1 border-t border-[#172126]/8" />{editLink}{workspaceLink}{messagesLink}{adminLink}{signOutLink}</div>}</div>;
+  if (mobile) return <div className="mt-2 rounded-xl bg-white p-2">{memberHead}{editLink}{workspaceLink}{messagesLink}{paymentLink}{adminLink}{signOutLink}</div>;
+  return <div className="relative"><button aria-expanded={open} onClick={() => setOpen(value => !value)} className="flex items-center gap-2 rounded-xl px-2 py-1.5 hover:bg-[#e9e4d8]"><Avatar className="size-8 border border-[#dce6df]"><AvatarImage src={user.avatarUrl} alt="Profile photo" /><AvatarFallback className="bg-[#dff5ea] text-xs font-bold text-[#176447]">{initial}</AvatarFallback></Avatar><span className="max-w-28 truncate text-sm font-bold text-[#354145]">{displayName(user)}</span></button>{open && <div className="absolute right-0 top-[calc(100%+8px)] z-50 w-60 rounded-2xl border border-[#172126]/10 bg-white p-2 shadow-xl">{memberHead}<div className="my-1 border-t border-[#172126]/8" />{editLink}{workspaceLink}{messagesLink}{paymentLink}{adminLink}{signOutLink}</div>}</div>;
 }
 
 export default function PublicLayout({ children }: { children: React.ReactNode }) {

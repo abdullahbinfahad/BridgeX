@@ -207,3 +207,8 @@
 - [x] Collect private traveler payout instructions and create an administrator payout-due notification only when a sender confirms receipt and releases an order.
 - [x] Allow carry listings to enter payment-pending during Accept · request payment without reintroducing a currency restriction.
 - [x] Send one payment-success alert only to the relevant owner, while retaining the detailed payment update in Messages for the matched participant.
+- [x] Replace browser confirmation prompts in completed-order actions with clear in-app BridgeX confirmation dialogs.
+- [x] Surface new order-delivered and traveler-payment updates as in-app web popups, while retaining each update in Messages on its own line.
+- [x] Add direct Payment history links alongside the signed-in profile, Edit profile, Workspace, and Messages navigation shortcuts.
+- [x] Replace sensitive payment-processing copy with discreet acceptance-status wording.
+- [x] Repair five-star selection and written review submission for completed orders.
