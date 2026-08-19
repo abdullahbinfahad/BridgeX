@@ -122,3 +122,7 @@
 - [x] Add a safe signed-in incident report action from public member profiles that identifies the reported member without exposing their private data.
 - [x] Expand marketplace pages to 80 posts and show complete public request route, deadline, category, weight, size, and special-handling metadata.
 - [x] Display poster verification status inline with the poster name and retain a three-column desktop marketplace card grid.
+- [x] Add a public Contact page enquiry form that safely records messages for authorized administrator review.
+- [x] Add a dedicated administrator contact-enquiries view with search and resolution state.
+- [x] Correct FAQ verification wording from “Bangladesh National ID” to “National ID.”
+- [x] Expand Terms and Privacy pages with accurate guidance on verified-member selection, damage/disputes, safety evidence, data retention, and lawful cooperation.
