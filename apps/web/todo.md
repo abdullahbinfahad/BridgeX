@@ -173,7 +173,7 @@
 - [x] Apply the supplied BridgeX logo to web branding, favicon, Windows desktop packaging, Android application configuration, and distribution assets.
 - [x] Collect a carry-interest sender’s exact destination-country delivery address in the Show interest form and use it for protected-match acceptance.
 - [x] Repair member-side BridgeX Admin support replies so the private conversation sends against the correct contact enquiry record.
-- [ ] Replace Android adaptive icon source assets with correctly sized BridgeX logo variants and release a refreshed APK.
+- [x] Replace Android adaptive icon source assets with correctly sized BridgeX logo variants and release a refreshed APK.
 - [x] Serve a compressed local BridgeX logo asset with lightweight dimensions instead of relying on an external GitHub image request.
 - [x] Add contextual visual feedback effects alongside the existing distinct action sound cues, respecting reduced-motion settings.
 - [x] Research a compliant third-party integration path for Chinese payment methods, including Alipay, WeChat Pay, and UnionPay, without enabling payments until merchant credentials and provider approval are available.
