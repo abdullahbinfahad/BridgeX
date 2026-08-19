@@ -126,3 +126,9 @@
 - [x] Add a dedicated administrator contact-enquiries view with search and resolution state.
 - [x] Correct FAQ verification wording from “Bangladesh National ID” to “National ID.”
 - [x] Expand Terms and Privacy pages with accurate guidance on verified-member selection, damage/disputes, safety evidence, data retention, and lawful cooperation.
+- [x] Expand public request-detail pages with every route, deadline, category, weight, size, handling, and existing media/detail field.
+- [x] Rename request-form route labels to Purchase country/Current Country and Purchase City/Current City, and require a lawful-item publish confirmation.
+- [x] Replace the Contact-page sensitive-data notice with platform safety guidance and add administrator replies plus user-visible enquiry status updates without exposing administrator names.
+- [x] Move administrator Users, Verification, Orders & escrow, Reports, Requests, and Carry listings into dedicated URL routes rather than rendering each dataset on the main `/admin` page.
+- [x] Add acknowledgement warnings before offers and carry interests that summarize legal item, requirements, handling, deadline, enforcement, and best-wishes information.
+- [x] Add real completed-order ratings and comments, calculate member averages, and display rating summaries on public member profiles and post identities.
