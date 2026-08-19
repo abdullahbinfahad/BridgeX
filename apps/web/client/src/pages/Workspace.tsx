@@ -137,8 +137,6 @@ function Offers() {
 
 function Reviews() { return <ListPage title="Reviews" copy="Reviews are available after a completed protected order." action="View orders" href="/dashboard/orders"><EmptyContent copy="No post-order reviews are available for this account yet." href="/dashboard/orders" label="View orders" /></ListPage>; }
 
-const ALIPAY_QR = "/manus-storage/bridgex-alipay-payment-qr_5b96604d.jpg";
-const WECHAT_QR = "/manus-storage/bridgex-wechat-payment-qr_1d6c2d6e.jpg";
 const paymentMoney = (amount: number, currency: string) => new Intl.NumberFormat(undefined, { style: "currency", currency: currency || "BDT", maximumFractionDigits: 2 }).format(Number(amount || 0));
 
 function Payments() {
@@ -151,6 +149,7 @@ function Payments() {
   const [reference, setReference] = useState("");
   const [note, setNote] = useState("");
   const [uploading, setUploading] = useState(false);
+  const [qrUrls, setQrUrls] = useState({ alipay: "", wechat: "" });
   const paymentId = new URLSearchParams(window.location.search).get("payment");
   const selected = payments.find(payment => payment.id === paymentId) ?? payments.find(payment => ["pending_payment", "rejected"].includes(payment.status)) ?? payments[0] ?? null;
 
@@ -164,6 +163,15 @@ function Payments() {
   };
 
   useEffect(() => { void load(); }, [user?.id]);
+  useEffect(() => {
+    if (!user || payments.length === 0) { setQrUrls({ alipay: "", wechat: "" }); return; }
+    let active = true;
+    void Promise.all([
+      supabase.storage.from("payment-instructions").createSignedUrl("alipay-qr.jpg.jpg", 60 * 60),
+      supabase.storage.from("payment-instructions").createSignedUrl("wechat-pay-qr.jpg.jpg", 60 * 60),
+    ]).then(([alipay, wechat]) => { if (active) setQrUrls({ alipay: alipay.data?.signedUrl ?? "", wechat: wechat.data?.signedUrl ?? "" }); });
+    return () => { active = false; };
+  }, [user?.id, payments.length]);
 
   const submit = async () => {
     if (!user || !selected || !file) return setNotice("Choose a clear payment screenshot before submitting.");
@@ -200,8 +208,8 @@ function Payments() {
           {["pending_payment", "rejected"].includes(selected.status) ? <>
             <div className="mt-5 rounded-2xl border border-[#e4c984] bg-[#fff9ea] p-4 text-sm leading-6 text-[#765b1a]"><p className="font-bold">Pay the exact displayed amount only.</p><p className="mt-1">Use the payment reference <strong>{selected.reference}</strong> in the transfer note if your app permits it. A wrong amount, unreadable screenshot, or payment sent to another account cannot be verified. Intentionally false proof may result in account review.</p>{selected.status === "rejected" && selected.reviewer_note && <p className="mt-2 rounded-lg bg-white/75 p-2 font-semibold">Administrator note: {selected.reviewer_note}</p>}</div>
             <div className="mt-5 grid gap-4 sm:grid-cols-2">
-              <label className={`cursor-pointer overflow-hidden rounded-2xl border-2 p-3 transition ${method === "alipay" ? "border-[#1677ff] bg-[#eef6ff]" : "border-transparent bg-[#f7f5ef]"}`}><input className="sr-only" type="radio" name="payment-method" checked={method === "alipay"} onChange={() => setMethod("alipay")} /><img src={ALIPAY_QR} alt="Alipay payment QR" className="mx-auto aspect-square w-full max-w-[250px] rounded-xl object-contain" /><p className="mt-3 text-center font-bold text-[#1677ff]">Pay with Alipay</p></label>
-              <label className={`cursor-pointer overflow-hidden rounded-2xl border-2 p-3 transition ${method === "wechat_pay" ? "border-[#09bb07] bg-[#edfaef]" : "border-transparent bg-[#f7f5ef]"}`}><input className="sr-only" type="radio" name="payment-method" checked={method === "wechat_pay"} onChange={() => setMethod("wechat_pay")} /><img src={WECHAT_QR} alt="WeChat Pay payment QR" className="mx-auto aspect-square w-full max-w-[250px] rounded-xl object-contain" /><p className="mt-3 text-center font-bold text-[#078d06]">Pay with WeChat Pay</p></label>
+              <label className={`cursor-pointer overflow-hidden rounded-2xl border-2 p-3 transition ${method === "alipay" ? "border-[#1677ff] bg-[#eef6ff]" : "border-transparent bg-[#f7f5ef]"}`}><input className="sr-only" type="radio" name="payment-method" checked={method === "alipay"} onChange={() => setMethod("alipay")} />{qrUrls.alipay ? <img src={qrUrls.alipay} alt="Alipay payment QR" className="mx-auto aspect-square w-full max-w-[250px] rounded-xl object-contain" /> : <div className="grid aspect-square w-full place-items-center rounded-xl bg-white text-center text-xs font-semibold text-[#637073]">Loading secure Alipay QR…</div>}<p className="mt-3 text-center font-bold text-[#1677ff]">Pay with Alipay</p></label>
+              <label className={`cursor-pointer overflow-hidden rounded-2xl border-2 p-3 transition ${method === "wechat_pay" ? "border-[#09bb07] bg-[#edfaef]" : "border-transparent bg-[#f7f5ef]"}`}><input className="sr-only" type="radio" name="payment-method" checked={method === "wechat_pay"} onChange={() => setMethod("wechat_pay")} />{qrUrls.wechat ? <img src={qrUrls.wechat} alt="WeChat Pay payment QR" className="mx-auto aspect-square w-full max-w-[250px] rounded-xl object-contain" /> : <div className="grid aspect-square w-full place-items-center rounded-xl bg-white text-center text-xs font-semibold text-[#637073]">Loading secure WeChat Pay QR…</div>}<p className="mt-3 text-center font-bold text-[#078d06]">Pay with WeChat Pay</p></label>
             </div>
             <div className="mt-6 grid gap-4 sm:grid-cols-2"><label className="grid gap-2 text-sm font-bold">Payment or transaction reference (optional)<Input value={reference} onChange={event => setReference(event.target.value)} placeholder="Exact transfer reference" className="h-11 rounded-xl" /></label><label className="grid gap-2 text-sm font-bold">Payment screenshot<span className="flex h-11 cursor-pointer items-center rounded-xl border border-[#172126]/12 bg-[#fbfaf7] px-3 text-sm font-bold"><FileUp className="mr-2 size-4" />{file ? file.name : "Choose screenshot"}<input className="sr-only" type="file" accept="image/jpeg,image/png,image/webp" onChange={event => setFile(event.target.files?.[0] ?? null)} /></span></label></div>
             <label className="mt-4 grid gap-2 text-sm font-bold">Note for payment review (optional)<Textarea value={note} onChange={event => setNote(event.target.value)} placeholder="For example, a transfer time or clarification for the administrator." className="min-h-20 rounded-xl" /></label>

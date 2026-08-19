@@ -159,6 +159,16 @@ describe("BridgeX currency, cargo, support, and brand release safeguards", () =>
     expect(workspace).toContain("Manual CNY payment request");
   });
 
+  it("uses signed private Supabase URLs for payment instructions instead of exposing the QR images through the public Render app", () => {
+    const workspace = read("apps/web/client/src/pages/Workspace.tsx");
+    const migration = read("supabase/migrations/202608191625_private_payment_instruction_read_scope.sql");
+    expect(workspace).toContain('from("payment-instructions").createSignedUrl');
+    expect(workspace).toContain("alipay-qr.jpg.jpg");
+    expect(workspace).toContain("wechat-pay-qr.jpg.jpg");
+    expect(migration).toContain("payment_instructions_payment_payer_read");
+    expect(migration).toContain("proof.payer_id = auth.uid()");
+  });
+
   it("renders sender payment proof instructions and routes administrators to a screenshot review detail page", () => {
     const workspace = read("apps/web/client/src/pages/Workspace.tsx");
     const admin = read("apps/web/client/src/pages/AdminControl.tsx");
