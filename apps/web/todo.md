@@ -132,3 +132,8 @@
 - [x] Move administrator Users, Verification, Orders & escrow, Reports, Requests, and Carry listings into dedicated URL routes rather than rendering each dataset on the main `/admin` page.
 - [x] Add acknowledgement warnings before offers and carry interests that summarize legal item, requirements, handling, deadline, enforcement, and best-wishes information.
 - [x] Add real completed-order ratings and comments, calculate member averages, and display rating summaries on public member profiles and post identities.
+- [x] Make the released-order review action highly visible on the relevant completed service card after delivery confirmation, and place Report member at the top-right of public profiles.
+- [ ] Expand carry and cargo listings with accepted product categories, flight airline details, and cargo-specific transport details.
+- [ ] Expand carry-interest submissions with multi-category items, quantity, weight, and a total payment offer.
+- [ ] Deliver administrator contact replies as named BridgeX Admin messages and show unread notification counts beside Messages in the authenticated profile menu.
+- [ ] Display real average ratings and public completed-service review comments on live posts and public member profiles.
