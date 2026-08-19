@@ -139,4 +139,30 @@ describe("BridgeX currency, cargo, support, and brand release safeguards", () =>
     expect(layout).toContain('go(user.role === "super_admin" ? "/admin/super" : "/admin", "admin")');
     expect(layout).toContain("updateBadge(updates.admin)");
   });
+
+  it("gates response acceptance behind protected payment proof verification and reserves carry capacity during payment review", () => {
+    const migration = read("supabase/migrations/202608191600_manual_payment_verification.sql");
+    expect(migration).toContain("CREATE TABLE IF NOT EXISTS public.bridgex_payment_proofs");
+    expect(migration).toContain("status IN ('pending_payment', 'payment_verifying', 'verified', 'rejected', 'cancelled')");
+    expect(migration).toContain("reserved_weight_kg");
+    expect(migration).toContain("CREATE OR REPLACE FUNCTION public.start_bridgex_payment");
+    expect(migration).toContain("CREATE OR REPLACE FUNCTION public.submit_bridgex_payment_proof");
+    expect(migration).toContain("CREATE OR REPLACE FUNCTION public.verify_bridgex_payment");
+    expect(migration).toContain("Only an administrator can complete a payment-verified acceptance.");
+  });
+
+  it("renders sender payment proof instructions and routes administrators to a screenshot review detail page", () => {
+    const workspace = read("apps/web/client/src/pages/Workspace.tsx");
+    const admin = read("apps/web/client/src/pages/AdminControl.tsx");
+    const review = read("apps/web/client/src/pages/AdminPaymentReview.tsx");
+    expect(workspace).toContain('title="Pending payments"');
+    expect(workspace).toContain("Submit payment screenshot for verification");
+    expect(workspace).toContain("Pay with Alipay");
+    expect(workspace).toContain("Pay with WeChat Pay");
+    expect(workspace).toContain("start_bridgex_payment");
+    expect(admin).toContain('"Payment verification"');
+    expect(admin).toContain("Review payment");
+    expect(review).toContain("verify_bridgex_payment");
+    expect(review).toContain("Uploaded payment screenshot");
+  });
 });

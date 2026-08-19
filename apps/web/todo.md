@@ -191,3 +191,11 @@
 - [x] Consolidate all BridgeX Admin notification entries into one Inbox contact card with its newest message preview and a single unread indicator.
 - [x] Make protected user-to-user deal messages update live in both participants’ chat views without a manual refresh.
 - [x] Route administrator-control notifications to a dedicated admin count and prevent them from increasing the member Workspace notification count.
+- [x] Evaluate compliant provider onboarding for Alipay, WeChat Pay, UnionPay, and card acceptance; do not enable a payment flow until the required merchant verification and provider approval are complete.
+- [ ] Verify official Xunhupay merchant onboarding, marketplace suitability, and API documentation before creating or integrating an account.
+- [ ] Integrate Xunhupay only after the user completes required merchant verification, accepts provider terms, and supplies approved API credentials through secure project settings.
+- [x] Present safe placement choices for the user-supplied Alipay and WeChat Pay QR images, then implement the chosen manual-payment instructions without representing static QR transfers as verified escrow payments.
+- [x] Gate offer and carry-interest acceptance behind a sender payment-proof submission and administrator verification, without exposing counterpart contact details before verification.
+- [x] Add a sender Pending payments workspace view with payment amount, QR instructions, screenshot upload, and payment-verifying status.
+- [x] Add a dedicated administrator Payment verification list and payment-detail page with payment proof, order context, review actions, and an auditable verified or rejected decision.
+- [x] Create the protected match, counterpart details, workspace order, and system/chat notifications only after a payment is verified by an authorized administrator.
