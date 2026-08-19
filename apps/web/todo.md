@@ -201,3 +201,4 @@
 - [x] Create the protected match, counterpart details, workspace order, and system/chat notifications only after a payment is verified by an authorized administrator.
 - [x] Prevent post-success handling from calling a null form reset method after the post has already been saved.
 - [x] Fix offer and carry-interest payment-start state transitions so they satisfy the live response-table check constraints and create payment requests successfully.
+- [x] Allow the send-request payment-pending status used by the verified Accept & pay flow without changing unrelated request lifecycle rules.
