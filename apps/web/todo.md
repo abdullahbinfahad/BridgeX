@@ -162,4 +162,12 @@
 - [x] Make acceptance of pending carry interests complete reliably and show the resulting protected deal state.
 - [x] Clear all inbox unread indicators immediately after a message or support update is opened.
 - [x] Consolidate every notification type into an Updates inbox with the newest 30 visible and let members reply to BridgeX Admin support messages.
-- [ ] Rebuild the Android client startup architecture to avoid the browser route-loading failure and provide a stable homepage-first APK.
+- [x] Rebuild the Android client startup architecture to avoid the browser route-loading failure and provide a stable homepage-first APK.
+- [x] Add a member-selected transaction currency preference and show it consistently on that member’s amounts and form inputs.
+- [x] Change cargo capacity matching so accepted interests can use the remaining available capacity rather than failing when a request exceeds it.
+- [x] Show and respond to member support replies by user name from the administrator enquiries interface.
+- [x] Verify and clear every protected-inbox unread indicator after the conversation is opened.
+- [x] Add distinct, restrained feedback sound cues for key BridgeX actions.
+- [ ] Document safe desktop distribution limits and handle the user-requested new Expo-account workflow only with account-owner participation.
+- [x] Connect the rebuilt BridgeX Android source to Expo project 79a0cf5c-1667-471c-a9fd-4c79444363f8 and submit a fresh APK build.
+- [x] Apply the supplied BridgeX logo to web branding, favicon, Windows desktop packaging, Android application configuration, and distribution assets.

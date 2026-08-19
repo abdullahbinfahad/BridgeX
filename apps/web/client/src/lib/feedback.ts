@@ -1,6 +1,6 @@
 export type BridgeXFeedback = "tap" | "notice" | "success" | "warning" | "error";
 
-const feedbackFrequencies: Record<BridgeXFeedback, number> = { tap: 440, notice: 587, success: 740, warning: 392, error: 220 };
+const feedbackPatterns: Record<BridgeXFeedback, number[]> = { tap: [440], notice: [587, 659], success: [523, 659, 784], warning: [440, 392], error: [277, 220] };
 
 export function playBridgeXFeedback(kind: BridgeXFeedback = "tap") {
   try {
@@ -9,16 +9,19 @@ export function playBridgeXFeedback(kind: BridgeXFeedback = "tap") {
     const AudioContextClass = window.AudioContext || (window as Window & { webkitAudioContext?: typeof AudioContext }).webkitAudioContext;
     if (!AudioContextClass) return;
     const context = new AudioContextClass();
-    const oscillator = context.createOscillator();
-    const gain = context.createGain();
-    oscillator.type = kind === "error" ? "triangle" : "sine";
-    oscillator.frequency.setValueAtTime(feedbackFrequencies[kind], context.currentTime);
-    gain.gain.setValueAtTime(kind === "tap" ? 0.025 : 0.045, context.currentTime);
-    gain.gain.exponentialRampToValueAtTime(0.001, context.currentTime + (kind === "success" ? 0.13 : 0.09));
-    oscillator.connect(gain).connect(context.destination);
-    oscillator.start();
-    oscillator.stop(context.currentTime + (kind === "success" ? 0.14 : 0.1));
-    window.setTimeout(() => void context.close(), 200);
+    feedbackPatterns[kind].forEach((frequency, index) => {
+      const oscillator = context.createOscillator();
+      const gain = context.createGain();
+      const start = context.currentTime + index * 0.075;
+      oscillator.type = kind === "error" || kind === "warning" ? "triangle" : "sine";
+      oscillator.frequency.setValueAtTime(frequency, start);
+      gain.gain.setValueAtTime(kind === "tap" ? 0.025 : 0.04, start);
+      gain.gain.exponentialRampToValueAtTime(0.001, start + 0.07);
+      oscillator.connect(gain).connect(context.destination);
+      oscillator.start(start);
+      oscillator.stop(start + 0.08);
+    });
+    window.setTimeout(() => void context.close(), 500);
   } catch {
     // Feedback is progressive enhancement and must never interrupt a marketplace action.
   }

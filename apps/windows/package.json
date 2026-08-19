@@ -21,9 +21,11 @@
     "files": [
       "main.cjs",
       "preload.cjs",
+      "bridgex.ico",
       "package.json"
     ],
     "win": {
+      "icon": "bridgex.ico",
       "target": [
         "dir"
       ]

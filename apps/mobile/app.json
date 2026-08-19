@@ -33,7 +33,7 @@
     },
     "extra": {
       "eas": {
-        "projectId": "131fe15d-e14d-4db6-80bc-e0a8eec89ac7"
+        "projectId": "79a0cf5c-1667-471c-a9fd-4c79444363f8"
       }
     },
     "web": {
@@ -42,6 +42,6 @@
     "plugins": [
       "expo-notifications"
     ],
-    "owner": "abdullahbinfahad"
+    "owner": "abdullahbinfahadabfs-team"
   }
 }

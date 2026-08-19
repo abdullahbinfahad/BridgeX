@@ -39,7 +39,7 @@ export default function Deals() {
   const order = selected ? orders.find(item => item.match_id === selected.id) : undefined;
   const counterpart = (deal: Deal) => deal.sender_id === user?.id ? deal.traveler_name || "Traveler" : deal.sender_name || "Sender";
   const counterpartId = (deal: Deal) => deal.sender_id === user?.id ? deal.traveler_id : deal.sender_id;
-  const unread = (deal: Deal) => { const lastRead = deal.sender_id === user?.id ? deal.sender_last_read_at : deal.traveler_last_read_at; return Boolean(deal.last_message_at && deal.last_message_sender_id !== user?.id && (!lastRead || new Date(deal.last_message_at).getTime() > new Date(lastRead).getTime())); };
+  const unread = (deal: Deal) => { const lastRead = deal.sender_id === user?.id ? deal.sender_last_read_at : deal.traveler_last_read_at; return Boolean(deal.last_message_at && deal.last_message_sender_id && deal.last_message_sender_id !== user?.id && (!lastRead || new Date(deal.last_message_at).getTime() > new Date(lastRead).getTime())); };
   const openDeal = (matchId: string) => window.location.assign(`/dashboard/deals?match=${encodeURIComponent(matchId)}`);
 
   const load = async () => {
