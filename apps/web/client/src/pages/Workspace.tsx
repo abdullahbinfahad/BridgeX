@@ -11,6 +11,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { compressImageForUpload } from "@/lib/fileUpload";
 import { supabase } from "@/lib/supabase";
 import GlobalVerification from "@/pages/GlobalVerification";
+import PaymentHistory from "@/pages/PaymentHistory";
 import Deals from "@/pages/Deals";
 import ManagePosts from "@/pages/ManagePosts";
 import { Banknote, CheckCircle2, ChevronRight, EllipsisVertical, FileUp, MapPin, PackageCheck, Plane, ShieldCheck, WalletCards } from "lucide-react";
@@ -276,6 +277,6 @@ export default function Workspace() {
   const section = location.split("/")[2] ?? "overview";
   const data = useMemberData(user?.id);
   useEffect(() => { if (user) void supabase.rpc("process_bridgex_overdue_traveler_reminders"); }, [user?.id]);
-  const content = section === "verification" ? <GlobalVerification /> : section === "wallet" ? <Wallet data={data} /> : section === "orders" ? <Orders data={data} /> : section === "completed" ? <CompletedOrders data={data} /> : section === "offers" ? <Offers /> : section === "payments" ? <Payments /> : section === "deals" ? <Deals /> : section === "manage-posts" ? <ManagePosts /> : section === "settings" ? <SettingsView /> : section === "requests" ? <MyRequests data={data} /> : section === "listings" ? <MyListings data={data} /> : section === "reviews" ? <Reviews /> : <Overview data={data} />;
+  const content = section === "verification" ? <GlobalVerification /> : section === "wallet" ? <Wallet data={data} /> : section === "orders" ? <Orders data={data} /> : section === "completed" ? <CompletedOrders data={data} /> : section === "offers" ? <Offers /> : section === "payments" ? <PaymentHistory /> : section === "deals" ? <Deals /> : section === "manage-posts" ? <ManagePosts /> : section === "settings" ? <SettingsView /> : section === "requests" ? <MyRequests data={data} /> : section === "listings" ? <MyListings data={data} /> : section === "reviews" ? <Reviews /> : <Overview data={data} />;
   return <DashboardLayout>{content}</DashboardLayout>;
 }

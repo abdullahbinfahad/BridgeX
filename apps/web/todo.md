@@ -203,3 +203,5 @@
 - [x] Fix offer and carry-interest payment-start state transitions so they satisfy the live response-table check constraints and create payment requests successfully.
 - [x] Allow the send-request payment-pending status used by the verified Accept & pay flow without changing unrelated request lifecycle rules.
 - [x] Remove the CNY-only restriction from manual Alipay and WeChat payment requests while preserving payment proof review.
+- [x] Add a member payment-history view covering paid, pending payment, payment-verifying, and verified payment records.
+- [x] Collect private traveler payout instructions and create an administrator payout-due notification only when a sender confirms receipt and releases an order.

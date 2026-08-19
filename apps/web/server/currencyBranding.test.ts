@@ -151,12 +151,30 @@ describe("BridgeX currency, cargo, support, and brand release safeguards", () =>
     expect(migration).toContain("Only an administrator can complete a payment-verified acceptance.");
   });
 
-  it("limits static Chinese-wallet QR collection to CNY instead of presenting an unsafe cross-currency manual transfer", () => {
-    const migration = read("supabase/migrations/202608191615_cny_manual_qr_safety.sql");
-    const workspace = read("apps/web/client/src/pages/Workspace.tsx");
-    expect(migration).toContain("bridgex_manual_qr_cny_only");
-    expect(migration).toContain("available only for CNY transactions");
-    expect(workspace).toContain("Manual CNY payment request");
+  it("removes the CNY-only QR gate while retaining manually reviewed payment records", () => {
+    const migration = read("supabase/migrations/202608191730_allow_manual_qr_all_currencies.sql");
+    const paymentHistory = read("apps/web/client/src/pages/PaymentHistory.tsx");
+    expect(migration).toContain("DROP TRIGGER IF EXISTS bridgex_manual_qr_cny_only");
+    expect(migration).toContain("DROP FUNCTION IF EXISTS public.enforce_bridgex_manual_qr_cny");
+    expect(paymentHistory).toContain("Manual payment request");
+    expect(paymentHistory).toContain("Pay with Alipay");
+    expect(paymentHistory).toContain("Pay with WeChat Pay");
+  });
+
+  it("creates private traveler payout details and payout-due records only after sender-confirmed release", () => {
+    const migration = read("supabase/migrations/202608191800_traveler_payout_history.sql");
+    const paymentHistory = read("apps/web/client/src/pages/PaymentHistory.tsx");
+    const admin = read("apps/web/client/src/pages/AdminControl.tsx");
+    expect(migration).toContain("CREATE TABLE IF NOT EXISTS public.bridgex_traveler_payout_profiles");
+    expect(migration).toContain("CREATE TABLE IF NOT EXISTS public.bridgex_traveler_payouts");
+    expect(migration).toContain("payout_status IN ('details_required', 'payment_due', 'payment_sent', 'received')");
+    expect(migration).toContain("CREATE OR REPLACE FUNCTION public.confirm_bridgex_sender_delivery");
+    expect(migration).toContain("traveler_payout_due");
+    expect(migration).toContain("mark_bridgex_traveler_payout_sent");
+    expect(paymentHistory).toContain("Traveler payout history");
+    expect(paymentHistory).toContain("Confirm received");
+    expect(admin).toContain('"Traveler payouts"');
+    expect(admin).toContain("Mark payment sent");
   });
 
   it("uses signed private Supabase URLs for payment instructions instead of exposing the QR images through the public Render app", () => {
