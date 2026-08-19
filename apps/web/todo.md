@@ -146,3 +146,4 @@
 - [x] Ensure original signed-in contact-enquiry submitters receive BridgeX Admin replies in Messages and notifications.
 - [x] Show complete carry-listing transport, date, accepted-category, and item-quantity details on public listing post pages.
 - [x] Add Mobile phone, Laptop, and Camera quantities plus a required delivery date to carry-interest submissions.
+- [x] Show a legal, safety, and fulfillment warning immediately before a carry-space listing is published.
