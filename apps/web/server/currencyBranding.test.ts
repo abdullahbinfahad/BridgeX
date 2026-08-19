@@ -20,9 +20,35 @@ describe("BridgeX currency, cargo, support, and brand release safeguards", () =>
     expect(read("apps/web/client/src/pages/InterestPage.tsx")).toContain("Total offer ({currency})");
   });
 
+  it("requires protected destination delivery contacts for carry interests and persists them to the accepted match", () => {
+    const migration = read("supabase/migrations/202608191330_carry_interest_delivery_contacts.sql");
+    const interestPage = read("apps/web/client/src/pages/InterestPage.tsx");
+    expect(migration).toContain("delivery_phone text");
+    expect(migration).toContain("v_interest.delivery_address");
+    expect(migration).toContain("v_interest.delivery_phone");
+    expect(interestPage).toContain("Destination delivery details");
+    expect(interestPage).toContain("Exact delivery location and address");
+  });
+
+  it("uses the notification related enquiry ID for private BridgeX Admin replies", () => {
+    const deals = read("apps/web/client/src/pages/Deals.tsx");
+    expect(deals).toContain("const selectedSupportEnquiryId = selectedSupport?.related_id || selectedSupport?.id || \"\"");
+    expect(deals).toContain("p_enquiry_id: selectedSupportEnquiryId");
+    expect(deals).toContain("support=${encodeURIComponent(update.related_id || update.id)}");
+  });
+
   it("uses the supplied logo for shared web branding, browser favicon, and mobile app configuration", () => {
-    expect(read("apps/web/client/src/components/bridgex/Brand.tsx")).toContain("bridgex-logo.png");
+    expect(read("apps/web/client/src/components/bridgex/Brand.tsx")).toContain("/bridgex-logo.webp");
     expect(read("apps/web/client/index.html")).toContain("/favicon.ico");
     expect(read("apps/mobile/app.json")).toContain("./assets/icon.png");
+    expect(read("apps/mobile/app.json")).toContain('"versionCode": 5');
+  });
+
+  it("pairs sound categories with lightweight visual feedback cues that respect motion preferences", () => {
+    const feedback = read("apps/web/client/src/lib/feedback.ts");
+    const styles = read("apps/web/client/src/index.css");
+    expect(feedback).toContain("showBridgeXVisualFeedback(kind)");
+    expect(styles).toContain(".bridgex-feedback-cue--success");
+    expect(styles).toContain("prefers-reduced-motion: reduce");
   });
 });

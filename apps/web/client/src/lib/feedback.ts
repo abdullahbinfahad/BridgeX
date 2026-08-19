@@ -1,9 +1,21 @@
 export type BridgeXFeedback = "tap" | "notice" | "success" | "warning" | "error";
 
 const feedbackPatterns: Record<BridgeXFeedback, number[]> = { tap: [440], notice: [587, 659], success: [523, 659, 784], warning: [440, 392], error: [277, 220] };
+const feedbackSymbols: Record<BridgeXFeedback, string> = { tap: "", notice: "•", success: "✓", warning: "!", error: "×" };
+
+function showBridgeXVisualFeedback(kind: BridgeXFeedback) {
+  if (window.matchMedia?.("(prefers-reduced-motion: reduce)").matches) return;
+  const cue = document.createElement("span");
+  cue.className = `bridgex-feedback-cue bridgex-feedback-cue--${kind}`;
+  cue.setAttribute("aria-hidden", "true");
+  cue.textContent = feedbackSymbols[kind];
+  document.body.appendChild(cue);
+  window.setTimeout(() => cue.remove(), kind === "tap" ? 320 : 760);
+}
 
 export function playBridgeXFeedback(kind: BridgeXFeedback = "tap") {
   try {
+    showBridgeXVisualFeedback(kind);
     const bridge = (window as Window & { ReactNativeWebView?: { postMessage: (message: string) => void } }).ReactNativeWebView;
     if (bridge) bridge.postMessage(JSON.stringify({ type: "BRIDGEX_FEEDBACK", kind }));
     const AudioContextClass = window.AudioContext || (window as Window & { webkitAudioContext?: typeof AudioContext }).webkitAudioContext;
