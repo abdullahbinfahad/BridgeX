@@ -6,7 +6,7 @@
   "main": "main.cjs",
   "scripts": {
     "start": "electron .",
-    "package:windows": "electron-builder --win --dir"
+    "package:windows": "electron-builder --win"
   },
   "devDependencies": {
     "electron": "^39.2.7",
@@ -27,6 +27,7 @@
     "win": {
       "icon": "bridgex.ico",
       "target": [
+        "nsis",
         "dir"
       ]
     }

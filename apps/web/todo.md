@@ -227,3 +227,10 @@
 - [x] Route the Super Admin control panel shortcut to the main BridgeX administrator Control Panel.
 - [x] Repair Traveler payouts account-detail text fields so members can enter names, references, and bank details normally.
 - [x] Make each Payments summary status card open a dedicated filtered page for pending payment, payment verifying, payment verified, or payment received records.
+- [x] Fix completed-order review RLS so only the eligible sender and traveler can submit one review per released order.
+- [x] Make the selected 1–5 star rating visibly yellow before review submission.
+- [x] Audit and improve Android APK and Windows package compatibility and installation guidance for common Xiaomi, Honor, Vivo, Huawei, and Windows devices.
+- [x] Strengthen BridgeX crawlable global SEO metadata, structured data, sitemaps, and search-intent landing content.
+- [x] Add lightweight trusted delivery, parcel, and luggage motion visuals that respect reduced-motion preferences and page performance.
+- [x] Verify the production completed-order review policy after applying the released/completed eligibility repair.
+- [ ] Validate and publish the NSIS installer from a Windows-native or fully configured Wine x64 build environment; the Linux sandbox produced the portable package but could not complete Wine-based installer signing validation.
