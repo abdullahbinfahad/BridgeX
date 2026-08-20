@@ -167,6 +167,17 @@ export default defineConfig({
   build: {
     outDir: path.resolve(import.meta.dirname, "dist/public"),
     emptyOutDir: true,
+    rollupOptions: {
+      output: {
+        manualChunks(id) {
+          if (!id.includes("node_modules")) return;
+          if (id.includes("@supabase")) return "supabase";
+          if (id.includes("@tanstack") || id.includes("@trpc")) return "data-client";
+          if (id.includes("lucide-react") || id.includes("framer-motion")) return "visuals";
+          if (id.includes("/node_modules/react/") || id.includes("/node_modules/react-dom/") || id.includes("/node_modules/scheduler/")) return "react-core";
+        },
+      },
+    },
   },
   server: {
     host: true,

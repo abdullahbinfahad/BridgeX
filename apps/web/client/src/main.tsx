@@ -7,7 +7,31 @@ import superjson from "superjson";
 import App from "./App";
 import "./index.css";
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 30_000,
+      gcTime: 5 * 60_000,
+      refetchOnWindowFocus: false,
+      retry: 1,
+    },
+    mutations: { retry: 0 },
+  },
+});
+
+if (typeof window !== "undefined") {
+  window.addEventListener("vite:preloadError", event => {
+    event.preventDefault();
+    const recoveryKey = "bridgex-vite-asset-recovery";
+    try {
+      if (sessionStorage.getItem(recoveryKey)) return;
+      sessionStorage.setItem(recoveryKey, "1");
+    } catch {
+      // Session storage is optional; a normal reload still recovers the latest route chunks.
+    }
+    window.location.reload();
+  });
+}
 
 const redirectToLoginIfUnauthorized = (error: unknown) => {
   if (!(error instanceof TRPCClientError)) return;

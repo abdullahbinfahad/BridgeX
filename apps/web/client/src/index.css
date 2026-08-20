@@ -234,6 +234,84 @@
 
   .bridgex-hero-luggage::before { left: 0.54rem; }
   .bridgex-hero-luggage::after { right: 0.54rem; }
+
+  .bridgex-ambient-scene {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    overflow: hidden;
+    pointer-events: none;
+    background-image: radial-gradient(circle at 8% 18%, rgba(45, 141, 98, 0.12) 0 0.2rem, transparent 0.25rem), radial-gradient(circle at 89% 72%, rgba(215, 155, 43, 0.13) 0 0.18rem, transparent 0.23rem);
+    background-size: 13rem 13rem, 17rem 17rem;
+  }
+
+  .bridgex-ambient-route {
+    position: absolute;
+    height: 7.5rem;
+    width: 58vw;
+    min-width: 34rem;
+    border: 2px dashed rgba(45, 141, 98, 0.22);
+    border-bottom: 0;
+    border-left: 0;
+    border-radius: 0 10rem 0 0;
+  }
+
+  .bridgex-ambient-route--one { top: 8rem; left: -13rem; transform: rotate(-12deg); }
+  .bridgex-ambient-route--two { top: 43rem; right: -15rem; border-color: rgba(215, 155, 43, 0.22); transform: rotate(17deg) scaleX(-1); }
+
+  .bridgex-ambient-package,
+  .bridgex-ambient-luggage,
+  .bridgex-ambient-plane {
+    position: absolute;
+    display: grid;
+    place-items: center;
+    box-shadow: 0 18px 34px rgba(23, 33, 38, 0.10), inset 0 1px 0 rgba(255, 255, 255, 0.68);
+  }
+
+  .bridgex-ambient-package {
+    border: 1px solid rgba(156, 99, 11, 0.22);
+    border-radius: 1.35rem;
+    color: #8d5a0b;
+    background: linear-gradient(145deg, rgba(255, 244, 211, 0.82), rgba(221, 166, 61, 0.52));
+  }
+
+  .bridgex-ambient-package--one { top: 10rem; left: 5vw; width: 5.25rem; height: 5.25rem; transform: rotate(-12deg); }
+  .bridgex-ambient-package--two { top: 35rem; right: 6vw; width: 4.25rem; height: 4.25rem; transform: rotate(14deg); }
+
+  .bridgex-ambient-luggage {
+    top: 27rem;
+    left: 7vw;
+    width: 6rem;
+    height: 6.85rem;
+    border-radius: 1.55rem 1.55rem 1rem 1rem;
+    color: #f7f5ef;
+    background: linear-gradient(145deg, rgba(23, 33, 38, 0.80), rgba(44, 79, 70, 0.66));
+  }
+
+  .bridgex-ambient-luggage::before,
+  .bridgex-ambient-luggage::after {
+    position: absolute;
+    bottom: -0.32rem;
+    width: 0.68rem;
+    height: 0.68rem;
+    border-radius: 999px;
+    background: rgba(23, 33, 38, 0.85);
+    content: "";
+  }
+
+  .bridgex-ambient-luggage::before { left: 0.65rem; }
+  .bridgex-ambient-luggage::after { right: 0.65rem; }
+
+  .bridgex-ambient-plane {
+    top: 20rem;
+    right: 9vw;
+    width: 4.2rem;
+    height: 4.2rem;
+    border: 1px solid rgba(45, 141, 98, 0.18);
+    border-radius: 999px;
+    color: #176447;
+    background: rgba(225, 247, 234, 0.72);
+  }
 }
 
 @keyframes bridgex-accent-shift {
@@ -254,6 +332,26 @@
 @keyframes bridgex-luggage-roll {
   0%, 100% { transform: translate3d(0, 0, 0) rotate(-1deg); }
   50% { transform: translate3d(1.15rem, -0.12rem, 0) rotate(1deg); }
+}
+
+@keyframes bridgex-ambient-package-drift {
+  0%, 100% { transform: translate3d(0, 0, 0) rotate(-12deg); }
+  50% { transform: translate3d(1.3rem, -1.1rem, 0) rotate(-4deg); }
+}
+
+@keyframes bridgex-ambient-package-drift-reverse {
+  0%, 100% { transform: translate3d(0, 0, 0) rotate(14deg); }
+  50% { transform: translate3d(-1.1rem, 0.8rem, 0) rotate(6deg); }
+}
+
+@keyframes bridgex-ambient-luggage-journey {
+  0%, 100% { transform: translate3d(0, 0, 0) rotate(-1deg); }
+  50% { transform: translate3d(2.4rem, -0.25rem, 0) rotate(1deg); }
+}
+
+@keyframes bridgex-ambient-plane-journey {
+  0%, 100% { transform: translate3d(0, 0, 0) rotate(-18deg); }
+  50% { transform: translate3d(-4.5rem, -2.7rem, 0) rotate(-4deg); }
 }
 
 @media (prefers-reduced-motion: no-preference) {
@@ -291,10 +389,14 @@
   .bridgex-hero-parcel--primary { animation: bridgex-parcel-float 5.6s cubic-bezier(0.45, 0, 0.25, 1) infinite; }
   .bridgex-hero-parcel--secondary { animation: bridgex-small-parcel-float 4.8s cubic-bezier(0.45, 0, 0.25, 1) 0.7s infinite; }
   .bridgex-hero-luggage { animation: bridgex-luggage-roll 6.4s cubic-bezier(0.45, 0, 0.25, 1) 0.3s infinite; }
+  .bridgex-ambient-package--one { animation: bridgex-ambient-package-drift 7.4s cubic-bezier(0.45, 0, 0.25, 1) infinite; }
+  .bridgex-ambient-package--two { animation: bridgex-ambient-package-drift-reverse 8.1s cubic-bezier(0.45, 0, 0.25, 1) 1s infinite; }
+  .bridgex-ambient-luggage { animation: bridgex-ambient-luggage-journey 9.2s cubic-bezier(0.45, 0, 0.25, 1) 0.4s infinite; }
+  .bridgex-ambient-plane { animation: bridgex-ambient-plane-journey 10.4s cubic-bezier(0.45, 0, 0.25, 1) 0.8s infinite; }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .bridgex-accent-text, .bridgex-hero-parcel, .bridgex-hero-luggage { animation: none; }
+  .bridgex-accent-text, .bridgex-hero-parcel, .bridgex-hero-luggage, .bridgex-ambient-package, .bridgex-ambient-luggage, .bridgex-ambient-plane { animation: none; }
 }
 
 @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {

@@ -30,11 +30,11 @@ const formatMoney = (amount: number) => `৳ ${Number(amount ?? 0).toLocaleStrin
 const statusLabel = (value: string) => value.replace(/_/g, " ").replace(/\b\w/g, (letter) => letter.toUpperCase());
 const CURRENCIES = [{ code: "BDT", label: "Bangladeshi Taka (BDT)" }, { code: "USD", label: "US Dollar (USD)" }, { code: "CNY", label: "Chinese Yuan (CNY)" }, { code: "EUR", label: "Euro (EUR)" }, { code: "GBP", label: "British Pound (GBP)" }, { code: "AED", label: "UAE Dirham (AED)" }, { code: "SAR", label: "Saudi Riyal (SAR)" }, { code: "INR", label: "Indian Rupee (INR)" }, { code: "JPY", label: "Japanese Yen (JPY)" }, { code: "CAD", label: "Canadian Dollar (CAD)" }, { code: "AUD", label: "Australian Dollar (AUD)" }];
 
-function useMemberData(userId?: string): MemberData {
+function useMemberData(userId?: string, enabled = true): MemberData {
   const [data, setData] = useState<MemberData>(emptyMemberData);
 
   useEffect(() => {
-    if (!userId) return;
+    if (!userId || !enabled) { setData(previous => ({ ...previous, loading: false, error: "" })); return; }
     let alive = true;
     setData(previous => ({ ...previous, loading: true, error: "" }));
     void (async () => {
@@ -49,7 +49,7 @@ function useMemberData(userId?: string): MemberData {
       setData({ requests: requestRows.map(item => ({ ...item, offer_count: offerCounts[item.id] ?? 0 })), listings: listingRows.map(item => ({ ...item, interest_count: interestCounts[item.id] ?? 0 })), orders: rawOrders.map(order => ({ ...order, match: order.match_id ? matchById.get(order.match_id) ?? null : null })), loading: false, error });
     })();
     return () => { alive = false; };
-  }, [userId]);
+  }, [userId, enabled]);
 
   return data;
 }
@@ -276,8 +276,10 @@ export default function Workspace() {
   const { user } = useAuth();
   const [location] = useLocation();
   const section = location.split("/")[2] ?? "overview";
-  const data = useMemberData(user?.id);
-  useEffect(() => { if (user) void supabase.rpc("process_bridgex_overdue_traveler_reminders"); }, [user?.id]);
+  const memberDataSections = ["overview", "wallet", "orders", "completed", "requests", "listings"];
+  const needsMemberData = memberDataSections.includes(section);
+  const data = useMemberData(user?.id, needsMemberData);
+  useEffect(() => { if (user && needsMemberData) void supabase.rpc("process_bridgex_overdue_traveler_reminders"); }, [user?.id, needsMemberData]);
   const content = section === "verification" ? <GlobalVerification /> : section === "wallet" ? <Wallet data={data} /> : section === "orders" ? <Orders data={data} /> : section === "completed" ? <CompletedOrders data={data} /> : section === "offers" ? <Offers /> : section === "payments" ? <PaymentHistory /> : section === "payouts" ? <PaymentHistory mode="payouts" /> : section === "deals" ? <Deals /> : section === "manage-posts" ? <ManagePosts /> : section === "settings" ? <SettingsView /> : section === "requests" ? <MyRequests data={data} /> : section === "listings" ? <MyListings data={data} /> : section === "reviews" ? <Reviews /> : <Overview data={data} />;
   return <DashboardLayout>{content}</DashboardLayout>;
 }
