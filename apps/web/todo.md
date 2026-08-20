@@ -289,3 +289,4 @@
 - [x] Remove the in-app BridgeX Back control entirely from Android while retaining browser Back navigation.
 - [x] Remove the remaining Android floating Back control at the source and make its Android-only suppression robust across cached and late-loaded routes.
 - [x] Display accurate unread-count badges on each relevant administrator Control Panel card without counting ordinary member notifications.
+- [x] Make each fresh Android app launch open the public BridgeX homepage rather than restoring a prior Workspace route, while keeping safe draft recovery after launch.

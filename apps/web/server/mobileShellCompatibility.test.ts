@@ -13,12 +13,15 @@ describe("BridgeX Android WebView compatibility shell", () => {
     expect(mobileApp).toContain("window.visualViewport.addEventListener");
   });
 
-  it("restores the member route and safe unsent form fields after a background interruption", () => {
+  it("opens the public homepage on every fresh launch while retaining safe drafts for in-process background recovery", () => {
     expect(mobileApp).toContain("@react-native-async-storage/async-storage");
     expect(mobileApp).toContain("WEB_STATE_KEY");
     expect(mobileApp).toContain("AppState.addEventListener");
     expect(mobileApp).toContain("__bridgexRestoreDraft");
     expect(mobileApp).toContain("type !== 'password' && type !== 'file'");
+    expect(mobileApp).toContain("const initialUrl = BRIDGEX_URL");
+    expect(mobileApp).not.toContain("setInitialUrl(saved.url)");
+    expect(mobileApp).toContain("?app=android&build=11");
   });
 
   it("uses WebView history for the Android system Back control and enables Android gallery file access", () => {
