@@ -16,6 +16,16 @@ const navigation = [
   { label: "Safety", href: "/safety" },
 ];
 const displayName = (user: ReturnType<typeof useAuth>["user"]) => user?.name || user?.email?.split("@")[0] || "Member";
+const ANDROID_BUILD = 7;
+const ANDROID_DOWNLOAD_URL = "https://expo.dev/accounts/abdullahbinfahadabfs-team/projects/bridgex/builds/80cd5f94-53f7-4f68-a7c8-3388bb409ceb";
+
+function AndroidUpdatePrompt() {
+  const [visible, setVisible] = useState(false);
+  useEffect(() => { const parameters = new URLSearchParams(window.location.search); const installedBuild = Number(parameters.get("build") || "0"); const key = `bridgex-android-update-dismissed-${installedBuild}`; if (parameters.get("app") === "android" && Number.isFinite(installedBuild) && installedBuild < ANDROID_BUILD && window.sessionStorage.getItem(key) !== "1") setVisible(true); }, []);
+  if (!visible) return null;
+  const dismiss = () => { const installedBuild = new URLSearchParams(window.location.search).get("build") || "0"; window.sessionStorage.setItem(`bridgex-android-update-dismissed-${installedBuild}`, "1"); setVisible(false); };
+  return <div className="fixed inset-x-4 bottom-4 z-[70] mx-auto max-w-md rounded-2xl border border-[#91e7bc]/45 bg-[#172126]/95 p-4 text-[#f7f5ef] shadow-2xl backdrop-blur-xl"><p className="text-sm font-bold">A newer BridgeX app is available.</p><p className="mt-1 text-xs leading-5 text-[#c3d0c9]">Update for improved typing, document uploads, Back navigation, and return-to-draft support.</p><div className="mt-3 flex gap-2"><a href={ANDROID_DOWNLOAD_URL} target="_blank" rel="noreferrer" className="rounded-lg bg-[#91e7bc] px-3 py-2 text-xs font-bold text-[#172126]">Update app</a><button onClick={dismiss} className="rounded-lg px-3 py-2 text-xs font-bold text-[#d6ddd7]">Not now</button></div></div>;
+}
 
 function NativePushBridge() {
   const { user } = useAuth();
@@ -26,7 +36,8 @@ function NativePushBridge() {
       if (data.session) bridge.postMessage(JSON.stringify({ type: "BRIDGEX_AUTH", userId: user.id, accessToken: data.session.access_token }));
     });
   }, [user?.id]);
-  return null;
+  useEffect(() => { const applyReleaseFooter = () => { const androidLink = Array.from(document.querySelectorAll("a")).find(link => link.textContent?.trim() === "Download for Android"); if (androidLink) androidLink.href = ANDROID_DOWNLOAD_URL; const footer = document.querySelector("footer"); if (footer && !footer.querySelector("[data-bridgex-copyright]")) { const copyright = document.createElement("div"); copyright.dataset.bridgexCopyright = "true"; copyright.className = "border-t border-white/10 px-5 py-4 text-center text-xs font-semibold text-[#8fa39a]"; copyright.textContent = "© 2027 BridgeX. All rights reserved."; footer.appendChild(copyright); } }; const timer = window.setTimeout(applyReleaseFooter, 0); return () => window.clearTimeout(timer); }, []);
+  return <AndroidUpdatePrompt />;
 }
 
 type UpdateDestination = "profile" | "workspace" | "messages" | "payments" | "admin";

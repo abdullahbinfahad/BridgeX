@@ -21,6 +21,7 @@ export default function Access() {
   const [failed, setFailed] = useState(false);
   const [sending, setSending] = useState(false);
   const [googleStarting, setGoogleStarting] = useState(false);
+  const [failedAttempts, setFailedAttempts] = useState(0);
 
   useEffect(() => {
     if (!loading && isAuthenticated) setLocation(signedInDestination(Boolean(user?.onboardingComplete)));
@@ -68,7 +69,8 @@ export default function Access() {
     setSending(false);
 
     if (error) {
-      reportError(error.message);
+      setFailedAttempts(current => current + 1);
+      reportError("We could not sign you in. Check your email and password.");
       return;
     }
 
@@ -189,6 +191,7 @@ export default function Access() {
             </form>
 
             {notice && <p className={`mt-3 text-sm ${failed ? "text-[#a64236]" : "text-[#176447]"}`}>{notice}</p>}
+            {mode === "signin" && failedAttempts >= 3 && <Link href="/contact?topic=password-reset" className="mt-2 inline-flex text-xs font-bold text-[#176447] hover:underline">Need password-reset help? Contact BridgeX</Link>}
 
             <Button
               onClick={() => setLocation("/marketplace?guest=1")}

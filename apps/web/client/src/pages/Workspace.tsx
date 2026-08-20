@@ -10,6 +10,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { compressImageForUpload } from "@/lib/fileUpload";
+import { SUPPORTED_CURRENCIES } from "@/lib/currencies";
 import { supabase } from "@/lib/supabase";
 import GlobalVerification from "@/pages/GlobalVerification";
 import PaymentHistory from "@/pages/PaymentHistory";
@@ -28,7 +29,7 @@ const emptyMemberData: MemberData = { requests: [], listings: [], orders: [], lo
 const userName = (user: ReturnType<typeof useAuth>["user"]) => user?.name || user?.email?.split("@")[0] || "Member";
 const formatMoney = (amount: number) => `৳ ${Number(amount ?? 0).toLocaleString()}`;
 const statusLabel = (value: string) => value.replace(/_/g, " ").replace(/\b\w/g, (letter) => letter.toUpperCase());
-const CURRENCIES = [{ code: "BDT", label: "Bangladeshi Taka (BDT)" }, { code: "USD", label: "US Dollar (USD)" }, { code: "CNY", label: "Chinese Yuan (CNY)" }, { code: "EUR", label: "Euro (EUR)" }, { code: "GBP", label: "British Pound (GBP)" }, { code: "AED", label: "UAE Dirham (AED)" }, { code: "SAR", label: "Saudi Riyal (SAR)" }, { code: "INR", label: "Indian Rupee (INR)" }, { code: "JPY", label: "Japanese Yen (JPY)" }, { code: "CAD", label: "Canadian Dollar (CAD)" }, { code: "AUD", label: "Australian Dollar (AUD)" }];
+const CURRENCIES = SUPPORTED_CURRENCIES;
 
 function useMemberData(userId?: string, enabled = true): MemberData {
   const [data, setData] = useState<MemberData>(emptyMemberData);

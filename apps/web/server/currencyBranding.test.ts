@@ -311,8 +311,9 @@ describe("BridgeX currency, cargo, support, and brand release safeguards", () =>
     expect(ratesPage).toContain('const [base, setBase] = useState("BDT")');
     expect(ratesPage).toContain('const [quote, setQuote] = useState("CNY")');
     expect(ratesPage).toContain("currencies = [");
-    expect(payments).toContain("Platform settlement conversion");
+    expect(payments).toContain("Amount to pay");
     expect(payments).toContain("settlement_amount");
-    expect(payments).toContain("Use the exact displayed CNY settlement amount.");
+    expect(payments).toContain("Converted to CNY for this payment.");
+    expect(payments).toContain("Use the displayed CNY amount.");
   });
 });

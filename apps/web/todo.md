@@ -262,3 +262,10 @@
 - [x] Preserve the member’s current route and recover unsent form drafts after brief Android background interruptions.
 - [x] Support Android system Back navigation through WebView history before exiting the app.
 - [x] Repair Android gallery/file selection so identity-document uploads appear in the BridgeX verification form after confirmation.
+- [x] Prompt Android members on older BridgeX builds to install the current supported app version.
+- [x] Restore payment QR display and simplify the settlement view to a prominent concise CNY amount.
+- [x] Add a short password-reset contact link after repeated invalid sign-in attempts.
+- [x] Prevent the traveler payout-receipt notification from being delivered to the sender.
+- [x] Add post-detail edit actions for the owner, including later price and currency changes.
+- [x] Expand post and profile currency selection to 40+ supported currencies.
+- [ ] Update the footer Android download link to the new APK and add a 2027 BridgeX copyright notice.
