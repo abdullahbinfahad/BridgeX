@@ -14,6 +14,11 @@
         "buildType": "apk"
       },
       "distribution": "internal"
+    },
+    "play": {
+      "android": {
+        "buildType": "app-bundle"
+      }
     }
   }
 }

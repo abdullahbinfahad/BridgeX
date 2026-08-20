@@ -240,5 +240,9 @@
 - [x] Replace generic loading text with a lightweight luggage-and-plane delivery loading animation that works in mobile WebView and browsers.
 - [x] Reposition ambient homepage visuals so they remain decorative and do not overlap calls to action or key text.
 - [x] Remove Supabase realtime channel registration from the account-menu notification path and use a mobile-safe polling fallback to prevent callback-after-subscribe crashes.
+- [x] Replace verbose Android and Windows download instructions with concise professional download copy.
+- [x] Add dedicated payment-status and payment-detail routes so users can open pending, verifying, verified, received, and individual payment actions from Payments.
+- [x] Prepare a Google Play-ready Android App Bundle release configuration, store listing checklist, privacy disclosures, and upload instructions.
+- [x] Establish the source-backed structure and maintenance workflow for the requested long-form BridgeX developer operations handbook.
 - [x] Diagnose and eliminate blank-screen failures after browser or Android WebView refreshes, with an automatic recovery path when a route chunk cannot load.
 - [x] Reduce initial and navigation loading time for the Workspace and administrator routes through measured query, loading-state, and code-delivery improvements.

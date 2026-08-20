@@ -47,7 +47,7 @@ describe("BridgeX currency, cargo, support, and brand release safeguards", () =>
     expect(read("apps/web/client/src/components/bridgex/Brand.tsx")).toContain("/bridgex-logo.webp");
     expect(read("apps/web/client/index.html")).toContain("/favicon.ico");
     expect(read("apps/mobile/app.json")).toContain("./assets/icon.png");
-    expect(read("apps/mobile/app.json")).toContain('"versionCode": 5');
+    expect(read("apps/mobile/app.json")).toContain('"versionCode": 6');
   });
 
   it("uses the compact 0.5 cm application-color Android top spacer in the next native build", () => {
@@ -161,6 +161,32 @@ describe("BridgeX currency, cargo, support, and brand release safeguards", () =>
     expect(paymentHistory).toContain("WeChat Pay");
   });
 
+  it("opens payment statuses and individual payment or payout actions on dedicated routes", () => {
+    const paymentHistory = read("apps/web/client/src/pages/PaymentHistory.tsx");
+    const workspace = read("apps/web/client/src/pages/Workspace.tsx");
+    expect(paymentHistory).toContain("/dashboard/payments/${key}");
+    expect(paymentHistory).toContain("/dashboard/payments/record/${payment.id}");
+    expect(paymentHistory).toContain("/dashboard/payouts/record/${payout.id}");
+    expect(workspace).toContain("/dashboard/payments/record/${encodeURIComponent(data)}");
+    expect(paymentHistory).not.toContain("dashboard/payments?status=");
+    expect(paymentHistory).not.toContain("dashboard/payments?payment=");
+  });
+
+  it("uses concise download links and keeps a separate signed Google Play App Bundle profile", () => {
+    const layout = read("apps/web/client/src/components/bridgex/PublicLayout.tsx");
+    const appConfig = read("apps/mobile/app.json");
+    const eas = read("apps/mobile/eas.json");
+    const gradle = read("apps/mobile/android/app/build.gradle");
+    expect(layout).toContain("Download for Android");
+    expect(layout).toContain("Download for Windows");
+    expect(layout).not.toContain("allow that app to install unknown apps");
+    expect(appConfig).toContain('"versionCode": 6');
+    expect(eas).toContain('"play"');
+    expect(eas).toContain('"buildType": "app-bundle"');
+    expect(gradle).toContain("EAS_BUILD_ANDROID_KEYSTORE_PATH");
+    expect(gradle).not.toContain("signingConfig signingConfigs.debug\n            def enableShrinkResources");
+  });
+
   it("creates private traveler payout details and payout-due records only after sender-confirmed release", () => {
     const migration = read("supabase/migrations/202608191800_traveler_payout_history.sql");
     const paymentHistory = read("apps/web/client/src/pages/PaymentHistory.tsx");
@@ -243,7 +269,7 @@ describe("BridgeX currency, cargo, support, and brand release safeguards", () =>
   it("uses a mobile-safe notification polling lifecycle and provides a return path for all dashboard routes", () => {
     const layout = read("apps/web/client/src/components/bridgex/PublicLayout.tsx");
     const app = read("apps/web/client/src/App.tsx");
-    expect(layout).toContain("Polling is intentionally used here instead of a realtime channel");
+    expect(layout).toContain("Polling avoids Android WebView channel reuse that can throw after subscription.");
     expect(layout).toContain("window.setInterval(() => void loadUnreadUpdates(), 30000)");
     expect(layout).not.toContain("member-web-updates-");
     expect(layout).toContain("}, [user?.id]);");

@@ -104,15 +104,29 @@ android {
             keyAlias 'androiddebugkey'
             keyPassword 'android'
         }
+        release {
+            def easStoreFile = System.getenv('EAS_BUILD_ANDROID_KEYSTORE_PATH')
+            if (easStoreFile) {
+                storeFile file(easStoreFile)
+                storePassword System.getenv('EAS_BUILD_ANDROID_KEYSTORE_PASSWORD')
+                keyAlias System.getenv('EAS_BUILD_ANDROID_KEY_ALIAS')
+                keyPassword System.getenv('EAS_BUILD_ANDROID_KEY_PASSWORD')
+            } else if (project.hasProperty('BRIDGEX_RELEASE_STORE_FILE')) {
+                storeFile file(BRIDGEX_RELEASE_STORE_FILE)
+                storePassword BRIDGEX_RELEASE_STORE_PASSWORD
+                keyAlias BRIDGEX_RELEASE_KEY_ALIAS
+                keyPassword BRIDGEX_RELEASE_KEY_PASSWORD
+            }
+        }
     }
     buildTypes {
         debug {
             signingConfig signingConfigs.debug
         }
         release {
-            // Caution! In production, you need to generate your own keystore file.
-            // see https://reactnative.dev/docs/signed-apk-android.
-            signingConfig signingConfigs.debug
+            // EAS injects the managed upload key at build time. For local release builds,
+            // provide BRIDGEX_RELEASE_* values through an untracked gradle.properties file.
+            signingConfig signingConfigs.release
             def enableShrinkResources = findProperty('android.enableShrinkResourcesInReleaseBuilds') ?: 'false'
             shrinkResources enableShrinkResources.toBoolean()
             minifyEnabled enableMinifyInReleaseBuilds

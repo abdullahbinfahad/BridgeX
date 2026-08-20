@@ -41,6 +41,11 @@ build/Release
 node_modules/
 jspm_packages/
 apps/windows/release/
+apps/mobile/android/app/*.jks
+apps/mobile/android/app/*.keystore
+apps/mobile/android/keystore.properties
+apps/mobile/android/release/
+*.aab
 
 # Snowpack dependency directory (https://snowpack.dev/)
 web_modules/
