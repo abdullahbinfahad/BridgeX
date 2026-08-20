@@ -225,3 +225,5 @@
 - [x] Replace detailed payment-process disclosure with concise professional protected-status wording.
 - [x] Show one-time web popups only for new administrator Control Panel updates, not ordinary member updates.
 - [x] Route the Super Admin control panel shortcut to the main BridgeX administrator Control Panel.
+- [x] Repair Traveler payouts account-detail text fields so members can enter names, references, and bank details normally.
+- [x] Make each Payments summary status card open a dedicated filtered page for pending payment, payment verifying, payment verified, or payment received records.
