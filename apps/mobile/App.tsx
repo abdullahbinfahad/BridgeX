@@ -6,7 +6,7 @@ import { useEffect, useRef, useState } from "react";
 import { ActivityIndicator, Platform, Pressable, StyleSheet, Text, View } from "react-native";
 import { WebView } from "react-native-webview";
 
-const BRIDGEX_URL = "https://bridgex.abdullahbinfahad.info/?app=android&build=5";
+const BRIDGEX_URL = "https://bridgex.abdullahbinfahad.info/?app=android&build=6";
 const SUPABASE_URL = "https://cyvaajdozstfltulnghp.supabase.co";
 const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_Fe6enUGU2YKo3sgke3RvWw_ONg9eqhZ";
 const HALF_CENTIMETER_DP = 160 / 2.54 / 2;

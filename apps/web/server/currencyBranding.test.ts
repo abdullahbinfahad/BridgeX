@@ -54,9 +54,9 @@ describe("BridgeX currency, cargo, support, and brand release safeguards", () =>
     const mobileApp = read("apps/mobile/App.tsx");
     expect(mobileApp).toContain("const HALF_CENTIMETER_DP = 160 / 2.54 / 2");
     expect(mobileApp).toContain("backgroundColor: \"#f7f5ef\", height: HALF_CENTIMETER_DP");
-    expect(mobileApp).toContain("?app=android&build=5");
-    expect(read("apps/mobile/android/app/build.gradle")).toContain("versionCode 5");
-    expect(read("apps/mobile/android/app/build.gradle")).toContain('versionName "1.0.5"');
+    expect(mobileApp).toContain("?app=android&build=6");
+    expect(read("apps/mobile/android/app/build.gradle")).toContain("versionCode 6");
+    expect(read("apps/mobile/android/app/build.gradle")).toContain('versionName "1.0.6"');
   });
 
   it("pairs sound categories with lightweight visual feedback cues that respect motion preferences", () => {
@@ -184,6 +184,8 @@ describe("BridgeX currency, cargo, support, and brand release safeguards", () =>
     expect(eas).toContain('"play"');
     expect(eas).toContain('"buildType": "app-bundle"');
     expect(gradle).toContain("EAS_BUILD_ANDROID_KEYSTORE_PATH");
+    expect(gradle).toContain("versionCode 6");
+    expect(gradle).toContain('versionName "1.0.6"');
     expect(gradle).not.toContain("signingConfig signingConfigs.debug\n            def enableShrinkResources");
   });
 
