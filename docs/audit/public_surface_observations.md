@@ -15,3 +15,7 @@ The signed-in public header also displayed the unread-update popup. It correctly
 ## Product implication
 
 Public discovery is core to marketplace liquidity. The guest marketplace query and its empty/loading/error states should be treated as a release-gate flow before public marketing or a larger paid acquisition campaign.
+
+## Final production availability check
+
+After the documentation and payment-notification release, the production domain first showed the normal short `Loading BridgeX…` startup state and then completed successfully. The verified page exposed the signed-in header, three unread BridgeX updates, the public landing content, post shortcuts, and live marketplace cards. This confirms a successful application response after the initial cold-start delay; it does not remove the recommendation to improve cold-start/loading-state communication for users on slow connections.
