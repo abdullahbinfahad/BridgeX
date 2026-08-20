@@ -108,12 +108,12 @@ describe("BridgeX currency, cargo, support, and brand release safeguards", () =>
     expect(migration).toContain("ADD TABLE public.contact_enquiry_messages");
   });
 
-  it("gives profile and workspace notifications their specific title and body detail", () => {
+  it("retains detailed update text for Control Panel-only popup presentation", () => {
     const layout = read("apps/web/client/src/components/bridgex/PublicLayout.tsx");
     expect(layout).toContain("type NotificationRecord = { id: string; type: string; link: string | null; title: string; body: string }");
     expect(layout).toContain("const updateDetailText");
     expect(layout).toContain("whitespace-pre-line");
-    expect(layout).toContain("description: description ||");
+    expect(layout).toContain("freshAdminRecords");
   });
 
   it("consolidates BridgeX Admin Inbox updates into one latest-message card with one unread count", () => {
@@ -136,7 +136,7 @@ describe("BridgeX currency, cargo, support, and brand release safeguards", () =>
     const layout = read("apps/web/client/src/components/bridgex/PublicLayout.tsx");
     expect(layout).toContain('type UpdateDestination = "profile" | "workspace" | "messages" | "payments" | "admin"');
     expect(layout).toContain('return "admin"');
-    expect(layout).toContain('go(user.role === "super_admin" ? "/admin/super" : "/admin", "admin")');
+    expect(layout).toContain('go("/admin", "admin")');
     expect(layout).toContain("updateBadge(updates.admin)");
   });
 

@@ -12,9 +12,11 @@ describe("BridgeX feedback and update navigation", () => {
     expect(app).toContain("<GlobalInteractionFeedback />");
   });
 
-  it("alerts members when they enter an unread profile, workspace, or message destination", () => {
-    expect(publicLayout).toContain("const label = destination === \"profile\"");
-    expect(publicLayout).toContain("control-panel");
+  it("shows one-time popups only for new Control Panel updates and routes Super Admins to the main panel", () => {
+    expect(publicLayout).toContain("shownAdminUpdateIds");
+    expect(publicLayout).toContain("bridgex-shown-admin-updates-");
+    expect(publicLayout).toContain("New Control Panel update");
+    expect(publicLayout).toContain('go("/admin", "admin")');
     expect(publicLayout).toContain('go("/dashboard", "workspace")');
     expect(publicLayout).toContain('go("/dashboard/settings", "profile")');
   });

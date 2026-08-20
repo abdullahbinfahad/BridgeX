@@ -221,3 +221,7 @@
 - [ ] Add a dedicated protected-deals inbox page showing the newest 15 deal conversations with a show-all route for the complete deal-chat history.
 - [x] Add a dedicated traveler payout-history page, retain only the newest 10 payment records in the Payments summary, and move private payout setup to the end of the page.
 - [x] Restrict traveler payout and traveler-specific delivery notifications to the traveler recipient only.
+- [ ] Show each BridgeX web notification only once per new update while retaining unread records in the relevant destination.
+- [x] Replace detailed payment-process disclosure with concise professional protected-status wording.
+- [x] Show one-time web popups only for new administrator Control Panel updates, not ordinary member updates.
+- [x] Route the Super Admin control panel shortcut to the main BridgeX administrator Control Panel.
