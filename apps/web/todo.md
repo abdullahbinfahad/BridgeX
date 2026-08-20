@@ -246,5 +246,8 @@
 - [x] Establish the source-backed structure and maintenance workflow for the requested long-form BridgeX developer operations handbook.
 - [x] Synchronize native Android `versionName` and `versionCode` with the Play App Bundle release configuration, then rebuild from the corrected source.
 - [x] Expand the BridgeX Developer Operations Handbook Publication Index into a complete source-backed operational handbook.
+- [x] Show each BridgeX notification as its own one-time popup rather than combining multiple updates in a single popup body.
+- [x] Add administrator-managed payment exchange rates with BDT-to-CNY as the default conversion and support for 20+ currencies.
+- [x] Show the current platform conversion rate, conversion timestamp, and calculated payment amount on the protected payment record before proof submission.
 - [x] Diagnose and eliminate blank-screen failures after browser or Android WebView refreshes, with an automatic recovery path when a route chunk cannot load.
 - [x] Reduce initial and navigation loading time for the Workspace and administrator routes through measured query, loading-state, and code-delivery improvements.

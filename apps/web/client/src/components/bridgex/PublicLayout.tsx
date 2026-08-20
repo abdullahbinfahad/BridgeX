@@ -41,7 +41,7 @@ const updateDestination = (notification: NotificationRecord): UpdateDestination 
   if (notification.link?.startsWith("/dashboard/deals") || /match|message|contact_reply|order_update/i.test(notification.type)) return "messages";
   return "workspace";
 };
-const updateDetailText = (records: NotificationRecord[]) => records.slice(0, 3).map(record => `${record.title}: ${record.body}`).join("\n\n");
+const updateDetailText = (record: NotificationRecord) => `${record.title}: ${record.body}`;
 
 function AccountMenu({ mobile = false }: { mobile?: boolean }) {
   const { user, isAuthenticated, loading, logout } = useAuth();
@@ -50,6 +50,7 @@ function AccountMenu({ mobile = false }: { mobile?: boolean }) {
   const [updates, setUpdates] = useState(emptyUpdateCounts);
   const [updateDetails, setUpdateDetails] = useState(emptyUpdateDetails);
   const shownAdminUpdateIds = useRef<Set<string>>(new Set());
+  const popupTimers = useRef<number[]>([]);
 
   useEffect(() => {
     if (!user) {
@@ -71,8 +72,13 @@ function AccountMenu({ mobile = false }: { mobile?: boolean }) {
       if (freshAdminRecords.length) {
         freshAdminRecords.forEach(record => shownAdminUpdateIds.current.add(record.id));
         try { window.sessionStorage.setItem(popupKey, JSON.stringify(Array.from(shownAdminUpdateIds.current))); } catch { /* session storage is optional */ }
-        playBridgeXFeedback("notice");
-        toast.info(freshAdminRecords.length === 1 ? freshAdminRecords[0].title || "New Control Panel update" : `${freshAdminRecords.length} new Control Panel updates`, { description: <span className="whitespace-pre-line">{updateDetailText(freshAdminRecords)}</span>, duration: 5200 });
+        freshAdminRecords.forEach((record, index) => {
+          const timer = window.setTimeout(() => {
+            playBridgeXFeedback("notice");
+            toast.info(record.title || "New Control Panel update", { description: <span className="whitespace-pre-line">{updateDetailText(record)}</span>, duration: 5000 });
+          }, index * 5400);
+          popupTimers.current.push(timer);
+        });
       }
       setUpdates(next);
       setUpdateDetails(details);
@@ -80,7 +86,7 @@ function AccountMenu({ mobile = false }: { mobile?: boolean }) {
     void loadUnreadUpdates();
     // Polling avoids Android WebView channel reuse that can throw after subscription.
     const interval = window.setInterval(() => void loadUnreadUpdates(), 30000);
-    return () => { active = false; window.clearInterval(interval); };
+    return () => { active = false; window.clearInterval(interval); popupTimers.current.forEach(timer => window.clearTimeout(timer)); popupTimers.current = []; };
   }, [user?.id]);
 
   if (loading) return mobile ? <span className="rounded-lg px-3 py-2.5 text-sm font-bold text-[#748083]">Loading account…</span> : <span className="ml-2 text-sm font-semibold text-[#748083]">Loading account…</span>;

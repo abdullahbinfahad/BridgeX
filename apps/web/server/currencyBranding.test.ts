@@ -290,4 +290,29 @@ describe("BridgeX currency, cargo, support, and brand release safeguards", () =>
     expect(styles).toContain("bridgex-loader-plane-flight");
     expect(styles).toContain("bridgex-delivery-loader__package");
   });
+
+  it("queues each new Control Panel update as an individual popup instead of combining multiple notifications", () => {
+    const layout = read("apps/web/client/src/components/bridgex/PublicLayout.tsx");
+    expect(layout).toContain("freshAdminRecords.forEach");
+    expect(layout).toContain("index * 5400");
+    expect(layout).toContain("toast.info(record.title");
+    expect(layout).not.toContain("new Control Panel updates");
+  });
+
+  it("keeps exchange-rate publishing administrator-only and snapshots the CNY settlement conversion on a payment record", () => {
+    const migration = read("supabase/migrations/202608201500_admin_exchange_rates_and_payment_snapshots.sql");
+    const ratesPage = read("apps/web/client/src/pages/AdminExchangeRates.tsx");
+    const payments = read("apps/web/client/src/pages/PaymentHistory.tsx");
+    expect(migration).toContain("CREATE TABLE IF NOT EXISTS public.bridgex_exchange_rates");
+    expect(migration).toContain("base_currency");
+    expect(migration).toContain("settlement_currency := 'CNY'");
+    expect(migration).toContain("CREATE OR REPLACE FUNCTION public.save_bridgex_exchange_rate");
+    expect(migration).toContain("Only an administrator can publish BridgeX payment exchange rates.");
+    expect(ratesPage).toContain('const [base, setBase] = useState("BDT")');
+    expect(ratesPage).toContain('const [quote, setQuote] = useState("CNY")');
+    expect(ratesPage).toContain("currencies = [");
+    expect(payments).toContain("Platform settlement conversion");
+    expect(payments).toContain("settlement_amount");
+    expect(payments).toContain("Use the exact displayed CNY settlement amount.");
+  });
 });
