@@ -276,3 +276,5 @@
 - [ ] Require payment method, screenshot path, submission timestamp, and a successful stored proof before a payment can enter administrator review.
 - [x] Add a Contact enquiries New Contact action that searches members and starts a private BridgeX support conversation.
 - [x] Show a payment in administrator verification only after a stored screenshot, payment method, and submission timestamp exist.
+- [x] Eliminate the intermittent production React crash, blank loading screen, and stale-asset failure with resilient recovery.
+- [x] Harden BridgeX data loading and list rendering for sustained high user and post volume.
