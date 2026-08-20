@@ -156,9 +156,9 @@ describe("BridgeX currency, cargo, support, and brand release safeguards", () =>
     const paymentHistory = read("apps/web/client/src/pages/PaymentHistory.tsx");
     expect(migration).toContain("DROP TRIGGER IF EXISTS bridgex_manual_qr_cny_only");
     expect(migration).toContain("DROP FUNCTION IF EXISTS public.enforce_bridgex_manual_qr_cny");
-    expect(paymentHistory).toContain("Manual payment request");
-    expect(paymentHistory).toContain("Pay with Alipay");
-    expect(paymentHistory).toContain("Pay with WeChat Pay");
+    expect(paymentHistory).toContain("Protected payment record");
+    expect(paymentHistory).toContain("Alipay");
+    expect(paymentHistory).toContain("WeChat Pay");
   });
 
   it("creates private traveler payout details and payout-due records only after sender-confirmed release", () => {

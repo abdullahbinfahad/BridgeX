@@ -216,3 +216,8 @@
 - [x] Add a discreet 5% platform service fee disclosure at appropriate payment and service-status touchpoints.
 - [x] Audit member, administrator, payment, messaging, storage, and review workflows; document weaknesses and improvement priorities.
 - [x] Produce public presentation content, a research/report package, and structured illustrated developer documentation for BridgeX.
+- [x] Rename the Payment history shortcut and page title to Payments while retaining the existing route.
+- [x] Keep traveler carry-space listings public until the traveler hides or deletes them, while live remaining weight and accepted-item quantities reduce only after confirmed matches.
+- [ ] Add a dedicated protected-deals inbox page showing the newest 15 deal conversations with a show-all route for the complete deal-chat history.
+- [x] Add a dedicated traveler payout-history page, retain only the newest 10 payment records in the Payments summary, and move private payout setup to the end of the page.
+- [x] Restrict traveler payout and traveler-specific delivery notifications to the traveler recipient only.
