@@ -2,7 +2,7 @@
   "expo": {
     "name": "BridgeX",
     "slug": "bridgex",
-    "version": "1.0.6",
+    "version": "1.0.7",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
@@ -13,8 +13,7 @@
     },
     "android": {
       "package": "im.bridgex.marketplace",
-      "versionCode": 6,
-      "googleServicesFile": "./google-services.json",
+      "versionCode": 7,
       "adaptiveIcon": {
         "backgroundColor": "#f7f5ef",
         "foregroundImage": "./assets/android-icon-foreground.png",
@@ -27,10 +26,12 @@
         "ACCESS_FINE_LOCATION",
         "ACCESS_COARSE_LOCATION",
         "CAMERA",
-        "READ_MEDIA_IMAGES"
+        "READ_MEDIA_IMAGES",
+        "READ_MEDIA_VISUAL_USER_SELECTED"
       ],
       "predictiveBackGestureEnabled": false
     },
+    "softwareKeyboardLayoutMode": "resize",
     "extra": {
       "eas": {
         "projectId": "79a0cf5c-1667-471c-a9fd-4c79444363f8"

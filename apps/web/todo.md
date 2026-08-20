@@ -258,3 +258,7 @@
 - [x] Send Accept & pay directly to the newly created payment record instead of an intermediate screen.
 - [x] Repair the Pending payment status-card route so it cannot open a 404 page.
 - [x] Keep the profile Payments shortcut with an accurate unread count while Accept & pay bypasses it and opens the payment record directly.
+- [x] Keep Android WebView text inputs visible above the keyboard on Honor, Chinese-variant, and low-memory devices.
+- [x] Preserve the member’s current route and recover unsent form drafts after brief Android background interruptions.
+- [x] Support Android system Back navigation through WebView history before exiting the app.
+- [x] Repair Android gallery/file selection so identity-document uploads appear in the BridgeX verification form after confirmation.
