@@ -235,5 +235,9 @@
 - [x] Verify the production completed-order review policy after applying the released/completed eligibility repair.
 - [ ] Validate and publish the NSIS installer from a Windows-native or fully configured Wine x64 build environment; the Linux sandbox produced the portable package but could not complete Wine-based installer signing validation.
 - [x] Make delivery, parcel, luggage, route, and travel background motion more visible and diverse without harming accessibility or page performance.
+- [x] Prevent the mobile three-dot menu from registering Supabase realtime callbacks after subscription and crashing the page.
+- [x] Restore a reliable visible back action on nested BridgeX routes that have no workable browser-history return path.
+- [x] Replace generic loading text with a lightweight luggage-and-plane delivery loading animation that works in mobile WebView and browsers.
+- [x] Reposition ambient homepage visuals so they remain decorative and do not overlap calls to action or key text.
 - [x] Diagnose and eliminate blank-screen failures after browser or Android WebView refreshes, with an automatic recovery path when a route chunk cannot load.
 - [x] Reduce initial and navigation loading time for the Workspace and administrator routes through measured query, loading-state, and code-delivery improvements.

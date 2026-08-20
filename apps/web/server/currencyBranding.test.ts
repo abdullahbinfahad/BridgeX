@@ -239,4 +239,25 @@ describe("BridgeX currency, cargo, support, and brand release safeguards", () =>
     expect(review).toContain("verify_bridgex_payment");
     expect(review).toContain("Uploaded payment screenshot");
   });
+
+  it("keeps the member realtime callback lifecycle independent of menu open state and provides a return path for all dashboard routes", () => {
+    const layout = read("apps/web/client/src/components/bridgex/PublicLayout.tsx");
+    const app = read("apps/web/client/src/App.tsx");
+    expect(layout).toContain('supabase.channel(`member-web-updates-${user.id}`)');
+    expect(layout).toContain("}, [user?.id]);");
+    expect(layout).not.toContain("}, [user?.id, open]);");
+    expect(app).toContain('location.startsWith("/dashboard") || location === "/notifications" ? "/dashboard"');
+  });
+
+  it("uses the branded luggage, parcel, and plane loader for route and workspace loading states", () => {
+    const app = read("apps/web/client/src/App.tsx");
+    const dashboard = read("apps/web/client/src/components/DashboardLayout.tsx");
+    const loader = read("apps/web/client/src/components/bridgex/DeliveryLoader.tsx");
+    const styles = read("apps/web/client/src/index.css");
+    expect(app).toContain("<DeliveryLoader />");
+    expect(dashboard).toContain("<DeliveryLoader label=");
+    expect(loader).toContain("bridgex-delivery-loader__luggage");
+    expect(styles).toContain("bridgex-loader-plane-flight");
+    expect(styles).toContain("bridgex-delivery-loader__package");
+  });
 });

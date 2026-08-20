@@ -4,6 +4,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useAuth } from "@/_core/hooks/useAuth";
+import DeliveryLoader from "@/components/bridgex/DeliveryLoader";
 import { BarChart3, BadgeCheck, Bell, BookOpenCheck, CheckCircle2, CircleDollarSign, FileText, LayoutDashboard, LogOut, MessageSquareText, PackageCheck, PanelLeft, Pencil, Plane, Settings, ShieldAlert, ShieldCheck, UserRound, Users } from "lucide-react";
 import { useState } from "react";
 import { useLocation } from "wouter";
@@ -20,7 +21,7 @@ export default function DashboardLayout({ children, mode = "member", preview = f
   const { user, loading, logout } = useAuth(); const [location, setLocation] = useLocation(); const [collapsed, setCollapsed] = useState(false);
   const previewUser = mode === "admin" ? { name: "BridgeX Admin", email: "admin@bridgex.market" } : { name: "Sadia Rahman", email: "sadia@bridgex.market" };
   const currentUser = user ?? (preview ? previewUser : null); const menu = mode === "admin" ? adminMenu : memberMenu;
-  if (loading && !preview) return <div className="grid min-h-screen place-items-center bg-[#f7f5ef] text-sm text-[#657275]">Loading your BridgeX workspace…</div>;
+  if (loading && !preview) return <DeliveryLoader label="Preparing your workspace" description="Loading your protected orders and activity…" />;
   if (!currentUser) return <div className="grid min-h-screen place-items-center bg-[#f7f5ef] px-5"><div className="max-w-md rounded-3xl border border-[#172126]/8 bg-white p-8 text-center shadow-sm"><Brand className="justify-center" /><h1 className="mt-7 font-display text-3xl font-bold tracking-[-0.05em]">Sign in to your workspace</h1><p className="mt-3 text-sm leading-6 text-[#647174]">Manage requests, travel capacity, protected orders, verification, and wallet activity in one place.</p><Button onClick={() => setLocation("/access")} className="mt-7 h-11 w-full rounded-xl bg-[#172126] font-bold">Continue to BridgeX</Button></div></div>;
   const workspaceOffset = collapsed ? "xl:ml-[76px]" : "xl:ml-[250px]";
   const verificationStatus = "verificationStatus" in currentUser ? currentUser.verificationStatus : undefined;
