@@ -287,3 +287,5 @@
 - [x] Reorder Workspace navigation to the exact member-facing sequence requested by the owner.
 - [x] Replace the verification submission form for approved members with a verified-account status and benefits experience.
 - [x] Remove the in-app BridgeX Back control entirely from Android while retaining browser Back navigation.
+- [x] Remove the remaining Android floating Back control at the source and make its Android-only suppression robust across cached and late-loaded routes.
+- [x] Display accurate unread-count badges on each relevant administrator Control Panel card without counting ordinary member notifications.

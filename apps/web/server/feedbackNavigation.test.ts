@@ -37,6 +37,9 @@ describe("BridgeX feedback and update navigation", () => {
     expect(adminControl).toContain("loadUpdateCounts");
     expect(adminControl).toContain("reports: reports.count ?? 0");
     expect(adminControl).toContain("tabBadge(key");
+    expect(adminControl).toContain('const UNREAD_BASELINE = "1970-01-01T00:00:00.000Z"');
+    expect(adminControl).toContain("newly unseen operational update");
+    expect(adminControl).toContain("Could not initialize Control Panel unread state");
   });
 
   it("returns the Workspace root to the public homepage and exposes complete notification history from Messages", () => {
@@ -70,7 +73,11 @@ describe("BridgeX feedback and update navigation", () => {
     expect(app).toContain('window.sessionStorage.setItem("bridgex-android-wrapper", "true")');
     expect(app).toContain('/BridgeXAndroid\\//i.test(navigator.userAgent)');
     expect(mobileApp).toContain("document.documentElement.dataset.bridgexAndroidWrapper = 'true'");
+    expect(mobileApp).toContain("window.__BRIDGEX_ANDROID_WRAPPER__ = true");
     expect(mobileApp).toContain("bridgex-android-back-control-style");
-    expect(mobileApp).toContain(".bridgex-global-back{display:none!important");
+    expect(mobileApp).toContain("[data-bridgex-global-back=\"true\"]");
+    expect(mobileApp).toContain("MutationObserver(hideBridgeXBack)");
+    expect(app).toContain("nativeBridgeMarker");
+    expect(app).toContain('data-bridgex-global-back="true"');
   });
 });
