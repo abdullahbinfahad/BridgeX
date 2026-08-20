@@ -245,5 +245,6 @@
 - [x] Prepare a Google Play-ready Android App Bundle release configuration, store listing checklist, privacy disclosures, and upload instructions.
 - [x] Establish the source-backed structure and maintenance workflow for the requested long-form BridgeX developer operations handbook.
 - [x] Synchronize native Android `versionName` and `versionCode` with the Play App Bundle release configuration, then rebuild from the corrected source.
+- [x] Expand the BridgeX Developer Operations Handbook Publication Index into a complete source-backed operational handbook.
 - [x] Diagnose and eliminate blank-screen failures after browser or Android WebView refreshes, with an automatic recovery path when a route chunk cannot load.
 - [x] Reduce initial and navigation loading time for the Workspace and administrator routes through measured query, loading-state, and code-delivery improvements.
