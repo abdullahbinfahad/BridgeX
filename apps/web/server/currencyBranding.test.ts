@@ -198,7 +198,7 @@ describe("BridgeX currency, cargo, support, and brand release safeguards", () =>
     expect(layout).toContain("updateDetailText");
     expect(layout).toContain("whitespace-pre-line");
     expect(layout).toContain('"/dashboard/payments"');
-    expect(layout).toContain("member-web-updates-");
+    expect(layout).toContain("window.setInterval(() => void loadUnreadUpdates(), 30000)");
     expect(reviews).toContain('fulfillment_status.eq.completed');
     expect(reviews).toContain("of 5 stars selected");
     expect(reviews).toContain("Publishing review…");
@@ -240,10 +240,12 @@ describe("BridgeX currency, cargo, support, and brand release safeguards", () =>
     expect(review).toContain("Uploaded payment screenshot");
   });
 
-  it("keeps the member realtime callback lifecycle independent of menu open state and provides a return path for all dashboard routes", () => {
+  it("uses a mobile-safe notification polling lifecycle and provides a return path for all dashboard routes", () => {
     const layout = read("apps/web/client/src/components/bridgex/PublicLayout.tsx");
     const app = read("apps/web/client/src/App.tsx");
-    expect(layout).toContain('supabase.channel(`member-web-updates-${user.id}`)');
+    expect(layout).toContain("Polling is intentionally used here instead of a realtime channel");
+    expect(layout).toContain("window.setInterval(() => void loadUnreadUpdates(), 30000)");
+    expect(layout).not.toContain("member-web-updates-");
     expect(layout).toContain("}, [user?.id]);");
     expect(layout).not.toContain("}, [user?.id, open]);");
     expect(app).toContain('location.startsWith("/dashboard") || location === "/notifications" ? "/dashboard"');

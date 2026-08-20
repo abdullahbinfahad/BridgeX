@@ -239,5 +239,6 @@
 - [x] Restore a reliable visible back action on nested BridgeX routes that have no workable browser-history return path.
 - [x] Replace generic loading text with a lightweight luggage-and-plane delivery loading animation that works in mobile WebView and browsers.
 - [x] Reposition ambient homepage visuals so they remain decorative and do not overlap calls to action or key text.
+- [x] Remove Supabase realtime channel registration from the account-menu notification path and use a mobile-safe polling fallback to prevent callback-after-subscribe crashes.
 - [x] Diagnose and eliminate blank-screen failures after browser or Android WebView refreshes, with an automatic recovery path when a route chunk cannot load.
 - [x] Reduce initial and navigation loading time for the Workspace and administrator routes through measured query, loading-state, and code-delivery improvements.

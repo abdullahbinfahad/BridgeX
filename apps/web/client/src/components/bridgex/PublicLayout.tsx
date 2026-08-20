@@ -57,9 +57,11 @@ function AccountMenu({ mobile = false }: { mobile?: boolean }) {
       setUpdateDetails(details);
     };
     void loadUnreadUpdates();
-    const channel = supabase.channel(`member-web-updates-${user.id}`).on("postgres_changes", { event: "INSERT", schema: "public", table: "notifications", filter: `user_id=eq.${user.id}` }, () => { void loadUnreadUpdates(); }).subscribe();
-    const interval = window.setInterval(() => void loadUnreadUpdates(), 15000);
-    return () => { active = false; window.clearInterval(interval); void supabase.removeChannel(channel); };
+    // Polling is intentionally used here instead of a realtime channel: some Android WebView
+    // sessions retain a subscribed channel instance across navigations, which makes later
+    // callback registration throw and can crash the account menu.
+    const interval = window.setInterval(() => void loadUnreadUpdates(), 30000);
+    return () => { active = false; window.clearInterval(interval); };
   }, [user?.id]);
   if (loading) return mobile ? <span className="rounded-lg px-3 py-2.5 text-sm font-bold text-[#748083]">Loading account…</span> : <span className="ml-2 text-sm font-semibold text-[#748083]">Loading account…</span>;
   if (!isAuthenticated || !user) return mobile ? <Link href="/access" className="rounded-lg px-3 py-2.5 text-sm font-bold hover:bg-[#ece8dd]">Log in or create account</Link> : <Link href="/access"><Button variant="ghost" size="sm" className="ml-1 font-semibold text-[#354145] hover:bg-[#e9e4d8]">Log in</Button></Link>;
