@@ -63,4 +63,12 @@ describe("BridgeX feedback and update navigation", () => {
     expect(payments).toContain('const recordId = routeType === "record" ? segments[3] ?? "" : ""');
     expect(publicLayout).toContain('Payments{updateBadge(updates.payments)}');
   });
+
+  it("keeps the browser Back control while durably suppressing it for Android WebView routes", () => {
+    const mobileApp = readFileSync(new URL("../../mobile/App.tsx", import.meta.url), "utf8");
+    expect(app).toContain('new URLSearchParams(window.location.search).get("app") === "android"');
+    expect(app).toContain('window.sessionStorage.setItem("bridgex-android-wrapper", "true")');
+    expect(app).toContain('/BridgeXAndroid\\//i.test(navigator.userAgent)');
+    expect(mobileApp).toContain("document.documentElement.dataset.bridgexAndroidWrapper = 'true'");
+  });
 });

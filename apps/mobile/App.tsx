@@ -28,6 +28,8 @@ const isBridgeXUrl = (url?: string) => Boolean(url && (url === BRIDGEX_ORIGIN ||
 
 const MOBILE_COMPATIBILITY_BRIDGE = `
   (function () {
+    document.documentElement.dataset.bridgexAndroidWrapper = 'true';
+    try { window.sessionStorage.setItem('bridgex-android-wrapper', 'true'); } catch (_) {}
     if (window.__bridgexMobileCompatibilityLoaded) return;
     window.__bridgexMobileCompatibilityLoaded = true;
     var timer = null;

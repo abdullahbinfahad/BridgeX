@@ -78,7 +78,11 @@ function GlobalInteractionFeedback() {
 
 function GlobalBackButton() {
   const [location, setLocation] = useLocation();
-  const inAndroidApp = /BridgeXAndroid\//i.test(navigator.userAgent);
+  const androidQueryMarker = new URLSearchParams(window.location.search).get("app") === "android";
+  if (androidQueryMarker) {
+    try { window.sessionStorage.setItem("bridgex-android-wrapper", "true"); } catch { /* Storage can be unavailable in hardened WebViews. */ }
+  }
+  const inAndroidApp = androidQueryMarker || /BridgeXAndroid\//i.test(navigator.userAgent) || window.sessionStorage.getItem("bridgex-android-wrapper") === "true";
   const hasDetailQuery = Boolean(window.location.search);
   const parent = location === "/" ? "" : location === "/dashboard" ? "/" : location.startsWith("/admin/") ? "/admin" : location.startsWith("/dashboard/deals") && hasDetailQuery ? "/dashboard/deals" : location.startsWith("/dashboard/payments/") ? "/dashboard/payments" : location.startsWith("/dashboard/payouts/") ? "/dashboard/payouts" : location.startsWith("/dashboard") || location === "/notifications" ? "/dashboard" : location.startsWith("/post/") || location.startsWith("/member/") || location.startsWith("/offer") || location.startsWith("/interest") ? "/marketplace" : "/";
   if (!parent || inAndroidApp) return null;

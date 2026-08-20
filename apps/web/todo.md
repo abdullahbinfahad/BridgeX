@@ -280,3 +280,7 @@
 - [x] Harden BridgeX data loading and list rendering for sustained high user and post volume.
 - [x] Hide the floating BridgeX Back control in the Android wrapper while retaining it for browser users.
 - [x] Increment the Android release and create a new Google Play App Bundle with the Android navigation update.
+- [ ] Diagnose and recover the live Render 502 Bad Gateway outage without losing BridgeX application data or recent releases.
+- [ ] Create a staged technical and operations roadmap for safely scaling BridgeX toward one million users.
+- [x] Fix Android-specific BridgeX Back control suppression so browser Back navigation remains visible while the installed Android app relies only on the system Back action.
+- [ ] Produce a comprehensive future BridgeX developer operations and troubleshooting manual with growth architecture, workflows, diagrams, and referenced technical procedures.
