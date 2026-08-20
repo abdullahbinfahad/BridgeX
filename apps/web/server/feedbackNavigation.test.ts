@@ -5,6 +5,10 @@ const app = readFileSync(new URL("../client/src/App.tsx", import.meta.url), "utf
 const publicLayout = readFileSync(new URL("../client/src/components/bridgex/PublicLayout.tsx", import.meta.url), "utf8");
 const workspace = readFileSync(new URL("../client/src/pages/Workspace.tsx", import.meta.url), "utf8");
 const adminControl = readFileSync(new URL("../client/src/pages/AdminControl.tsx", import.meta.url), "utf8");
+const deals = readFileSync(new URL("../client/src/pages/Deals.tsx", import.meta.url), "utf8");
+const notifications = readFileSync(new URL("../client/src/pages/NotificationsPage.tsx", import.meta.url), "utf8");
+const onboarding = readFileSync(new URL("../client/src/pages/Onboarding.tsx", import.meta.url), "utf8");
+const offer = readFileSync(new URL("../client/src/pages/OfferPage.tsx", import.meta.url), "utf8");
 
 describe("BridgeX feedback and update navigation", () => {
   it("uses one application-wide interaction-feedback listener", () => {
@@ -32,5 +36,20 @@ describe("BridgeX feedback and update navigation", () => {
     expect(adminControl).toContain("loadUpdateCounts");
     expect(adminControl).toContain("reports: reports.count ?? 0");
     expect(adminControl).toContain("tabBadge(key");
+  });
+
+  it("returns the Workspace root to the public homepage and exposes complete notification history from Messages", () => {
+    expect(app).toContain('location === "/dashboard" ? "/"');
+    expect(deals).toContain('window.location.assign("/notifications")');
+    expect(notifications).toContain("Load more updates");
+    expect(notifications).toContain("All account, offer, payment, order, support, safety, and administrator updates appear here.");
+  });
+
+  it("requires complete protected-order profile details and explains the requirement during onboarding and traveler offers", () => {
+    expect(onboarding).toContain("Complete your details before accepting protected work");
+    expect(onboarding).toContain("current exact pickup location");
+    expect(onboarding).toContain("home delivery location");
+    expect(offer).toContain("Complete details are required for acceptance");
+    expect(offer).toContain("Complete your profile before submitting an offer.");
   });
 });

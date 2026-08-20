@@ -249,5 +249,9 @@
 - [x] Show each BridgeX notification as its own one-time popup rather than combining multiple updates in a single popup body.
 - [x] Add administrator-managed payment exchange rates with BDT-to-CNY as the default conversion and support for 20+ currencies.
 - [x] Show the current platform conversion rate, conversion timestamp, and calculated payment amount on the protected payment record before proof submission.
+- [x] Fix the Workspace root Back control so it returns to the public BridgeX homepage instead of routing to the same page.
+- [x] Link Messages “Show all” to a complete member Updates page with all account, payment, order, support, and system notifications.
+- [x] Show a concise onboarding notice that required contact and delivery information must be complete before a member can accept products or protected orders.
+- [x] Require a traveler offer to include complete pickup/location and contact details before it can be submitted for acceptance.
 - [x] Diagnose and eliminate blank-screen failures after browser or Android WebView refreshes, with an automatic recovery path when a route chunk cannot load.
 - [x] Reduce initial and navigation loading time for the Workspace and administrator routes through measured query, loading-state, and code-delivery improvements.
