@@ -11,3 +11,5 @@ The final live reliability update, commit `1948724`, was visually checked in the
 The subsequent menu-and-loader update, commit `31d6d8d`, was also checked on the live domain. The signed-in account shell completed hydration after a fresh page load without showing the reported realtime subscription exception; the update removes the menu-open state from the realtime subscription lifecycle so opening the account menu no longer re-registers a subscribed callback.
 
 The definitive polling-fallback release, commit `64ad08b`, was verified on the live domain by opening the signed-in account menu. It contains no `postgres_changes` callback registration in this menu path and opened successfully after deployment.
+
+The payment-route and Google Play preparation release, commit `829ae23`, was pushed to `main` on 2026-08-20. The first public verification request reached the Render free-tier wake-up screen while the service was allocating an instance. After startup, the live BridgeX homepage completed its delivery-themed loading state and displayed the signed-in public shell and live marketplace content successfully.
