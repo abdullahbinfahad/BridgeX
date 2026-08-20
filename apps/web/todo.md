@@ -275,3 +275,4 @@
 - [ ] Repair payment-proof screenshots so Android and desktop uploads are persistently stored and securely visible in administrator payment review before verification.
 - [ ] Require payment method, screenshot path, submission timestamp, and a successful stored proof before a payment can enter administrator review.
 - [x] Add a Contact enquiries New Contact action that searches members and starts a private BridgeX support conversation.
+- [x] Show a payment in administrator verification only after a stored screenshot, payment method, and submission timestamp exist.
