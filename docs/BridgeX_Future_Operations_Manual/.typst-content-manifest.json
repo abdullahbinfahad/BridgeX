@@ -1,0 +1,11 @@
+{
+  "task_kind": "new-document",
+  "output": "pdf",
+  "signals": [],
+  "hard_constraints": ["minimum 600 pages", "developer operations manual", "annotated workflows", "technical troubleshooting"],
+  "content_features": {
+    "code_blocks": 80,
+    "defined_terms": 120,
+    "portrait_images": 12
+  }
+}
