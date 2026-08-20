@@ -278,3 +278,5 @@
 - [x] Show a payment in administrator verification only after a stored screenshot, payment method, and submission timestamp exist.
 - [x] Eliminate the intermittent production React crash, blank loading screen, and stale-asset failure with resilient recovery.
 - [x] Harden BridgeX data loading and list rendering for sustained high user and post volume.
+- [x] Hide the floating BridgeX Back control in the Android wrapper while retaining it for browser users.
+- [x] Increment the Android release and create a new Google Play App Bundle with the Android navigation update.
