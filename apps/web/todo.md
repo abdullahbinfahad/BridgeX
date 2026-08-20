@@ -269,3 +269,8 @@
 - [x] Add post-detail edit actions for the owner, including later price and currency changes.
 - [x] Expand post and profile currency selection to 40+ supported currencies.
 - [ ] Update the footer Android download link to the new APK and add a 2027 BridgeX copyright notice.
+- [ ] Allow only one pending or accepted traveler offer per send-request and hide competing offers after payment begins.
+- [ ] Show full currency names alongside currency codes throughout member-facing post, offer, payment, and profile views.
+- [ ] Compress every image/file upload aggressively before storage, including optional image attachments in member and BridgeX Admin conversations.
+- [ ] Repair payment-proof screenshots so Android and desktop uploads are persistently stored and securely visible in administrator payment review before verification.
+- [ ] Require payment method, screenshot path, submission timestamp, and a successful stored proof before a payment can enter administrator review.

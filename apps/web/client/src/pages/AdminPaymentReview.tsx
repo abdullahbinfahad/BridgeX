@@ -39,7 +39,7 @@ export default function AdminPaymentReview() {
     const byId = new Map((members.data ?? []).map((member: Member) => [member.id, member])); setPayer(byId.get(record.payer_id) ?? null); setOwner(byId.get(record.owner_id) ?? null);
     const row: any = post.data;
     setContext(record.response_kind === "offer" ? (row ? `${row.title} · ${row.purchase_city || row.purchase_country} → ${row.destination_city}, ${row.destination_country}` : "Item request") : (row ? `${row.origin_city}, ${row.origin_country} → ${row.destination_city}, ${row.destination_country} · ${row.transport_mode || "Carry space"}` : "Carry-space interest"));
-    if (record.proof_path) { const signed = await supabase.storage.from("payment-proofs").createSignedUrl(record.proof_path, 10 * 60); setProofUrl(signed.data?.signedUrl ?? null); }
+    if (record.proof_path) { const signed = await supabase.storage.from("payment-proofs").createSignedUrl(record.proof_path, 10 * 60); if (signed.error) setNotice(`Payment proof exists but could not be opened: ${signed.error.message}`); setProofUrl(signed.data?.signedUrl ?? null); }
     setLoading(false);
   };
 

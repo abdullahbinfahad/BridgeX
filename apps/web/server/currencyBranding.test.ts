@@ -314,6 +314,6 @@ describe("BridgeX currency, cargo, support, and brand release safeguards", () =>
     expect(payments).toContain("Amount to pay");
     expect(payments).toContain("settlement_amount");
     expect(payments).toContain("Converted to CNY for this payment.");
-    expect(payments).toContain("Use the displayed CNY amount.");
+    expect(payments).toContain("Payment screenshot (required)");
   });
 });

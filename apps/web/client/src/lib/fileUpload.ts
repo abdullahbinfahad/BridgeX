@@ -1,4 +1,4 @@
-const MAX_DIMENSION = 1600;
+const MAX_DIMENSION = 1080;
 const MAX_VIDEO_SECONDS = 45;
 const MAX_VIDEO_BYTES = 12 * 1024 * 1024;
 
@@ -21,7 +21,7 @@ export async function compressImageForUpload(file: File) {
     context.fillStyle = "#ffffff";
     context.fillRect(0, 0, canvas.width, canvas.height);
     context.drawImage(image, 0, 0, canvas.width, canvas.height);
-    const blob = await new Promise<Blob | null>((resolve) => canvas.toBlob(resolve, "image/jpeg", 0.76));
+    const blob = await new Promise<Blob | null>((resolve) => canvas.toBlob(resolve, "image/jpeg", 0.64));
     if (!blob) return file;
     const compressed = new File([blob], `${file.name.replace(/\.[^.]+$/, "")}-compressed.jpg`, { type: "image/jpeg" });
     return compressed.size < file.size ? compressed : file;
