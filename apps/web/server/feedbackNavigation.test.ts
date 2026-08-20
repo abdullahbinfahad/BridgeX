@@ -40,6 +40,8 @@ describe("BridgeX feedback and update navigation", () => {
     expect(adminControl).toContain('const UNREAD_BASELINE = "1970-01-01T00:00:00.000Z"');
     expect(adminControl).toContain("newly unseen operational update");
     expect(adminControl).toContain("Could not initialize Control Panel unread state");
+    const unreadMigration = readFileSync(new URL("../../../supabase/migrations/202608211115_rebase_admin_section_unread_state.sql", import.meta.url), "utf8");
+    expect(unreadMigration).toContain("SET last_read_at = TIMESTAMPTZ '1970-01-01 00:00:00+00'");
   });
 
   it("returns the Workspace root to the public homepage and exposes complete notification history from Messages", () => {
