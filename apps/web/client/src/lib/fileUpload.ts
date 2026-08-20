@@ -1,4 +1,6 @@
 const MAX_DIMENSION = 1080;
+export const MAX_REPORT_EVIDENCE_BYTES = 700 * 1024;
+const REPORT_EVIDENCE_MAX_DIMENSION = 720;
 const MAX_VIDEO_SECONDS = 45;
 const MAX_VIDEO_BYTES = 12 * 1024 * 1024;
 
@@ -25,6 +27,41 @@ export async function compressImageForUpload(file: File) {
     if (!blob) return file;
     const compressed = new File([blob], `${file.name.replace(/\.[^.]+$/, "")}-compressed.jpg`, { type: "image/jpeg" });
     return compressed.size < file.size ? compressed : file;
+  } catch {
+    return file;
+  } finally {
+    URL.revokeObjectURL(source);
+  }
+}
+
+/** Creates a deliberately small JPEG evidence copy for safety reports without storing originals. */
+export async function compressReportEvidenceImage(file: File) {
+  if (!file.type.startsWith("image/")) return file;
+  const source = URL.createObjectURL(file);
+  try {
+    const image = new Image();
+    image.src = source;
+    await image.decode();
+    const longestSide = Math.max(image.width, image.height);
+    const scale = Math.min(1, REPORT_EVIDENCE_MAX_DIMENSION / longestSide);
+    const canvas = document.createElement("canvas");
+    canvas.width = Math.max(1, Math.round(image.width * scale));
+    canvas.height = Math.max(1, Math.round(image.height * scale));
+    const context = canvas.getContext("2d");
+    if (!context) return file;
+    context.fillStyle = "#ffffff";
+    context.fillRect(0, 0, canvas.width, canvas.height);
+    context.drawImage(image, 0, 0, canvas.width, canvas.height);
+
+    let best: Blob | null = null;
+    for (const quality of [0.5, 0.42, 0.34, 0.28]) {
+      const candidate = await new Promise<Blob | null>(resolve => canvas.toBlob(resolve, "image/jpeg", quality));
+      if (!candidate) continue;
+      if (!best || candidate.size < best.size) best = candidate;
+      if (candidate.size <= MAX_REPORT_EVIDENCE_BYTES) break;
+    }
+    if (!best) return file;
+    return new File([best], `${file.name.replace(/\.[^.]+$/, "")}-evidence.jpg`, { type: "image/jpeg" });
   } catch {
     return file;
   } finally {

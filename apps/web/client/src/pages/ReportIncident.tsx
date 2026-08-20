@@ -4,7 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { useAuth } from "@/_core/hooks/useAuth";
-import { compressImageForUpload } from "@/lib/fileUpload";
+import { compressReportEvidenceImage, MAX_REPORT_EVIDENCE_BYTES } from "@/lib/fileUpload";
 import { supabase } from "@/lib/supabase";
 import { INCIDENT_CATEGORIES, canSubmitIncidentReport, type IncidentCategory } from "@shared/bridgeXControls";
 import { AlertTriangle, ArrowLeft, FileUp, ShieldCheck } from "lucide-react";
@@ -41,10 +41,10 @@ export default function ReportIncident() {
 
     const evidencePaths: string[] = [];
     for (const file of evidence) {
-      const prepared = await compressImageForUpload(file);
-      if (prepared.size > 5 * 1024 * 1024) {
+      const prepared = await compressReportEvidenceImage(file);
+      if (prepared.size > MAX_REPORT_EVIDENCE_BYTES) {
         setStatus("error");
-        setMessage(`${file.name} is still larger than 5 MB after compression.`);
+        setMessage(`${file.name} could not be compressed below 700 KB. Choose a clearer or smaller image.`);
         return;
       }
 
@@ -109,7 +109,7 @@ export default function ReportIncident() {
               </div>
               <div className="grid gap-2"><Label>Reported member</Label><Input value={subjectUserId} onChange={(event) => setSubjectUserId(event.target.value)} placeholder="Member ID" className="h-11 rounded-xl" readOnly={Boolean(new URLSearchParams(window.location.search).get("member"))} /><p className="text-xs text-[#687579]">When opened from a public member profile, this account is attached to the report without revealing any private member data.</p></div>
               <div className="grid gap-2"><Label>What happened?</Label><Textarea required minLength={20} value={description} onChange={(event) => setDescription(event.target.value)} placeholder="Include dates, the agreed arrangement, the concern, and any relevant order details. Do not include passwords or unnecessary identity numbers." className="min-h-36 rounded-xl" /></div>
-              <label className="flex cursor-pointer items-center gap-3 rounded-2xl border border-dashed border-[#b8c8bf] bg-[#f4faf5] p-4"><span className="grid size-10 place-items-center rounded-xl bg-[#dff5ea] text-[#176447]"><FileUp className="size-5" /></span><span className="min-w-0 flex-1"><span className="block text-sm font-bold">{evidence.length ? `${evidence.length} evidence file${evidence.length > 1 ? "s" : ""} selected` : "Add evidence images"}</span><span className="mt-0.5 block text-xs text-[#71807b]">Optional JPG, PNG, or WEBP. Up to 3 files; every image is compressed in your browser before private upload.</span></span><input className="sr-only" type="file" multiple accept="image/jpeg,image/png,image/webp" onChange={(event) => selectEvidence(event.target.files)} /></label>
+              <label className="flex cursor-pointer items-center gap-3 rounded-2xl border border-dashed border-[#b8c8bf] bg-[#f4faf5] p-4"><span className="grid size-10 place-items-center rounded-xl bg-[#dff5ea] text-[#176447]"><FileUp className="size-5" /></span><span className="min-w-0 flex-1"><span className="block text-sm font-bold">{evidence.length ? `${evidence.length} evidence file${evidence.length > 1 ? "s" : ""} selected` : "Add evidence images"}</span><span className="mt-0.5 block text-xs text-[#71807b]">Optional JPG, PNG, or WEBP. Up to 3 files; each image is reduced to a maximum 720 px and strongly compressed below 700 KB before private upload.</span></span><input className="sr-only" type="file" multiple accept="image/jpeg,image/png,image/webp" onChange={(event) => selectEvidence(event.target.files)} /></label>
               <label className="flex gap-2 text-xs leading-5 text-[#5f6d6b]"><input type="checkbox" checked={consent} onChange={(event) => setConsent(event.target.checked)} />I confirm that this report is truthful to the best of my knowledge and I consent to BridgeX storing the selected evidence for authorized safety review.</label>
               <Button disabled={status === "submitting"} className="h-12 rounded-xl bg-[#172126] font-bold"><ShieldCheck className="mr-2 size-4" />{status === "submitting" ? "Submitting report…" : "Submit safety report"}</Button>
               {message && <p className={`rounded-xl px-3 py-2 text-sm font-semibold ${status === "sent" ? "bg-[#dff5ea] text-[#176447]" : "bg-[#f8e8e5] text-[#9b4b3e]"}`}>{message}</p>}

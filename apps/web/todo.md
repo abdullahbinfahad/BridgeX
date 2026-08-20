@@ -290,3 +290,5 @@
 - [x] Remove the remaining Android floating Back control at the source and make its Android-only suppression robust across cached and late-loaded routes.
 - [x] Display accurate unread-count badges on each relevant administrator Control Panel card without counting ordinary member notifications.
 - [x] Make each fresh Android app launch open the public BridgeX homepage rather than restoring a prior Workspace route, while keeping safe draft recovery after launch.
+- [x] Add an administrator-only safety-report evidence viewer and strongly compress report images before upload.
+- [x] Permanently remove the report’s stored evidence images only when an administrator closes that report, while retaining the text audit record.
