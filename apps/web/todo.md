@@ -292,3 +292,4 @@
 - [x] Make each fresh Android app launch open the public BridgeX homepage rather than restoring a prior Workspace route, while keeping safe draft recovery after launch.
 - [x] Add an administrator-only safety-report evidence viewer and strongly compress report images before upload.
 - [x] Permanently remove the report’s stored evidence images only when an administrator closes that report, while retaining the text audit record.
+- [x] Replace the failed SQL storage-table deletion with an authorized Supabase Storage API deletion before closing a safety report.

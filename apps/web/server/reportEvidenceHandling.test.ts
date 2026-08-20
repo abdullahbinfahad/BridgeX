@@ -14,15 +14,17 @@ describe("BridgeX safety-report evidence handling", () => {
     expect(report).toContain("below 700 KB before private upload");
   });
 
-  it("opens signed report evidence for administrators and deletes it only on final close", () => {
+  it("opens signed report evidence for administrators and uses the Storage API only on final close", () => {
     const admin = read("../client/src/pages/AdminControl.tsx");
-    const migration = read("../../../supabase/migrations/202608211200_close_incident_report_evidence.sql");
+    const migration = read("../../../supabase/migrations/202608211230_authorize_report_evidence_storage_delete.sql");
     expect(admin).toContain("viewReportEvidence");
     expect(admin).toContain('createSignedUrl(path, 600)');
     expect(admin).toContain('changes.status === "under_review"');
-    expect(admin).toContain('close_bridgex_incident_report');
-    expect(migration).toContain("DELETE FROM storage.objects");
-    expect(migration).toContain("evidence_paths = '[]'::jsonb");
-    expect(migration).toContain("Only an administrator can close a BridgeX safety report.");
+    expect(admin).toContain('storage.from("request-media").remove(paths)');
+    expect(admin).toContain('evidence_paths: []');
+    expect(admin).not.toContain('close_bridgex_incident_report');
+    expect(migration).toContain("request_media_delete_admin_report_evidence");
+    expect(migration).toContain("FOR DELETE TO authenticated");
+    expect(migration).toContain("name LIKE '%/reports/%'");
   });
 });
