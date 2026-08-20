@@ -70,5 +70,7 @@ describe("BridgeX feedback and update navigation", () => {
     expect(app).toContain('window.sessionStorage.setItem("bridgex-android-wrapper", "true")');
     expect(app).toContain('/BridgeXAndroid\\//i.test(navigator.userAgent)');
     expect(mobileApp).toContain("document.documentElement.dataset.bridgexAndroidWrapper = 'true'");
+    expect(mobileApp).toContain("bridgex-android-back-control-style");
+    expect(mobileApp).toContain(".bridgex-global-back{display:none!important");
   });
 });

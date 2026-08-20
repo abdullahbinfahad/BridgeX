@@ -284,3 +284,6 @@
 - [x] Create a staged technical and operations roadmap for safely scaling BridgeX toward one million users.
 - [x] Fix Android-specific BridgeX Back control suppression so browser Back navigation remains visible while the installed Android app relies only on the system Back action.
 - [x] Produce a comprehensive future BridgeX developer operations and troubleshooting manual with growth architecture, workflows, diagrams, and referenced technical procedures.
+- [x] Reorder Workspace navigation to the exact member-facing sequence requested by the owner.
+- [x] Replace the verification submission form for approved members with a verified-account status and benefits experience.
+- [x] Remove the in-app BridgeX Back control entirely from Android while retaining browser Back navigation.
