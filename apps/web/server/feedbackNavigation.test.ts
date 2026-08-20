@@ -9,6 +9,7 @@ const deals = readFileSync(new URL("../client/src/pages/Deals.tsx", import.meta.
 const notifications = readFileSync(new URL("../client/src/pages/NotificationsPage.tsx", import.meta.url), "utf8");
 const onboarding = readFileSync(new URL("../client/src/pages/Onboarding.tsx", import.meta.url), "utf8");
 const offer = readFileSync(new URL("../client/src/pages/OfferPage.tsx", import.meta.url), "utf8");
+const payments = readFileSync(new URL("../client/src/pages/PaymentHistory.tsx", import.meta.url), "utf8");
 
 describe("BridgeX feedback and update navigation", () => {
   it("uses one application-wide interaction-feedback listener", () => {
@@ -51,5 +52,15 @@ describe("BridgeX feedback and update navigation", () => {
     expect(onboarding).toContain("home delivery location");
     expect(offer).toContain("Complete details are required for acceptance");
     expect(offer).toContain("Complete your profile before submitting an offer.");
+  });
+
+  it("opens a new payment directly and supports every nested payment status or record route", () => {
+    expect(app).toContain('path={"/dashboard/payments/:view/:record"}');
+    expect(app).toContain('path={"/dashboard/payments/:view"}');
+    expect(app).toContain('location.startsWith("/dashboard/payments/") ? "/dashboard/payments"');
+    expect(workspace).toContain('window.location.assign(`/dashboard/payments/record/${encodeURIComponent(data)}`)');
+    expect(payments).toContain('const routeType = segments[2] ?? ""');
+    expect(payments).toContain('const recordId = routeType === "record" ? segments[3] ?? "" : ""');
+    expect(publicLayout).toContain('Payments{updateBadge(updates.payments)}');
   });
 });

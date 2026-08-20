@@ -255,3 +255,6 @@
 - [x] Require a traveler offer to include complete pickup/location and contact details before it can be submitted for acceptance.
 - [x] Diagnose and eliminate blank-screen failures after browser or Android WebView refreshes, with an automatic recovery path when a route chunk cannot load.
 - [x] Reduce initial and navigation loading time for the Workspace and administrator routes through measured query, loading-state, and code-delivery improvements.
+- [x] Send Accept & pay directly to the newly created payment record instead of an intermediate screen.
+- [x] Repair the Pending payment status-card route so it cannot open a 404 page.
+- [x] Keep the profile Payments shortcut with an accurate unread count while Accept & pay bypasses it and opens the payment record directly.

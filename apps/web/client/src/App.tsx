@@ -44,6 +44,10 @@ function Router() {
       <Route path={"/onboarding"} component={Onboarding} />
       <Route path={"/report-incident"} component={ReportIncident} />
       <Route path={"/dashboard/reviews"} component={ReviewsPage} />
+      <Route path={"/dashboard/payments/:view/:record"} component={Workspace} />
+      <Route path={"/dashboard/payouts/:view/:record"} component={Workspace} />
+      <Route path={"/dashboard/payments/:view"} component={Workspace} />
+      <Route path={"/dashboard/payouts/:view"} component={Workspace} />
       <Route path={"/dashboard"} component={Workspace} />
       <Route path={"/dashboard/:section"} component={Workspace} />
       <Route path={"/notifications"} component={NotificationsPage} />
@@ -75,7 +79,7 @@ function GlobalInteractionFeedback() {
 function GlobalBackButton() {
   const [location, setLocation] = useLocation();
   const hasDetailQuery = Boolean(window.location.search);
-  const parent = location === "/" ? "" : location === "/dashboard" ? "/" : location.startsWith("/admin/") ? "/admin" : location.startsWith("/dashboard/deals") && hasDetailQuery ? "/dashboard/deals" : location.startsWith("/dashboard") || location === "/notifications" ? "/dashboard" : location.startsWith("/post/") || location.startsWith("/member/") || location.startsWith("/offer") || location.startsWith("/interest") ? "/marketplace" : "/";
+  const parent = location === "/" ? "" : location === "/dashboard" ? "/" : location.startsWith("/admin/") ? "/admin" : location.startsWith("/dashboard/deals") && hasDetailQuery ? "/dashboard/deals" : location.startsWith("/dashboard/payments/") ? "/dashboard/payments" : location.startsWith("/dashboard/payouts/") ? "/dashboard/payouts" : location.startsWith("/dashboard") || location === "/notifications" ? "/dashboard" : location.startsWith("/post/") || location.startsWith("/member/") || location.startsWith("/offer") || location.startsWith("/interest") ? "/marketplace" : "/";
   if (!parent) return null;
   return <button onClick={() => setLocation(parent)} className="bridgex-global-back fixed bottom-5 left-4 z-40 inline-flex items-center gap-1.5 rounded-full border border-[#172126]/10 px-3.5 py-2 text-xs font-bold text-[#304044] shadow-lg sm:left-6"><ChevronLeft className="size-4" />Back</button>;
 }
