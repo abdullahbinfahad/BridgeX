@@ -293,3 +293,4 @@
 - [x] Add an administrator-only safety-report evidence viewer and strongly compress report images before upload.
 - [x] Permanently remove the report’s stored evidence images only when an administrator closes that report, while retaining the text audit record.
 - [x] Replace the failed SQL storage-table deletion with an authorized Supabase Storage API deletion before closing a safety report.
+- [x] Permanently delete the entire safety-report record as well as all evidence files when an administrator confirms Close, including compatibility for an older deployed page.
