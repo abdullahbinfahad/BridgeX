@@ -34,4 +34,16 @@ describe("BridgeX system-language preferences", () => {
     expect(migration).toContain("preferred_language text NOT NULL DEFAULT 'en'");
     expect(migration).toContain("users_preferred_language_check");
   });
+
+  it("provides complete fixed-interface translations and applies them through the language provider", () => {
+    const provider = read("../client/src/contexts/LanguageContext.tsx");
+    const fixed = read("../client/src/lib/fixedInterfaceTranslations.ts");
+    for (const language of ["en", "zh-CN", "fr", "es", "de", "ar", "ja", "ko", "bn", "hi", "ur"]) {
+      expect(fixed).toContain(`"${language}": {`);
+    }
+    expect(provider).toContain("localizeFixedInterface(document, language)");
+    expect(provider).toContain("MutationObserver");
+    expect(provider).toContain("data-bridgex-user-content");
+    expect(fixed).toContain("allLanguageReverseLookup");
+  });
 });

@@ -1,0 +1,5 @@
+{
+  "apiType": "stageMode",
+  "buildOption": { "strictMode": { "caseSensitiveCheck": true, "useNormalizedOHMUrl": true } },
+  "modules": [ { "name": "entry", "srcPath": "./entry" } ]
+}

@@ -1,0 +1,29 @@
+{
+  "name": "bridgex-macos",
+  "version": "1.0.0",
+  "private": true,
+  "description": "BridgeX macOS desktop wrapper for the global delivery marketplace.",
+  "author": "BridgeX",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/abdullahbinfahad/BridgeX.git"
+  },
+  "main": "main.cjs",
+  "scripts": {
+    "start": "electron .",
+    "package:mac:x64": "electron-builder --mac zip --x64 --publish never",
+    "package:mac:arm64": "electron-builder --mac zip --arm64 --publish never"
+  },
+  "devDependencies": {
+    "electron": "^37.2.0",
+    "electron-builder": "^26.0.12"
+  },
+  "build": {
+    "appId": "info.abdullahbinfahad.bridgex",
+    "productName": "BridgeX",
+    "artifactName": "BridgeX-macOS-${version}-${arch}.${ext}",
+    "asar": true,
+    "mac": { "target": ["zip"], "category": "public.app-category.business", "icon": "build/bridgex.icns" },
+    "files": ["main.cjs", "preload.cjs", "package.json"]
+  }
+}

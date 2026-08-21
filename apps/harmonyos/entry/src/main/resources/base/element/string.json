@@ -1,0 +1,7 @@
+{
+  "string": [
+    { "name": "module_desc", "value": "BridgeX global delivery marketplace" },
+    { "name": "EntryAbility_desc", "value": "BridgeX application entry" },
+    { "name": "EntryAbility_label", "value": "BridgeX" }
+  ]
+}

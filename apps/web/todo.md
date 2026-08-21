@@ -305,3 +305,8 @@
 - [x] Restore the original full-resolution delivery animation as the account-access background without quality-reducing recompression.
 - [x] Add persistent English, Simplified Chinese, French, Spanish, German, Arabic, Japanese, Korean, Bangla, Hindi, and Urdu interface preferences available during registration and in Settings.
 - [x] Add accurate HarmonyOS and macOS footer download options without implying unavailable app builds exist.
+- [ ] Create verified downloadable BridgeX application deliverables for HarmonyOS and macOS, then replace the footer availability labels with their real links.
+- [x] Translate all fixed BridgeX interface strings across public, member, administrator, and account screens for the selected system language while preserving user-authored content unchanged.
+- [x] Build and publish BridgeX macOS desktop ZIP downloads for Apple Silicon and Intel Macs, then link the public footer to the verified release page.
+- [x] Package and publish the complete BridgeX HarmonyOS ArkTS source project with its shared app icon, Internet permission, and DevEco Studio signing instructions.
+- [ ] Sign and publish an installable BridgeX HarmonyOS HAP using the owner’s Huawei Developer certificate and AppGallery release profile.
