@@ -302,3 +302,4 @@
 - [x] Add the supplied compressed delivery visual below the account-access trust message with responsive, performance-safe loading.
 - [x] Use the optimized delivery animation as the complete account-access trust-panel background, with an accessible dark overlay and no separate media card.
 - [x] Replace the low-quality delivery background with a clearer high-definition animated variant while preserving fast loading.
+- [x] Restore the original full-resolution delivery animation as the account-access background without quality-reducing recompression.
