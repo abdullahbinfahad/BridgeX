@@ -323,3 +323,8 @@
 - [x] Add traveler no-penalty refusal controls for suspicious, undeclared, prohibited, or materially mismatched handoffs, with order status and safety-record visibility.
 - [x] Add clearer administrative moderation reasons, member-facing restriction/removal explanations, and appeal-request intake controls.
 - [x] Add privacy-rights request intake and a documented internal access/retention control baseline without claiming jurisdictional legal compliance.
+- [x] Let members select a supported currency for declared item value in both send-request and carry-interest declarations, while preserving the selected currency in the stored declaration data.
+- [x] Make declaration requirements route-aware: collect domestic or international service intent and show the full truthful-item declaration only for international send requests and carry interests.
+- [x] Replace country-specific protected-order milestones and workflow wording with location-neutral global copy.
+- [x] Add a carefully scoped damage/loss coverage policy presentation that does not promise insurance or platform-funded reimbursement before funding, legal review, and licensed coverage are in place.
+- [x] Correct meaning-based translations of the public workflow headline and status descriptions across all 11 BridgeX interface languages.

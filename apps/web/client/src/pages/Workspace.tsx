@@ -71,7 +71,7 @@ function Overview({ data }: { data: MemberData }) {
 function OrderMilestones({ order }: { order: MemberOrder }) {
   const { user } = useAuth();
   const isTraveler = order.traveler_id === user?.id;
-  const stages = isTraveler ? ["Offer", "Matched", "China pickup", "Received", "Transit", "Delivered", "Released"] : ["Offer", "Matched", "China send", "Traveler received", "Transit", "Delivered", "Released"];
+  const stages = isTraveler ? ["Offer", "Matched", "Pickup", "Received", "Transit", "Delivered", "Released"] : ["Offer", "Matched", "Pickup arranged", "Handoff recorded", "Transit", "Delivered", "Released"];
   const fulfillment = order.fulfillment_status.toLowerCase();
   const escrow = order.escrow_status.toLowerCase();
   const progress = escrow === "released" ? 6 : fulfillment === "delivered" || fulfillment === "completed" ? 5 : fulfillment === "in_transit" ? 4 : ["received", "handoff"].includes(fulfillment) ? 3 : ["china_pickup", "purchased"].includes(fulfillment) ? 2 : fulfillment === "matched" || ["funded", "held"].includes(escrow) ? 1 : 0;
