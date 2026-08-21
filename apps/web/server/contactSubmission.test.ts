@@ -16,8 +16,7 @@ describe("BridgeX Contact enquiry access", () => {
 
   it("keeps Contact accessible from public navigation and the footer", () => {
     const layout = read("../client/src/components/bridgex/PublicLayout.tsx");
-    expect(layout).toContain('{ label: "Contact", href: "/contact" }');
-    expect(layout).toContain("data-bridgex-contact-footer");
-    expect(layout).toContain('contact.href = "/contact"');
+    expect(layout).toContain('{ label: t("contact"), href: "/contact" }');
+    expect(layout).toContain('<Link href="/contact">{t("contact")}</Link>');
   });
 });

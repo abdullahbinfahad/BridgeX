@@ -4,7 +4,9 @@ import { Route, Switch, useLocation } from "wouter";
 import { lazy, Suspense, useEffect } from "react";
 import ErrorBoundary from "./components/ErrorBoundary";
 import { ThemeProvider } from "./contexts/ThemeContext";
+import { LanguageProvider, useLanguage } from "./contexts/LanguageContext";
 import { useAuth } from "@/_core/hooks/useAuth";
+import { isSystemLanguage } from "@/lib/language";
 import { playBridgeXFeedback } from "@/lib/feedback";
 import DeliveryLoader from "@/components/bridgex/DeliveryLoader";
 import { ChevronLeft } from "lucide-react";
@@ -76,6 +78,16 @@ function GlobalInteractionFeedback() {
   return null;
 }
 
+function LanguageProfileSync() {
+  const { user } = useAuth();
+  const { setLanguage } = useLanguage();
+  useEffect(() => {
+    const preferred = user?.profile?.preferred_language;
+    if (isSystemLanguage(preferred)) setLanguage(preferred);
+  }, [setLanguage, user?.id, user?.profile?.preferred_language]);
+  return null;
+}
+
 function GlobalBackButton() {
   const [location, setLocation] = useLocation();
   const androidQueryMarker = new URLSearchParams(window.location.search).get("app") === "android";
@@ -100,17 +112,20 @@ function GlobalBackButton() {
 function App() {
   return (
     <ErrorBoundary>
-      <ThemeProvider
-        defaultTheme="light"
-        // switchable
-      >
-        <TooltipProvider>
-          <Toaster />
-          <GlobalInteractionFeedback />
-          <GlobalBackButton />
-          <Suspense fallback={<DeliveryLoader />}><Router /></Suspense>
-        </TooltipProvider>
-      </ThemeProvider>
+      <LanguageProvider>
+        <ThemeProvider
+          defaultTheme="light"
+          // switchable
+        >
+          <TooltipProvider>
+            <Toaster />
+            <LanguageProfileSync />
+            <GlobalInteractionFeedback />
+            <GlobalBackButton />
+            <Suspense fallback={<DeliveryLoader />}><Router /></Suspense>
+          </TooltipProvider>
+        </ThemeProvider>
+      </LanguageProvider>
     </ErrorBoundary>
   );
 }

@@ -8,6 +8,7 @@ describe("BridgeX email-confirmed registration", () => {
     expect(access).toContain('emailRedirectTo: `${window.location.origin}/access`');
     expect(access).toContain("Check your email inbox and confirm your address before signing in.");
     expect(access).toContain("Confirm your email from the BridgeX message in your inbox before signing in.");
-    expect(access).toContain("BridgeX sends a confirmation message to this address");
+    expect(access).toContain('preferred_language: language');
+    expect(access).toContain('t("emailConfirmation")');
   });
 });

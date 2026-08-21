@@ -7,6 +7,8 @@ import { signedInDestination } from "@shared/bridgeXControls";
 import { ArrowLeft, CheckCircle2, Chrome, Eye, Loader2, ShieldCheck } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Link, useLocation } from "wouter";
+import { useLanguage } from "@/contexts/LanguageContext";
+import { LANGUAGE_OPTIONS, SystemLanguage } from "@/lib/language";
 
 type AccessMode = "signin" | "signup";
 const ACCOUNT_ACCESS_DELIVERY_VISUAL = "https://bridgexmp-fcp7rl7v.manus.space/manus-storage/bridgex-delivery-motion-original_add67cb7.webp";
@@ -23,6 +25,7 @@ export default function Access() {
   const [sending, setSending] = useState(false);
   const [googleStarting, setGoogleStarting] = useState(false);
   const [failedAttempts, setFailedAttempts] = useState(0);
+  const { language, setLanguage, t } = useLanguage();
 
   useEffect(() => {
     if (!loading && isAuthenticated) setLocation(signedInDestination(Boolean(user?.onboardingComplete)));
@@ -48,7 +51,7 @@ export default function Access() {
       const { data, error } = await supabase.auth.signUp({
         email,
         password,
-        options: { data: { full_name: name }, emailRedirectTo: `${window.location.origin}/access` },
+        options: { data: { full_name: name, preferred_language: language }, emailRedirectTo: `${window.location.origin}/access` },
       });
 
       setSending(false);
@@ -113,10 +116,10 @@ export default function Access() {
             <ShieldCheck className="size-6" />
           </span>
           <h1 className="mt-7 font-display text-5xl font-bold leading-tight tracking-[-0.05em]">
-            Protected orders start with a trusted account.
+            {t("protectedOrderTrust")}
           </h1>
           <p className="mt-5 text-sm leading-7 text-[#c3d0c9]">
-            Sign in with your email and password or a protected Google account without leaving BridgeX.
+            {t("accountAccess")}
           </p>
         </div>
       </section>
@@ -132,10 +135,11 @@ export default function Access() {
             <div className="grid size-11 place-items-center rounded-2xl bg-[#dff5ea] text-[#176447]">
               <ShieldCheck className="size-5" />
             </div>
-            <p className="mt-6 text-xs font-bold uppercase tracking-[0.16em] text-[#2d8d62]">Account access</p>
+            <p className="mt-6 text-xs font-bold uppercase tracking-[0.16em] text-[#2d8d62]">{t("accountAccess")}</p>
             <h2 className="mt-2 font-display text-3xl font-bold tracking-[-0.05em]">
-              {mode === "signin" ? "Welcome back." : "Create your account."}
+              {mode === "signin" ? t("signIn") : t("createAccount")}
             </h2>
+            <label className="mt-5 block text-xs font-bold uppercase tracking-[0.12em] text-[#637073]">{t("chooseLanguage")}<select value={language} onChange={event => setLanguage(event.target.value as SystemLanguage)} className="mt-2 h-10 w-full rounded-xl border border-[#172126]/12 bg-[#faf9f5] px-3 text-sm font-semibold normal-case tracking-normal text-[#172126]">{LANGUAGE_OPTIONS.map(option => <option key={option.code} value={option.code}>{option.nativeLabel} · {option.label}</option>)}</select></label>
 
             <Button
               disabled={sending || googleStarting}
@@ -144,12 +148,12 @@ export default function Access() {
               className="mt-6 h-11 w-full rounded-xl border-[#172126]/15 bg-white font-bold text-[#172126] hover:bg-[#f4faf5]"
             >
               {googleStarting ? <Loader2 className="mr-2 size-4 animate-spin" /> : <Chrome className="mr-2 size-4" />}
-              {googleStarting ? "Opening Google…" : "Continue with Google"}
+              {googleStarting ? "Opening Google…" : t("continueWithGoogle")}
             </Button>
 
             <div className="my-5 flex items-center gap-3 text-xs font-semibold uppercase tracking-[0.13em] text-[#899490]" aria-hidden="true">
               <span className="h-px flex-1 bg-[#172126]/10" />
-              or use email
+              {t("orUseEmail")}
               <span className="h-px flex-1 bg-[#172126]/10" />
             </div>
 
@@ -159,14 +163,14 @@ export default function Access() {
                 onClick={() => setMode("signin")}
                 className={`h-9 rounded-lg text-sm font-bold ${mode === "signin" ? "bg-white shadow-sm" : "text-[#687579]"}`}
               >
-                Sign in
+                {t("signIn")}
               </button>
               <button
                 type="button"
                 onClick={() => setMode("signup")}
                 className={`h-9 rounded-lg text-sm font-bold ${mode === "signup" ? "bg-white shadow-sm" : "text-[#687579]"}`}
               >
-                Create account
+                {t("createAccount")}
               </button>
             </div>
 
@@ -174,7 +178,7 @@ export default function Access() {
               {mode === "signup" && (
                 <Input
                   className="mt-5 h-11 rounded-xl"
-                  placeholder="Display name"
+                  placeholder={t("displayName")}
                   value={name}
                   onChange={(event) => setName(event.target.value)}
                 />
@@ -183,7 +187,7 @@ export default function Access() {
                 className="mt-3 h-11 rounded-xl"
                 type="email"
                 autoComplete="email"
-                placeholder="Email address"
+                placeholder={t("emailAddress")}
                 value={email}
                 onChange={(event) => setEmail(event.target.value)}
               />
@@ -192,16 +196,16 @@ export default function Access() {
                 type="password"
                 autoComplete={mode === "signin" ? "current-password" : "new-password"}
                 minLength={8}
-                placeholder="Password (at least 8 characters)"
+                placeholder={t("password")}
                 value={password}
                 onChange={(event) => setPassword(event.target.value)}
               />
               <Button type="submit" disabled={sending || googleStarting} className="mt-3 h-11 w-full rounded-xl bg-[#172126] font-bold">
-                {sending ? "Please wait…" : mode === "signin" ? "Sign in securely" : "Create secure account"}
+                {sending ? "Please wait…" : mode === "signin" ? t("signInSecurely") : t("createSecureAccount")}
               </Button>
             </form>
 
-            {mode === "signup" && <p className="mt-3 text-xs leading-5 text-[#637073]">For email-password accounts, BridgeX sends a confirmation message to this address. Confirm it before your first sign-in.</p>}
+            {mode === "signup" && <p className="mt-3 text-xs leading-5 text-[#637073]">{t("emailConfirmation")}</p>}
 
             {notice && <p className={`mt-3 text-sm ${failed ? "text-[#a64236]" : "text-[#176447]"}`}>{notice}</p>}
             {mode === "signin" && failedAttempts >= 3 && <Link href="/contact?topic=password-reset" className="mt-2 inline-flex text-xs font-bold text-[#176447] hover:underline">Need password-reset help? Contact BridgeX</Link>}
@@ -212,7 +216,7 @@ export default function Access() {
               className="mt-4 h-11 w-full rounded-xl bg-white font-bold"
             >
               <Eye className="mr-2 size-4" />
-              Browse as guest
+              {t("browseAsGuest")}
             </Button>
 
             <div className="mt-5 rounded-xl bg-[#f4faf5] p-3 text-xs leading-5 text-[#526063]">

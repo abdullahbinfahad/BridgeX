@@ -178,8 +178,10 @@ describe("BridgeX currency, cargo, support, and brand release safeguards", () =>
     const appConfig = read("apps/mobile/app.json");
     const eas = read("apps/mobile/eas.json");
     const gradle = read("apps/mobile/android/app/build.gradle");
-    expect(layout).toContain("Download for Android");
-    expect(layout).toContain("Download for Windows");
+    expect(layout).toContain('t("downloadAndroid")');
+    expect(layout).toContain('t("downloadWindows")');
+    expect(layout).toContain('t("harmonyOS")');
+    expect(layout).toContain('t("macOS")');
     expect(layout).not.toContain("allow that app to install unknown apps");
     expect(appConfig).toContain('"versionCode": 11');
     expect(eas).toContain('"play"');
