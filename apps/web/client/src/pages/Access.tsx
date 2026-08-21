@@ -107,6 +107,15 @@ export default function Access() {
           <p className="mt-5 text-sm leading-7 text-[#c3d0c9]">
             Sign in with your email and password or a protected Google account without leaving BridgeX.
           </p>
+          <div className="mt-7 flex h-48 items-center justify-center overflow-hidden rounded-2xl border border-white/10 bg-white/5 p-2 shadow-[0_20px_50px_rgba(0,0,0,0.18)]">
+            <img
+              src="/manus-storage/bridgex-delivery-motion_c0394da2.webp"
+              alt="Animated delivery route visual"
+              loading="lazy"
+              decoding="async"
+              className="h-full w-auto max-w-full object-contain"
+            />
+          </div>
         </div>
       </section>
 
