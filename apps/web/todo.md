@@ -313,3 +313,7 @@
 - [x] Assess official WeChat and Alipay sign-in availability and implement only a compliant free option that does not require unavailable merchant or developer credentials.
 - [x] Add Train as a supported transport mode for carry-space listings and public listing details.
 - [x] Make domestic same-country delivery explicit and safe across BridgeX listing, request, matching, and policy guidance.
+- [x] Draft and obtain approval for BridgeX-specific customs, taxes, prohibited-items, sender-truthfulness, and platform-role terms before changing the full Terms, Safety, and FAQ content.
+- [x] Add required terms-and-legal acknowledgements to posting, listing, offers, interests, payment/match acceptance, with server-side recording for completed actions.
+- [x] Add a sender declaration that false, concealed, substituted, or materially mismatched items may be refused, reported to authorities where required by law, and lead to account action.
+- [x] Improve the FAQ and safety pages with BridgeX-specific customs, duty, declaration, prohibited-item, domestic, and cross-border guidance without copying another platform’s wording or design.

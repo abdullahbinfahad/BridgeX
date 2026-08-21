@@ -15,7 +15,7 @@ describe("BridgeX currency, cargo, support, and brand release safeguards", () =>
 
   it("uses the selected currency in the profile, request, listing, offer, and interest data paths", () => {
     expect(read("apps/web/client/src/pages/Workspace.tsx")).toContain("Transaction currency");
-    expect(read("apps/web/client/src/pages/CreateFlow.tsx")).toContain("currency });");
+    expect(read("apps/web/client/src/pages/CreateFlow.tsx")).toContain("currency, terms_accepted_at");
     expect(read("apps/web/client/src/pages/OfferPage.tsx")).toContain("Service amount ({currency})");
     expect(read("apps/web/client/src/pages/InterestPage.tsx")).toContain("Total offer ({currency})");
   });
