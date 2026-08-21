@@ -21,7 +21,7 @@ CREATE TABLE `flightListings` (
 	`destinationCountry` varchar(80) NOT NULL DEFAULT 'Bangladesh',
 	`destinationDistrict` varchar(80) NOT NULL,
 	`destinationCity` varchar(80) NOT NULL,
-	`transportMode` enum('flight','cargo') NOT NULL DEFAULT 'flight',
+		`transportMode` enum('flight','train','cargo') NOT NULL DEFAULT 'flight',
 	`departureAt` timestamp NOT NULL,
 	`availableWeightKg` decimal(7,2) NOT NULL,
 	`pricingMode` enum('per_kg','per_item') NOT NULL DEFAULT 'per_kg',

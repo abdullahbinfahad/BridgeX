@@ -109,7 +109,7 @@ export const appRouter = router({
         originCountry: z.string().min(2).max(80),
         originCity: z.string().min(2).max(80),
         destination: bangladeshAddress,
-        transportMode: z.enum(["flight", "cargo"]),
+        transportMode: z.enum(["flight", "train", "cargo"]),
         departureAt: z.date(),
         availableWeightKg: z.string().regex(/^\d+(\.\d{1,2})?$/),
         pricingMode: z.enum(["per_kg", "per_item"]),

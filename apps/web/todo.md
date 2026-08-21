@@ -310,3 +310,6 @@
 - [x] Build and publish BridgeX macOS desktop ZIP downloads for Apple Silicon and Intel Macs, then link the public footer to the verified release page.
 - [x] Package and publish the complete BridgeX HarmonyOS ArkTS source project with its shared app icon, Internet permission, and DevEco Studio signing instructions.
 - [ ] Sign and publish an installable BridgeX HarmonyOS HAP using the owner’s Huawei Developer certificate and AppGallery release profile.
+- [x] Assess official WeChat and Alipay sign-in availability and implement only a compliant free option that does not require unavailable merchant or developer credentials.
+- [x] Add Train as a supported transport mode for carry-space listings and public listing details.
+- [x] Make domestic same-country delivery explicit and safe across BridgeX listing, request, matching, and policy guidance.

@@ -92,7 +92,7 @@ export const flightListings = mysqlTable("flightListings", {
   destinationCountry: varchar("destinationCountry", { length: 80 }).default("Bangladesh").notNull(),
   destinationDistrict: varchar("destinationDistrict", { length: 80 }).notNull(),
   destinationCity: varchar("destinationCity", { length: 80 }).notNull(),
-  transportMode: mysqlEnum("transportMode", ["flight", "cargo"]).default("flight").notNull(),
+  transportMode: mysqlEnum("transportMode", ["flight", "train", "cargo"]).default("flight").notNull(),
   departureAt: timestamp("departureAt").notNull(),
   availableWeightKg: decimal("availableWeightKg", { precision: 7, scale: 2 }).notNull(),
   pricingMode: mysqlEnum("pricingMode", ["per_kg", "per_item"]).default("per_kg").notNull(),
