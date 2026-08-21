@@ -9,6 +9,7 @@ import { useEffect, useState } from "react";
 import { Link, useLocation } from "wouter";
 
 type AccessMode = "signin" | "signup";
+const ACCOUNT_ACCESS_DELIVERY_VISUAL = "https://bridgexmp-fcp7rl7v.manus.space/manus-storage/bridgex-delivery-motion_c0394da2.webp";
 
 export default function Access() {
   const { user, isAuthenticated, loading } = useAuth();
@@ -95,9 +96,19 @@ export default function Access() {
 
   return (
     <main className="grid min-h-screen bg-[#f7f5ef] lg:grid-cols-[0.9fr_1.1fr]">
-      <section className="hidden bg-[#172126] p-10 text-[#f7f5ef] lg:flex lg:flex-col">
-        <Brand className="[&>span:last-child]:text-[#f7f5ef]" />
-        <div className="my-auto max-w-md">
+      <section className="relative hidden overflow-hidden bg-[#172126] p-10 text-[#f7f5ef] lg:flex lg:flex-col">
+        <img
+          src={ACCOUNT_ACCESS_DELIVERY_VISUAL}
+          alt=""
+          aria-hidden="true"
+          loading="eager"
+          decoding="async"
+          fetchPriority="low"
+          className="absolute inset-0 h-full w-full object-cover object-center opacity-55"
+        />
+        <div aria-hidden="true" className="absolute inset-0 bg-gradient-to-br from-[#101d21]/95 via-[#172126]/84 to-[#172126]/72" />
+        <Brand className="relative z-10 [&>span:last-child]:text-[#f7f5ef]" />
+        <div className="relative z-10 my-auto max-w-md">
           <span className="grid size-12 place-items-center rounded-2xl bg-[#2d8d62] text-white">
             <ShieldCheck className="size-6" />
           </span>
@@ -107,15 +118,6 @@ export default function Access() {
           <p className="mt-5 text-sm leading-7 text-[#c3d0c9]">
             Sign in with your email and password or a protected Google account without leaving BridgeX.
           </p>
-          <div className="mt-7 flex h-48 items-center justify-center overflow-hidden rounded-2xl border border-white/10 bg-white/5 p-2 shadow-[0_20px_50px_rgba(0,0,0,0.18)]">
-            <img
-              src="/manus-storage/bridgex-delivery-motion_c0394da2.webp"
-              alt="Animated delivery route visual"
-              loading="lazy"
-              decoding="async"
-              className="h-full w-auto max-w-full object-contain"
-            />
-          </div>
         </div>
       </section>
 

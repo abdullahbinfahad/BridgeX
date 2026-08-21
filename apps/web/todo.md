@@ -300,3 +300,4 @@
 - [x] Require new email-password accounts to verify ownership through a Supabase confirmation email before gaining access.
 - [x] Deliver a concise Simplified Chinese PDF explaining BridgeX for public sharing.
 - [x] Add the supplied compressed delivery visual below the account-access trust message with responsive, performance-safe loading.
+- [x] Use the optimized delivery animation as the complete account-access trust-panel background, with an accessible dark overlay and no separate media card.
