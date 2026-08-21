@@ -294,3 +294,5 @@
 - [x] Permanently remove the report’s stored evidence images only when an administrator closes that report, while retaining the text audit record.
 - [x] Replace the failed SQL storage-table deletion with an authorized Supabase Storage API deletion before closing a safety report.
 - [x] Permanently delete the entire safety-report record as well as all evidence files when an administrator confirms Close, including compatibility for an older deployed page.
+- [x] Fix guest and signed-in Contact enquiry submission so valid messages meet the database validation rule.
+- [x] Restore an always-visible Contact page link in the public footer.

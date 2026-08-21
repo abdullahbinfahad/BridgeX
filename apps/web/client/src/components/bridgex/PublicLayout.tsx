@@ -14,6 +14,7 @@ const navigation = [
   { label: "Marketplace", href: "/marketplace" },
   { label: "How it works", href: "/how-it-works" },
   { label: "Safety", href: "/safety" },
+  { label: "Contact", href: "/contact" },
 ];
 const displayName = (user: ReturnType<typeof useAuth>["user"]) => user?.name || user?.email?.split("@")[0] || "Member";
 const ANDROID_BUILD = 7;
@@ -36,7 +37,7 @@ function NativePushBridge() {
       if (data.session) bridge.postMessage(JSON.stringify({ type: "BRIDGEX_AUTH", userId: user.id, accessToken: data.session.access_token }));
     });
   }, [user?.id]);
-  useEffect(() => { const applyReleaseFooter = () => { const androidLink = Array.from(document.querySelectorAll("a")).find(link => link.textContent?.trim() === "Download for Android"); if (androidLink) androidLink.href = ANDROID_DOWNLOAD_URL; const footer = document.querySelector("footer"); if (footer && !footer.querySelector("[data-bridgex-copyright]")) { const copyright = document.createElement("div"); copyright.dataset.bridgexCopyright = "true"; copyright.className = "border-t border-white/10 px-5 py-4 text-center text-xs font-semibold text-[#8fa39a]"; copyright.textContent = "© 2027 BridgeX. All rights reserved."; footer.appendChild(copyright); } }; const timer = window.setTimeout(applyReleaseFooter, 0); return () => window.clearTimeout(timer); }, []);
+  useEffect(() => { const applyReleaseFooter = () => { const androidLink = Array.from(document.querySelectorAll("a")).find(link => link.textContent?.trim() === "Download for Android"); if (androidLink) androidLink.href = ANDROID_DOWNLOAD_URL; const footer = document.querySelector("footer"); const safetyLink = footer?.querySelector<HTMLAnchorElement>("a[href='/safety']"); if (safetyLink?.parentElement && !footer?.querySelector("[data-bridgex-contact-footer]")) { const contact = document.createElement("a"); contact.dataset.bridgexContactFooter = "true"; contact.href = "/contact"; contact.textContent = "Contact"; safetyLink.parentElement.appendChild(contact); } if (footer && !footer.querySelector("[data-bridgex-copyright]")) { const copyright = document.createElement("div"); copyright.dataset.bridgexCopyright = "true"; copyright.className = "border-t border-white/10 px-5 py-4 text-center text-xs font-semibold text-[#8fa39a]"; copyright.textContent = "© 2027 BridgeX. All rights reserved."; footer.appendChild(copyright); } }; const timer = window.setTimeout(applyReleaseFooter, 0); return () => window.clearTimeout(timer); }, []);
   return <AndroidUpdatePrompt />;
 }
 
