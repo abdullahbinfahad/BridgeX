@@ -317,3 +317,9 @@
 - [x] Add required terms-and-legal acknowledgements to posting, listing, offers, interests, payment/match acceptance, with server-side recording for completed actions.
 - [x] Add a sender declaration that false, concealed, substituted, or materially mismatched items may be refused, reported to authorities where required by law, and lead to account action.
 - [x] Improve the FAQ and safety pages with BridgeX-specific customs, duty, declaration, prohibited-item, domestic, and cross-border guidance without copying another platform’s wording or design.
+- [x] Assess BridgeX’s current legal-compliance readiness against the supplied international legal-risk map and produce a prioritized unresolved-risk remediation roadmap without claiming legal certification.
+- [x] Classify legal-compliance controls BridgeX can implement directly now versus obligations requiring licensed providers, insurance, local counsel, or government approvals, then update the readiness assessment with the prioritized list.
+- [x] Add structured sender item declarations, purpose/value fields, prohibited-item confirmations, and durable compliance records for new send requests and carry interests.
+- [x] Add traveler no-penalty refusal controls for suspicious, undeclared, prohibited, or materially mismatched handoffs, with order status and safety-record visibility.
+- [x] Add clearer administrative moderation reasons, member-facing restriction/removal explanations, and appeal-request intake controls.
+- [x] Add privacy-rights request intake and a documented internal access/retention control baseline without claiming jurisdictional legal compliance.

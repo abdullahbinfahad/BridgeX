@@ -29,8 +29,61 @@ export default function AdminControl() {
   const isControlPanelHome = window.location.pathname === "/admin";
   useEffect(() => { if (isControlPanelHome) return; const timer = window.setTimeout(() => void load(0), search ? 350 : 0); return () => window.clearTimeout(timer); }, [tab, search, isControlPanelHome]);
   useEffect(() => { if (!user || !isControlPanelHome) return; void loadUpdateCounts(); const timer = window.setInterval(() => void loadUpdateCounts(), 120000); return () => window.clearInterval(timer); }, [user?.id, isControlPanelHome]);
-  const moderate = async (id: string, changes: Record<string, unknown>, success: string) => { const opensEvidence = tab === "reports" && changes.status === "under_review"; const preview = opensEvidence ? window.open("", "_blank") : null; if (opensEvidence && preview) preview.document.write("<title>BridgeX safety evidence</title><p style='font-family:system-ui;padding:24px'>Loading private report evidence…</p>"); if (tab === "reports" && changes.status === "closed") { if (!window.confirm("Delete this entire safety report and permanently remove every uploaded evidence image? This cannot be undone.")) return; setActionId(id); const { data: report, error: reportError } = await supabase.from("incident_reports").select("evidence_paths").eq("id", id).maybeSingle(); if (reportError || !report) { setActionId(null); return setNotice(reportError?.message || "Safety report not found."); } const paths = Array.isArray(report.evidence_paths) ? report.evidence_paths.filter((path): path is string => typeof path === "string" && path.length > 0) : []; const { error: storageError } = paths.length ? await supabase.storage.from("request-media").remove(paths) : { error: null }; if (storageError) { setActionId(null); return setNotice(`Evidence could not be deleted: ${storageError.message}`); } const { error } = await supabase.from("incident_reports").delete().eq("id", id); setActionId(null); if (error) return setNotice(`Evidence was deleted, but deleting this report failed: ${error.message}`); setNotice("Safety report and all of its uploaded evidence were permanently deleted."); await load(page); return; } setActionId(id); const { error } = await supabase.from(tableByTab[tab]).update(changes).eq("id", id); setActionId(null); if (error) { preview?.close(); return setNotice(error.message); } setNotice(success); if (opensEvidence) { const { data: report } = await supabase.from("incident_reports").select("id,evidence_paths").eq("id", id).maybeSingle(); if (report) await viewReportEvidence(report as RecordShape, preview); else preview?.close(); } await load(page); };
-  const remove = async (record: RecordShape) => { if (!window.confirm(`Remove this ${tab === "requests" ? "item request" : "carry listing"} from the public marketplace? This cannot be undone.`)) return; setActionId(record.id); const { error } = await supabase.from(tableByTab[tab]).delete().eq("id", record.id); setActionId(null); if (error) return setNotice(error.message); setNotice("The post was removed from the marketplace."); await load(page); };
+  const moderate = async (id: string, changes: Record<string, unknown>, success: string) => {
+    if (tab === "users") {
+      const action = changes.suspended ? "restrict" : "restore";
+      const reason = action === "restrict" ? window.prompt("Explain this account restriction clearly for the member. They will see this reason and can submit an appeal.") : "";
+      if (reason === null) return;
+      setActionId(id);
+      const { error } = await supabase.rpc("moderate_bridgex_member", { p_user_id: id, p_action: action, p_reason: reason?.trim() || null });
+      setActionId(null);
+      if (error) return setNotice(error.message);
+      setNotice(action === "restrict" ? "Account restricted and the member was notified with the recorded reason." : "Account restored and the member was notified.");
+      await load(page);
+      return;
+    }
+    const opensEvidence = tab === "reports" && changes.status === "under_review";
+    const preview = opensEvidence ? window.open("", "_blank") : null;
+    if (opensEvidence && preview) preview.document.write("<title>BridgeX safety evidence</title><p style='font-family:system-ui;padding:24px'>Loading private report evidence…</p>");
+    if (tab === "reports" && changes.status === "closed") {
+      if (!window.confirm("Delete this entire safety report and permanently remove every uploaded evidence image? This cannot be undone.")) return;
+      setActionId(id);
+      const { data: report, error: reportError } = await supabase.from("incident_reports").select("evidence_paths").eq("id", id).maybeSingle();
+      if (reportError || !report) { setActionId(null); return setNotice(reportError?.message || "Safety report not found."); }
+      const paths = Array.isArray(report.evidence_paths) ? report.evidence_paths.filter((path): path is string => typeof path === "string" && path.length > 0) : [];
+      const { error: storageError } = paths.length ? await supabase.storage.from("request-media").remove(paths) : { error: null };
+      if (storageError) { setActionId(null); return setNotice(`Evidence could not be deleted: ${storageError.message}`); }
+      const { error } = await supabase.from("incident_reports").delete().eq("id", id);
+      setActionId(null);
+      if (error) return setNotice(`Evidence was deleted, but deleting this report failed: ${error.message}`);
+      setNotice("Safety report and all of its uploaded evidence were permanently deleted.");
+      await load(page);
+      return;
+    }
+    setActionId(id);
+    const { error } = await supabase.from(tableByTab[tab]).update(changes).eq("id", id);
+    setActionId(null);
+    if (error) { preview?.close(); return setNotice(error.message); }
+    setNotice(success);
+    if (opensEvidence) {
+      const { data: report } = await supabase.from("incident_reports").select("id,evidence_paths").eq("id", id).maybeSingle();
+      if (report) await viewReportEvidence(report as RecordShape, preview); else preview?.close();
+    }
+    await load(page);
+  };
+  const remove = async (record: RecordShape) => {
+    const kind = tab === "requests" ? "request" : "listing";
+    const alreadyPaused = Boolean(record.moderation_reason) && (kind === "request" ? record.status === "closed" : record.status === "paused");
+    const action = alreadyPaused ? "restore" : "pause";
+    const reason = action === "pause" ? window.prompt(`Explain why this ${kind === "request" ? "item request" : "carry listing"} is being paused. The member will receive this reason and can submit an appeal.`) : "";
+    if (reason === null || (action === "restore" && !window.confirm("Restore this administrator-paused marketplace post and notify its owner?"))) return;
+    setActionId(record.id);
+    const { error } = await supabase.rpc("moderate_bridgex_marketplace_post", { p_kind: kind, p_post_id: record.id, p_action: action, p_reason: reason?.trim() || null });
+    setActionId(null);
+    if (error) return setNotice(error.message);
+    setNotice(action === "pause" ? "The marketplace post was paused and the member was notified with the recorded reason." : "The marketplace post was restored and the member was notified.");
+    await load(page);
+  };
   const updateOrder = async (record: RecordShape, action: OrderAdminAction) => { setActionId(record.id); const { error } = await supabase.rpc("update_bridgex_admin_order", { p_order_id: record.id, p_action: action }); setActionId(null); if (error) return setNotice(error.message); setNotice("Order updated and both participants notified."); await load(page); };
   const markPayoutSent = async (record: RecordShape) => { const reference = window.prompt("Enter the payment reference recorded for this traveler payout (optional):"); if (reference === null) return; const note = window.prompt("Optional administrator note for the traveler:") ?? ""; setActionId(record.id); const { error } = await supabase.rpc("mark_bridgex_traveler_payout_sent", { p_payout_id: record.id, p_payment_reference: reference.trim() || null, p_note: note.trim() || null }); setActionId(null); if (error) return setNotice(error.message); setNotice("Traveler payout marked sent and the traveler was notified to confirm receipt."); await load(page); };
   const viewPayoutQr = async (record: RecordShape) => { if (!record.qr_path) return setNotice("This traveler supplied bank details instead of a QR image."); const { data, error } = await supabase.storage.from("traveler-payout-instructions").createSignedUrl(record.qr_path, 600); if (error || !data?.signedUrl) return setNotice(error?.message || "The private QR image could not be opened."); window.open(data.signedUrl, "_blank", "noopener,noreferrer"); };
