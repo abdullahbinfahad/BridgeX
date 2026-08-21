@@ -328,3 +328,12 @@
 - [x] Replace country-specific protected-order milestones and workflow wording with location-neutral global copy.
 - [x] Add a carefully scoped damage/loss coverage policy presentation that does not promise insurance or platform-funded reimbursement before funding, legal review, and licensed coverage are in place.
 - [x] Correct meaning-based translations of the public workflow headline and status descriptions across all 11 BridgeX interface languages.
+- [x] Assess and replace the current mobile web-wrapper approach with an independent native BridgeX app that uses the existing secure Supabase backend API and preserves authentication, marketplace, order, message, and offline-safe behavior.
+- [x] Add production crawler assets and metadata for Google indexing, including a canonical robots policy and XML sitemap for BridgeX’s public routes.
+- [x] Verify the live site’s public crawlability and prepare exact Google Search Console ownership, sitemap-submission, and URL-inspection steps.
+- [x] Replace the Android WebView wrapper with a fully independent Expo native application using the existing secured Supabase API and shared BridgeX business rules.
+- [x] Add native email/password and Google authentication with persistent secure sessions and verified account state.
+- [x] Build native marketplace browsing, post creation, offers, carry interests, workspace, protected orders, chats, and member profiles.
+- [x] Build native verification, payments, payout details, notifications, settings, and administrator controls using the existing API and access policies.
+- [x] Add offline-safe cache, draft persistence, image upload retry, and a secure queue for supported write actions.
+- [ ] Produce and validate a new Android APK/AAB with a native-first startup path and update the public Android download destination. Blocked pending Expo access to EAS project `79a0cf5c-1667-471c-a9fd-4c79444363f8` or an authorized replacement project.

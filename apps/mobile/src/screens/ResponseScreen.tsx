@@ -1,0 +1,77 @@
+import { useEffect, useMemo, useState } from "react";
+import { ActivityIndicator, Alert, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
+import { createNativeOffer, loadNativeInterestListing, upsertNativeListingInterest, type NativeInterestListing } from "../lib/api";
+import { CURRENCY_NAMES, PRODUCT_CATEGORIES, SUPPORTED_CURRENCIES } from "../lib/constants";
+import type { BridgeXProfile, MarketplacePost } from "../types";
+
+type Props = { post: MarketplacePost; userId: string; profile: BridgeXProfile | null; onBack: () => void; onSuccess: () => void; onProfile: () => void };
+
+export function ResponseScreen({ post, userId, profile, onBack, onSuccess, onProfile }: Props) {
+  const isOffer = post.kind === "requests";
+  const [amount, setAmount] = useState("");
+  const [date, setDate] = useState("");
+  const [note, setNote] = useState("");
+  const [acknowledged, setAcknowledged] = useState(false);
+  const [busy, setBusy] = useState(false);
+  const [listing, setListing] = useState<NativeInterestListing | null>(null);
+  const [categories, setCategories] = useState<string[]>([]);
+  const [weight, setWeight] = useState("");
+  const [phone, setPhone] = useState(profile?.phone || "");
+  const [address, setAddress] = useState(profile?.current_address || "");
+  const [city, setCity] = useState(profile?.current_city || "");
+  const [country, setCountry] = useState(profile?.current_country || "");
+  const [declaredValue, setDeclaredValue] = useState("");
+  const [declarationCurrency, setDeclarationCurrency] = useState("BDT");
+  const [purpose, setPurpose] = useState("");
+  const [commercial, setCommercial] = useState(false);
+  const [declared, setDeclared] = useState(false);
+
+  useEffect(() => {
+    if (isOffer) return;
+    void loadNativeInterestListing(post.id).then(setListing).catch(error => Alert.alert("BridgeX", error?.message || "This carry listing is no longer available."));
+  }, [isOffer, post.id]);
+
+  const international = useMemo(() => Boolean(!isOffer && listing?.origin_country && listing?.destination_country && listing.origin_country.trim().toLowerCase() !== listing.destination_country.trim().toLowerCase()), [isOffer, listing]);
+  const profileComplete = Boolean(profile?.full_name?.trim() && profile?.phone?.trim() && profile?.current_country?.trim() && profile?.current_city?.trim() && profile?.current_address?.trim());
+  const availableCategories = listing?.accepted_categories?.length ? listing.accepted_categories : [...PRODUCT_CATEGORIES];
+  const toggle = (category: string) => setCategories(current => current.includes(category) ? current.filter(value => value !== category) : [...current, category]);
+
+  const submitOffer = async () => {
+    if (post.ownerId === userId) return Alert.alert("Your own request", "You cannot make an offer on your own request.");
+    if (!profileComplete) return Alert.alert("Complete protected details", "Add your full name, active phone, current country and city, and exact pickup address before offering.", [{ text: "Open profile", onPress: onProfile }]);
+    if (!amount || Number(amount) <= 0 || !acknowledged) return Alert.alert("Complete your offer", "Enter a valid service amount and accept the BridgeX Terms and Safety requirements.");
+    setBusy(true);
+    try {
+      await createNativeOffer({ requestId: post.id, travelerId: userId, requestOwnerId: post.ownerId, requestTitle: post.title, amount: Number(amount), currency: post.currency, estimatedDeliveryAt: date || undefined, note });
+      Alert.alert("Offer submitted", "Your proposal was sent. Best wishes for a safe and lawful handoff.");
+      onSuccess();
+    } catch (error: any) { Alert.alert("Could not submit offer", error?.message || "Try again later."); }
+    finally { setBusy(false); }
+  };
+
+  const submitInterest = async () => {
+    if (!listing) return;
+    if (listing.user_id === userId) return Alert.alert("Your own listing", "You cannot show interest in your own carry listing.");
+    if (!categories.length || !weight || !amount || !date || !phone.trim() || !address.trim() || !city.trim() || !country.trim() || !acknowledged) return Alert.alert("Complete your interest", "Add categories, delivery date, weight, offer, protected delivery details, and acknowledgement.");
+    if (international && (!declaredValue || !purpose.trim() || !declared)) return Alert.alert("International declaration required", "Add truthful item value, declaration currency, purpose, commercial-use status, and confirmation.");
+    setBusy(true);
+    try {
+      await upsertNativeListingInterest({ listing, senderId: userId, categories, weightKg: Number(weight), offer: Number(amount), deliveryRequiredBy: date, phone, address, city, country, note, serviceScope: international ? "international" : "domestic", declaredValue: Number(declaredValue || 0), declarationCurrency, itemPurpose: purpose, commercialUse: commercial });
+      Alert.alert("Interest sent", "The traveler can now review your accurate details and proposal.");
+      onSuccess();
+    } catch (error: any) { Alert.alert("Could not send interest", error?.message || "Try again later."); }
+    finally { setBusy(false); }
+  };
+
+  const offerBody = <><Field label={`Service amount (${post.currency})`}><TextInput value={amount} onChangeText={setAmount} keyboardType="decimal-pad" placeholder="e.g. 850" style={styles.input} /></Field><Field label="Estimated arrival (optional)"><TextInput value={date} onChangeText={setDate} placeholder="YYYY-MM-DDTHH:MM" style={styles.input} /></Field><Field label="Offer note"><TextInput value={note} onChangeText={setNote} placeholder="Share route timing, capacity, and important lawful conditions." style={[styles.input, styles.longInput]} multiline /></Field></>;
+
+  const interestBody = !listing ? <View style={styles.loading}><ActivityIndicator color="#2d8d62" /></View> : <><Field label="Items the traveler accepts"><View style={styles.chips}>{availableCategories.map(category => <Pressable key={category} onPress={() => toggle(category)} style={[styles.chip, categories.includes(category) && styles.chipActive]}><Text style={[styles.chipText, categories.includes(category) && styles.chipTextActive]}>{category}</Text></Pressable>)}</View></Field><Field label="Delivery required by"><TextInput value={date} onChangeText={setDate} placeholder="YYYY-MM-DD" style={styles.input} /></Field><Field label="Total weight (kg)"><TextInput value={weight} onChangeText={setWeight} keyboardType="decimal-pad" style={styles.input} /></Field><Field label={`Total offer (${listing.currency || "BDT"})`}><TextInput value={amount} onChangeText={setAmount} keyboardType="decimal-pad" style={styles.input} /></Field>{international ? <View style={styles.declaration}><Text style={styles.declarationTitle}>Truthful item declaration</Text><Text style={styles.declarationCopy}>This cross-border route needs truthful value, currency, purpose, and commercial-use information before review.</Text><Field label="Declared item value"><TextInput value={declaredValue} onChangeText={setDeclaredValue} keyboardType="decimal-pad" style={styles.input} /></Field><Currency value={declarationCurrency} onChange={setDeclarationCurrency} /><Field label="Item purpose"><TextInput value={purpose} onChangeText={setPurpose} placeholder="Personal use, family use, business sample…" style={styles.input} /></Field><Check checked={commercial} onChange={() => setCommercial(value => !value)} label="Commercial / resale / business use" /><Check checked={declared} onChange={() => setDeclared(value => !value)} label="I confirm the item, value, currency, purpose, and commercial-use information are truthful and lawful." /></View> : <View style={styles.domestic}><Text style={styles.domesticTitle}>Domestic service selected</Text><Text style={styles.domesticCopy}>Keep all item and delivery details accurate and lawful. An international declaration is not needed for this same-country route.</Text></View>}<Text style={styles.sectionTitle}>Protected delivery details</Text><Text style={styles.sectionCopy}>Only the matched traveler can view these details after protected acceptance.</Text><Field label="Recipient phone"><TextInput value={phone} onChangeText={setPhone} keyboardType="phone-pad" style={styles.input} /></Field><Field label="Destination country"><TextInput value={country} onChangeText={setCountry} style={styles.input} /></Field><Field label="Destination city"><TextInput value={city} onChangeText={setCity} style={styles.input} /></Field><Field label="Exact delivery address"><TextInput value={address} onChangeText={setAddress} style={[styles.input, styles.longInput]} multiline /></Field><Field label="Interest note"><TextInput value={note} onChangeText={setNote} placeholder="Describe selected items, quantities, and handling needs accurately." style={[styles.input, styles.longInput]} multiline /></Field></>;
+
+  return <ScrollView style={styles.page} contentContainerStyle={styles.content} keyboardShouldPersistTaps="handled"><Pressable onPress={onBack}><Text style={styles.back}>‹ Back to post</Text></Pressable><Text style={styles.eyebrow}>{isOffer ? "TRAVELER OFFER" : "CARRY-SPACE INTEREST"}</Text><Text style={styles.title}>{isOffer ? "Make a clear proposal" : "Show interest"}</Text><Text style={styles.copy}>{isOffer ? "Only respond if you can meet the route, timing, item requirements, handling needs, and transport rules." : "Provide accurate items, lawful delivery details, and the total proposal for this available capacity."}</Text><View style={styles.summary}><Text style={styles.summaryTitle}>{post.title}</Text><Text style={styles.summaryCopy}>{post.route} · {post.weight} · {post.currency} {post.price.toLocaleString()}</Text></View>{isOffer ? offerBody : interestBody}<Check checked={acknowledged} onChange={() => setAcknowledged(value => !value)} label="I have read and accept the BridgeX Terms, Safety, and truthful-item requirements." /><Pressable disabled={busy || (!isOffer && !listing)} onPress={() => void (isOffer ? submitOffer() : submitInterest())} style={[styles.submit, (busy || (!isOffer && !listing)) && styles.disabled]}>{busy ? <ActivityIndicator color="#fff" /> : <Text style={styles.submitText}>{isOffer ? "Submit offer" : "Send interest"}</Text>}</Pressable></ScrollView>;
+}
+
+function Field({ label, children }: { label: string; children: React.ReactNode }) { return <View style={styles.field}><Text style={styles.label}>{label}</Text>{children}</View>; }
+function Currency({ value, onChange }: { value: string; onChange: (value: string) => void }) { return <Field label="Declaration currency"><ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.currencyRow}>{SUPPORTED_CURRENCIES.map(code => <Pressable key={code} onPress={() => onChange(code)} style={[styles.currency, value === code && styles.currencyActive]}><Text style={[styles.currencyText, value === code && styles.currencyTextActive]}>{code}</Text></Pressable>)}</ScrollView><Text style={styles.currencyName}>{CURRENCY_NAMES[value] || value} ({value})</Text></Field>; }
+function Check({ checked, onChange, label }: { checked: boolean; onChange: () => void; label: string }) { return <Pressable onPress={onChange} style={styles.checkRow}><View style={[styles.checkbox, checked && styles.checkboxActive]}>{checked && <Text style={styles.tick}>✓</Text>}</View><Text style={styles.checkText}>{label}</Text></Pressable>; }
+
+const styles = StyleSheet.create({ page: { flex: 1, backgroundColor: "#f7f5ef" }, content: { gap: 14, padding: 20, paddingBottom: 44 }, back: { color: "#176447", fontSize: 14, fontWeight: "900", marginBottom: 3 }, eyebrow: { color: "#2d8d62", fontSize: 10, fontWeight: "900", letterSpacing: 1.4, marginTop: 5 }, title: { color: "#172126", fontFamily: "serif", fontSize: 29, fontWeight: "800", letterSpacing: -0.9, marginTop: 2 }, copy: { color: "#606e70", fontSize: 13, lineHeight: 20, marginTop: -5 }, summary: { backgroundColor: "#172126", borderRadius: 16, padding: 15 }, summaryTitle: { color: "#fff", fontSize: 15, fontWeight: "900" }, summaryCopy: { color: "#c5d4cd", fontSize: 12, lineHeight: 18, marginTop: 5 }, field: { gap: 7 }, label: { color: "#28363a", fontSize: 13, fontWeight: "900" }, input: { backgroundColor: "#fff", borderColor: "#dbe2da", borderRadius: 12, borderWidth: 1, color: "#172126", fontSize: 14, paddingHorizontal: 13, paddingVertical: 12 }, longInput: { minHeight: 94, textAlignVertical: "top" }, chips: { flexDirection: "row", flexWrap: "wrap", gap: 8 }, chip: { backgroundColor: "#fff", borderColor: "#dbe2da", borderRadius: 18, borderWidth: 1, paddingHorizontal: 10, paddingVertical: 8 }, chipActive: { backgroundColor: "#e5f1e7", borderColor: "#2d8d62" }, chipText: { color: "#576568", fontSize: 11, fontWeight: "800" }, chipTextActive: { color: "#176447" }, loading: { alignItems: "center", padding: 22 }, declaration: { backgroundColor: "#fff9ea", borderColor: "#e6cf94", borderRadius: 16, borderWidth: 1, gap: 12, padding: 15 }, declarationTitle: { color: "#765b1a", fontSize: 15, fontWeight: "900" }, declarationCopy: { color: "#6f5d30", fontSize: 12, lineHeight: 18, marginTop: -5 }, domestic: { backgroundColor: "#edf7ee", borderColor: "#cae2cf", borderRadius: 15, borderWidth: 1, padding: 14 }, domesticTitle: { color: "#176447", fontSize: 13, fontWeight: "900" }, domesticCopy: { color: "#4d6d59", fontSize: 12, lineHeight: 18, marginTop: 4 }, sectionTitle: { color: "#263438", fontSize: 16, fontWeight: "900", marginTop: 2 }, sectionCopy: { color: "#687578", fontSize: 12, lineHeight: 18, marginTop: -8 }, currencyRow: { gap: 7 }, currency: { backgroundColor: "#fff", borderColor: "#dbe2da", borderRadius: 18, borderWidth: 1, paddingHorizontal: 10, paddingVertical: 8 }, currencyActive: { backgroundColor: "#e5f1e7", borderColor: "#2d8d62" }, currencyText: { color: "#566467", fontSize: 11, fontWeight: "800" }, currencyTextActive: { color: "#176447" }, currencyName: { color: "#717e80", fontSize: 11, fontWeight: "700", marginTop: 4 }, checkRow: { alignItems: "flex-start", flexDirection: "row", gap: 10 }, checkbox: { alignItems: "center", backgroundColor: "#fff", borderColor: "#9daca3", borderRadius: 5, borderWidth: 1, height: 21, justifyContent: "center", marginTop: 1, width: 21 }, checkboxActive: { backgroundColor: "#2d8d62", borderColor: "#2d8d62" }, tick: { color: "#fff", fontSize: 14, fontWeight: "900" }, checkText: { color: "#4c5c5e", flex: 1, fontSize: 12, lineHeight: 18 }, submit: { alignItems: "center", backgroundColor: "#172126", borderRadius: 14, justifyContent: "center", minHeight: 52, marginTop: 5 }, submitText: { color: "#fff", fontSize: 15, fontWeight: "900" }, disabled: { opacity: 0.5 } });

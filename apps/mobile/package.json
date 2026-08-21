@@ -4,14 +4,21 @@
   "main": "index.ts",
   "dependencies": {
     "@react-native-async-storage/async-storage": "^2.2.0",
+    "@supabase/supabase-js": "^2.112.3",
     "expo": "~57.0.13",
     "expo-constants": "~57.0.12",
+    "expo-document-picker": "~57.0.1",
     "expo-haptics": "^57.0.1",
+    "expo-image-manipulator": "~57.0.12",
+    "expo-image-picker": "~57.0.12",
+    "expo-network": "~57.0.1",
     "expo-notifications": "~57.0.12",
+    "expo-secure-store": "~57.0.1",
     "expo-status-bar": "~57.0.1",
+    "expo-web-browser": "~57.0.2",
     "react": "19.2.3",
     "react-native": "0.86.2",
-    "react-native-webview": "13.16.1"
+    "react-native-url-polyfill": "^4.0.0"
   },
   "devDependencies": {
     "@types/react": "~19.2.2",
@@ -21,7 +28,8 @@
     "start": "expo start",
     "android": "expo run:android",
     "ios": "expo run:ios",
-    "web": "expo start --web"
+    "web": "expo start --web",
+    "test:native": "node tests/native-architecture.test.mjs"
   },
   "private": true
 }
