@@ -9,7 +9,7 @@ import { useEffect, useState } from "react";
 import { Link, useLocation } from "wouter";
 
 type AccessMode = "signin" | "signup";
-const ACCOUNT_ACCESS_DELIVERY_VISUAL = "https://bridgexmp-fcp7rl7v.manus.space/manus-storage/bridgex-delivery-motion_c0394da2.webp";
+const ACCOUNT_ACCESS_DELIVERY_VISUAL = "https://bridgexmp-fcp7rl7v.manus.space/manus-storage/bridgex-delivery-motion-hd_460af0a7.webp";
 
 export default function Access() {
   const { user, isAuthenticated, loading } = useAuth();

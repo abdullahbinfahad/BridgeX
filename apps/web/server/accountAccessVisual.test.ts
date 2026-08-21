@@ -5,7 +5,7 @@ const access = readFileSync(new URL("../client/src/pages/Access.tsx", import.met
 
 describe("BridgeX account-access delivery visual", () => {
   it("uses the optimized delivery animation as a complete trust-panel background without blocking account access", () => {
-    expect(access).toContain("const ACCOUNT_ACCESS_DELIVERY_VISUAL = \"https://bridgexmp-fcp7rl7v.manus.space/manus-storage/bridgex-delivery-motion_c0394da2.webp\"");
+    expect(access).toContain("const ACCOUNT_ACCESS_DELIVERY_VISUAL = \"https://bridgexmp-fcp7rl7v.manus.space/manus-storage/bridgex-delivery-motion-hd_460af0a7.webp\"");
     expect(access).toContain('aria-hidden="true"');
     expect(access).toContain('loading="eager"');
     expect(access).toContain('decoding="async"');
