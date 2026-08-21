@@ -297,3 +297,4 @@
 - [x] Fix guest and signed-in Contact enquiry submission so valid messages meet the database validation rule.
 - [x] Restore an always-visible Contact page link in the public footer.
 - [x] Replace the China-only browser title with global anywhere-to-anywhere courier-alternative positioning.
+- [x] Require new email-password accounts to verify ownership through a Supabase confirmation email before gaining access.

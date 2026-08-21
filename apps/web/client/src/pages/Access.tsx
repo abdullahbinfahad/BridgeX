@@ -47,7 +47,7 @@ export default function Access() {
       const { data, error } = await supabase.auth.signUp({
         email,
         password,
-        options: { data: { full_name: name } },
+        options: { data: { full_name: name }, emailRedirectTo: `${window.location.origin}/access` },
       });
 
       setSending(false);
@@ -60,7 +60,7 @@ export default function Access() {
       setNotice(
         data.session
           ? "Account created. Continuing to your BridgeX profile…"
-          : "Account created. You can now sign in with your email and password."
+          : "Check your email inbox and confirm your address before signing in. Also check your spam folder."
       );
       return;
     }
@@ -70,7 +70,7 @@ export default function Access() {
 
     if (error) {
       setFailedAttempts(current => current + 1);
-      reportError("We could not sign you in. Check your email and password.");
+      reportError(/email not confirmed/i.test(error.message) ? "Confirm your email from the BridgeX message in your inbox before signing in." : "We could not sign you in. Check your email and password.");
       return;
     }
 
@@ -189,6 +189,8 @@ export default function Access() {
                 {sending ? "Please wait…" : mode === "signin" ? "Sign in securely" : "Create secure account"}
               </Button>
             </form>
+
+            {mode === "signup" && <p className="mt-3 text-xs leading-5 text-[#637073]">For email-password accounts, BridgeX sends a confirmation message to this address. Confirm it before your first sign-in.</p>}
 
             {notice && <p className={`mt-3 text-sm ${failed ? "text-[#a64236]" : "text-[#176447]"}`}>{notice}</p>}
             {mode === "signin" && failedAttempts >= 3 && <Link href="/contact?topic=password-reset" className="mt-2 inline-flex text-xs font-bold text-[#176447] hover:underline">Need password-reset help? Contact BridgeX</Link>}
