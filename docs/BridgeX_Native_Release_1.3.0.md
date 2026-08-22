@@ -24,4 +24,11 @@ Carry listings can now keep numeric inventory for Mobile phones, Laptops, and Ca
 | EAS project | `459e7ae1-9dc7-4318-b642-814abe9ace20` |
 | Build account | `abdullahbinfahadbridexs-team` |
 
-The signed APK and Play Store Android App Bundle must be generated from the same committed source revision. The former 1.2.0 download link remains valid only until its artifact expiration date and will be replaced in the public footer after the new APK completes.
+Both signed artifacts were generated from commit `95746b8` and are ready for their respective distribution paths.
+
+| Artifact | Build page / download |
+|---|---|
+| Android APK for direct distribution | https://expo.dev/artifacts/eas/N5fukcxoZHP8d2apA28UWulZSz94sBUqxyXNpYIX1pY.apk |
+| Android App Bundle for Google Play Console | https://expo.dev/artifacts/eas/p6b5cEALF_XW6fqMKzUprrnqNfTRSAGjwhTUQrBdjc4.aab |
+
+The public website footer now points to the 1.3.0 APK. The prior 1.2.0 artifact remains separate and will expire according to its original Expo retention date.

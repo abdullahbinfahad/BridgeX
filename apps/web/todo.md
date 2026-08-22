@@ -347,4 +347,4 @@
 - [x] Add branded native bottom navigation icons, press feedback, accessible interaction motion, and restrained action feedback without distracting sounds.
 - [x] Add native About, How It Works, Safety, Contact, Downloads, Legal, Terms, and Privacy entry points and screens.
 - [x] Complete native parity for marketplace detail, offers, carry interests, protected deals, profile identity, ratings, and counterpart information using the existing secured API.
-- [ ] Run native architecture and release validation, then publish an incremented APK/AAB only after the parity changes are tested.
+- [x] Run native architecture and release validation, then publish an incremented APK/AAB only after the parity changes are tested. BridgeX 1.3.0 (14) APK and Play Store AAB are finished.
