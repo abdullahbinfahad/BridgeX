@@ -49,17 +49,17 @@ describe("BridgeX currency, cargo, support, and brand release safeguards", () =>
     expect(read("apps/web/client/src/components/bridgex/Brand.tsx")).toContain("/bridgex-logo.webp");
     expect(read("apps/web/client/index.html")).toContain("/favicon.ico");
     expect(read("apps/mobile/app.json")).toContain("./assets/icon.png");
-    expect(read("apps/mobile/app.json")).toContain('"versionCode": 13');
+    expect(read("apps/mobile/app.json")).toContain('"versionCode": 14');
   });
 
-  it("uses the independent native app shell in the finished Android 1.2.0 release", () => {
+  it("uses the independent native app shell in the BridgeX Android 1.3.0 release", () => {
     const mobileApp = read("apps/mobile/App.tsx");
     const nativeApp = read("apps/mobile/src/NativeApp.tsx");
     expect(mobileApp).toContain('import NativeApp from "./src/NativeApp"');
     expect(nativeApp).toContain("SafeAreaView");
     expect(nativeApp).not.toContain("WebView");
-    expect(read("apps/mobile/android/app/build.gradle")).toContain("versionCode 13");
-    expect(read("apps/mobile/android/app/build.gradle")).toContain('versionName "1.2.0"');
+    expect(read("apps/mobile/android/app/build.gradle")).toContain("versionCode 14");
+    expect(read("apps/mobile/android/app/build.gradle")).toContain('versionName "1.3.0"');
   });
 
   it("pairs sound categories with lightweight visual feedback cues that respect motion preferences", () => {
@@ -185,12 +185,12 @@ describe("BridgeX currency, cargo, support, and brand release safeguards", () =>
     expect(layout).toContain('t("harmonyOS")');
     expect(layout).toContain('t("macOS")');
     expect(layout).not.toContain("allow that app to install unknown apps");
-    expect(appConfig).toContain('"versionCode": 13');
+    expect(appConfig).toContain('"versionCode": 14');
     expect(eas).toContain('"play"');
     expect(eas).toContain('"buildType": "app-bundle"');
     expect(gradle).toContain("EAS_BUILD_ANDROID_KEYSTORE_PATH");
-    expect(gradle).toContain("versionCode 13");
-    expect(gradle).toContain('versionName "1.2.0"');
+    expect(gradle).toContain("versionCode 14");
+    expect(gradle).toContain('versionName "1.3.0"');
     expect(gradle).not.toContain("signingConfig signingConfigs.debug\n            def enableShrinkResources");
   });
 

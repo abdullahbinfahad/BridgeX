@@ -1,6 +1,7 @@
-export type AppRoute = "home" | "marketplace" | "create" | "workspace" | "messages" | "notifications" | "payments" | "settings" | "verification" | "admin" | "post" | "profile" | "respond";
+export type AppRoute = "home" | "marketplace" | "create" | "workspace" | "messages" | "notifications" | "payments" | "settings" | "verification" | "admin" | "post" | "profile" | "member" | "respond" | "more" | "info";
 export type MarketplaceTab = "requests" | "carry";
 export type ServiceScope = "domestic" | "international";
+export type NativeInfoSection = "about" | "how_it_works" | "safety" | "contact" | "downloads" | "legal" | "terms" | "privacy";
 
 export type BridgeXProfile = {
   id: string;
@@ -35,6 +36,22 @@ export type MarketplacePost = {
   currency: string;
   weight: string;
   category?: string | null;
+  categories?: string[];
+  description?: string | null;
+  deliveryDays?: number | null;
+  size?: string | null;
+  specialHandling?: string | null;
+  transportMode?: string | null;
+  departureAt?: string | null;
+  estimatedDeliveryAt?: string | null;
+  acceptedItemQuantities?: Record<string, number>;
+  acceptedItemBudgets?: Record<string, number>;
+  transportProvider?: string | null;
+  transportReference?: string | null;
+  posterName?: string | null;
+  posterVerified?: boolean;
+  posterRating?: number;
+  posterReviewCount?: number;
   createdAt: string;
   mediaPaths: string[];
   status: string;

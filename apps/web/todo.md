@@ -339,3 +339,12 @@
 - [x] Produce and validate a new Android APK/AAB with a native-first startup path and update the public Android download destination. The completed APK and AAB are version 1.2.0 (13).
 - [x] Create or relink BridgeX to an Expo EAS project accessible to the configured `abdullahbinfahad` build account, then produce the independent-native APK and Play Store AAB.
 - [x] Link the completed independent-native app to new Expo project `459e7ae1-9dc7-4318-b642-814abe9ace20`, then queue its production APK and Play Store AAB builds.
+- [x] Align native Android system-bar color and safe-area treatment with the BridgeX app surface while retaining readable content bounds.
+- [x] Repair native text-input placeholders, entered-text contrast, and keyboard-safe form layout across authentication, profile, category, and workflow forms.
+- [x] Implement native system-back navigation that returns to the previous in-app screen before permitting Android exit.
+- [x] Add the branded luggage-and-route native loading treatment to startup and asynchronous screen states.
+- [x] Expand native product-category selection with mobile, laptop, camera, and other category quantities, and add per-item carry-space budget controls.
+- [x] Add branded native bottom navigation icons, press feedback, accessible interaction motion, and restrained action feedback without distracting sounds.
+- [x] Add native About, How It Works, Safety, Contact, Downloads, Legal, Terms, and Privacy entry points and screens.
+- [x] Complete native parity for marketplace detail, offers, carry interests, protected deals, profile identity, ratings, and counterpart information using the existing secured API.
+- [ ] Run native architecture and release validation, then publish an incremented APK/AAB only after the parity changes are tested.

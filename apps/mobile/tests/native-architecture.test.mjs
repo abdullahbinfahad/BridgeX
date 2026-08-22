@@ -13,6 +13,11 @@ const api = read("src/lib/api.ts");
 const session = read("src/hooks/useBridgeXSession.ts");
 const profile = read("src/screens/ProfileScreen.tsx");
 const payments = read("src/screens/PaymentsScreen.tsx");
+const compose = read("src/screens/ComposeScreen.tsx");
+const response = read("src/screens/ResponseScreen.tsx");
+const memberProfile = read("src/screens/MemberProfileScreen.tsx");
+const more = read("src/screens/MoreScreen.tsx");
+const info = read("src/screens/InfoScreen.tsx");
 const packageJson = read("package.json");
 
 assert.match(entry, /NativeApp/);
@@ -27,6 +32,12 @@ assert.match(api, /submitNativePaymentProof/);
 assert.match(api, /moderateNativeMember/);
 assert.match(profile, /uploadNativeVerificationDocument/);
 assert.match(payments, /uploadNativePaymentProof/);
+assert.match(compose, /acceptedItemBudgets/);
+assert.match(compose, /QUANTITY_AWARE_ITEMS/);
+assert.match(response, /itemQuantities/);
+assert.match(memberProfile, /Public BridgeX posts/);
+assert.match(more, /How it works/);
+assert.match(info, /Open current website page/);
 assert.doesNotMatch(packageJson, /react-native-webview/);
 
 console.log("BridgeX independent native architecture checks passed.");

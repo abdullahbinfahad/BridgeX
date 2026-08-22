@@ -17,16 +17,28 @@ export async function loadMarketplace(kind: "requests" | "carry", page = 0, page
   const cacheKey = `marketplace:${kind}:${page}`;
   const from = page * pageSize;
   const result = kind === "requests"
-    ? await supabase.from("send_requests").select("id,user_id,title,category,purchase_country,purchase_city,destination_country,destination_city,weight_kg,budget_bdt,currency,media_paths,image_path,status,created_at").eq("status", "open").order("created_at", { ascending: false }).range(from, from + pageSize - 1)
-    : await supabase.from("carry_listings").select("id,user_id,origin_country,origin_city,destination_country,destination_city,transport_mode,available_weight_kg,filled_weight_kg,reserved_weight_kg,price_bdt,currency,media_paths,status,created_at").eq("status", "open").order("created_at", { ascending: false }).range(from, from + pageSize - 1);
+    ? await supabase.from("send_requests").select("id,user_id,title,category,categories,description,purchase_country,purchase_city,destination_country,destination_city,weight_kg,size_description,delivery_required_days,special_handling,budget_bdt,currency,media_paths,image_path,status,created_at").eq("status", "open").order("created_at", { ascending: false }).range(from, from + pageSize - 1)
+    : await supabase.from("carry_listings").select("id,user_id,origin_country,origin_city,destination_country,destination_city,transport_mode,available_weight_kg,filled_weight_kg,reserved_weight_kg,price_bdt,currency,accepted_categories,accepted_item_quantities,accepted_item_budgets,departure_at,estimated_delivery_at,airline_name,flight_number,cargo_provider,cargo_reference,notes,media_paths,status,created_at").eq("status", "open").order("created_at", { ascending: false }).range(from, from + pageSize - 1);
   if (result.error) {
     const fallback = await cacheGet<MarketplacePost[]>(cacheKey);
     if (fallback) return fallback;
     throw result.error;
   }
-  const posts = (result.data ?? []).map((row: any): MarketplacePost => kind === "requests"
-    ? { id: row.id, kind, ownerId: row.user_id, title: row.title, route: `${row.purchase_city || "Origin"}, ${row.purchase_country || ""} → ${row.destination_city || "Destination"}, ${row.destination_country || ""}`, price: Number(row.budget_bdt ?? 0), currency: row.currency || "BDT", weight: `${row.weight_kg ?? 0} kg`, category: row.category, createdAt: row.created_at, mediaPaths: Array.from(new Set([row.image_path, ...asArray(row.media_paths)].filter(Boolean))), status: row.status }
-    : { id: row.id, kind, ownerId: row.user_id, title: `${row.transport_mode === "cargo" ? "Cargo" : row.transport_mode === "train" ? "Train" : "Carry"} space available`, route: `${row.origin_city || "Origin"}, ${row.origin_country || ""} → ${row.destination_city || "Destination"}, ${row.destination_country || ""}`, price: Number(row.price_bdt ?? 0), currency: row.currency || "BDT", weight: `${Math.max(0, Number(row.available_weight_kg ?? 0) - Number(row.filled_weight_kg ?? 0) - Number(row.reserved_weight_kg ?? 0))} kg remaining`, createdAt: row.created_at, mediaPaths: asArray(row.media_paths), status: row.status });
+  const rows = result.data ?? [];
+  const ownerIds = Array.from(new Set(rows.map((row: any) => row.user_id).filter(Boolean)));
+  const [badges, ratings] = await Promise.all([
+    ownerIds.length ? supabase.from("bridgex_member_badges").select("id,display_name,is_verified").in("id", ownerIds) : Promise.resolve({ data: [] as any[] }),
+    ownerIds.length ? supabase.from("bridgex_member_rating_summaries").select("id,average_rating,review_count").in("id", ownerIds) : Promise.resolve({ data: [] as any[] }),
+  ]);
+  const badgeById = new Map((badges.data ?? []).map((item: any) => [item.id, item]));
+  const ratingById = new Map((ratings.data ?? []).map((item: any) => [item.id, item]));
+  const posts = rows.map((row: any): MarketplacePost => {
+    const badge: any = badgeById.get(row.user_id); const rating: any = ratingById.get(row.user_id);
+    const identity = { posterName: badge?.display_name || "BridgeX member", posterVerified: Boolean(badge?.is_verified), posterRating: Number(rating?.average_rating ?? 0), posterReviewCount: Number(rating?.review_count ?? 0) };
+    return kind === "requests"
+      ? { id: row.id, kind, ownerId: row.user_id, title: row.title, route: `${row.purchase_city || "Origin"}, ${row.purchase_country || ""} → ${row.destination_city || "Destination"}, ${row.destination_country || ""}`, price: Number(row.budget_bdt ?? 0), currency: row.currency || "BDT", weight: `${row.weight_kg ?? 0} kg`, category: row.category, categories: asArray(row.categories), description: row.description, deliveryDays: row.delivery_required_days, size: row.size_description, specialHandling: row.special_handling, createdAt: row.created_at, mediaPaths: Array.from(new Set([row.image_path, ...asArray(row.media_paths)].filter(Boolean))), status: row.status, ...identity }
+      : { id: row.id, kind, ownerId: row.user_id, title: `${row.transport_mode === "cargo" ? "Cargo" : row.transport_mode === "train" ? "Train" : "Carry"} space available`, route: `${row.origin_city || "Origin"}, ${row.origin_country || ""} → ${row.destination_city || "Destination"}, ${row.destination_country || ""}`, price: Number(row.price_bdt ?? 0), currency: row.currency || "BDT", weight: `${Math.max(0, Number(row.available_weight_kg ?? 0) - Number(row.filled_weight_kg ?? 0) - Number(row.reserved_weight_kg ?? 0))} kg remaining`, categories: asArray(row.accepted_categories), transportMode: row.transport_mode, departureAt: row.departure_at, estimatedDeliveryAt: row.estimated_delivery_at, acceptedItemQuantities: row.accepted_item_quantities || {}, acceptedItemBudgets: row.accepted_item_budgets || {}, transportProvider: row.airline_name || row.cargo_provider, transportReference: row.flight_number || row.cargo_reference, description: row.notes, createdAt: row.created_at, mediaPaths: asArray(row.media_paths), status: row.status, ...identity };
+  });
   await cacheSet(cacheKey, posts);
   return posts;
 }
@@ -66,12 +78,12 @@ export async function createNativeSendRequest(userId: string, input: NativeSendR
 export type NativeCarryListingInput = {
   originCountry: string; originCity: string; destinationCountry: string; destinationCity: string; destinationAddress: string; transportMode: "flight" | "train" | "cargo";
   departureAt: string; estimatedDeliveryAt?: string; availableWeightKg: number; pricingMode: "per_kg" | "per_item"; price: number; currency: string;
-  categories: string[]; acceptedItemQuantities: Record<string, number>; airline?: string; flightNumber?: string; provider?: string; reference?: string; notes?: string; mediaPaths: string[];
+  categories: string[]; acceptedItemQuantities: Record<string, number>; acceptedItemBudgets: Record<string, number>; airline?: string; flightNumber?: string; provider?: string; reference?: string; notes?: string; mediaPaths: string[];
 };
 
 export async function createNativeCarryListing(userId: string, input: NativeCarryListingInput) {
   const flight = input.transportMode === "flight";
-  const { data, error } = await supabase.from("carry_listings").insert({ user_id: userId, origin_country: input.originCountry.trim(), origin_city: input.originCity.trim(), destination_country: input.destinationCountry.trim(), destination_district: input.destinationCountry.trim(), destination_city: input.destinationCity.trim(), destination_address: input.destinationAddress.trim(), transport_mode: input.transportMode, departure_at: new Date(input.departureAt).toISOString(), estimated_delivery_at: input.estimatedDeliveryAt ? new Date(input.estimatedDeliveryAt).toISOString() : null, available_weight_kg: input.availableWeightKg, pricing_mode: input.pricingMode, price_bdt: input.price, currency: input.currency, accepted_categories: input.categories, accepted_item_quantities: input.acceptedItemQuantities, airline_name: flight ? input.airline?.trim() || null : null, flight_number: flight ? input.flightNumber?.trim() || null : null, cargo_provider: flight ? null : input.provider?.trim() || null, cargo_reference: flight ? null : input.reference?.trim() || null, notes: input.notes?.trim() || null, media_paths: input.mediaPaths, terms_accepted_at: new Date().toISOString(), terms_version: TERMS_VERSION }).select("id").single();
+  const { data, error } = await supabase.from("carry_listings").insert({ user_id: userId, origin_country: input.originCountry.trim(), origin_city: input.originCity.trim(), destination_country: input.destinationCountry.trim(), destination_district: input.destinationCountry.trim(), destination_city: input.destinationCity.trim(), destination_address: input.destinationAddress.trim(), transport_mode: input.transportMode, departure_at: new Date(input.departureAt).toISOString(), estimated_delivery_at: input.estimatedDeliveryAt ? new Date(input.estimatedDeliveryAt).toISOString() : null, available_weight_kg: input.availableWeightKg, pricing_mode: input.pricingMode, price_bdt: input.price, currency: input.currency, accepted_categories: input.categories, accepted_item_quantities: input.acceptedItemQuantities, accepted_item_budgets: input.acceptedItemBudgets, airline_name: flight ? input.airline?.trim() || null : null, flight_number: flight ? input.flightNumber?.trim() || null : null, cargo_provider: flight ? null : input.provider?.trim() || null, cargo_reference: flight ? null : input.reference?.trim() || null, notes: input.notes?.trim() || null, media_paths: input.mediaPaths, terms_accepted_at: new Date().toISOString(), terms_version: TERMS_VERSION }).select("id").single();
   if (error) throw error;
   await recordAcknowledgement(userId, "carry_listing", data.id);
   return data.id as string;
@@ -80,7 +92,7 @@ export async function createNativeCarryListing(userId: string, input: NativeCarr
 export type NativeWorkspace = {
   requests: Array<{ id: string; title: string; status: string; purchase_country: string | null; destination_country: string | null; destination_city: string | null; created_at: string }>;
   listings: Array<{ id: string; origin_country: string | null; origin_city: string | null; destination_country: string | null; destination_city: string | null; status: string; departure_at: string; available_weight_kg: number | null }>;
-  orders: Array<{ id: string; match_id: string | null; reference: string; sender_id: string; traveler_id: string; amount_bdt: number | null; currency: string | null; escrow_status: string; fulfillment_status: string; updated_at: string }>;
+  orders: Array<{ id: string; match_id: string | null; reference: string; sender_id: string; traveler_id: string; amount_bdt: number | null; currency: string | null; escrow_status: string; fulfillment_status: string; updated_at: string; counterpart_name?: string | null; counterpart_verified?: boolean; counterpart_rating?: number; counterpart_review_count?: number }>;
 };
 
 export async function loadNativeWorkspace(userId: string): Promise<NativeWorkspace> {
@@ -91,7 +103,20 @@ export async function loadNativeWorkspace(userId: string): Promise<NativeWorkspa
   ]);
   const error = requests.error || listings.error || orders.error;
   if (error) throw error;
-  const workspace = { requests: requests.data ?? [], listings: listings.data ?? [], orders: orders.data ?? [] } as NativeWorkspace;
+  const orderRows = orders.data ?? [];
+  const memberIds = Array.from(new Set(orderRows.flatMap((order: any) => [order.sender_id, order.traveler_id]).filter(Boolean)));
+  const [badges, ratings] = await Promise.all([
+    memberIds.length ? supabase.from("bridgex_member_badges").select("id,display_name,is_verified").in("id", memberIds) : Promise.resolve({ data: [] as any[] }),
+    memberIds.length ? supabase.from("bridgex_member_rating_summaries").select("id,average_rating,review_count").in("id", memberIds) : Promise.resolve({ data: [] as any[] }),
+  ]);
+  const badgeById = new Map((badges.data ?? []).map((item: any) => [item.id, item]));
+  const ratingById = new Map((ratings.data ?? []).map((item: any) => [item.id, item]));
+  const enrichedOrders = orderRows.map((order: any) => {
+    const counterpartId = order.sender_id === userId ? order.traveler_id : order.sender_id;
+    const badge: any = badgeById.get(counterpartId); const rating: any = ratingById.get(counterpartId);
+    return { ...order, counterpart_name: badge?.display_name || "BridgeX member", counterpart_verified: Boolean(badge?.is_verified), counterpart_rating: Number(rating?.average_rating ?? 0), counterpart_review_count: Number(rating?.review_count ?? 0) };
+  });
+  const workspace = { requests: requests.data ?? [], listings: listings.data ?? [], orders: enrichedOrders } as NativeWorkspace;
   await cacheSet(`workspace:${userId}`, workspace);
   return workspace;
 }
@@ -143,19 +168,19 @@ export async function createNativeOffer(input: { requestId: string; travelerId: 
   return data.id as string;
 }
 
-export type NativeInterestListing = { id: string; user_id: string; origin_country: string | null; destination_country: string | null; currency: string | null; accepted_categories: string[] | null; accepted_item_quantities: Record<string, number> | null; status: string };
+export type NativeInterestListing = { id: string; user_id: string; origin_country: string | null; destination_country: string | null; currency: string | null; accepted_categories: string[] | null; accepted_item_quantities: Record<string, number> | null; accepted_item_budgets: Record<string, number> | null; status: string };
 export async function loadNativeInterestListing(listingId: string): Promise<NativeInterestListing | null> {
-  const { data, error } = await supabase.from("carry_listings").select("id,user_id,origin_country,destination_country,currency,accepted_categories,accepted_item_quantities,status").eq("id", listingId).eq("status", "open").maybeSingle();
+  const { data, error } = await supabase.from("carry_listings").select("id,user_id,origin_country,destination_country,currency,accepted_categories,accepted_item_quantities,accepted_item_budgets,status").eq("id", listingId).eq("status", "open").maybeSingle();
   if (error) throw error;
   return data;
 }
 
-export async function upsertNativeListingInterest(input: { listing: NativeInterestListing; senderId: string; categories: string[]; quantityDescription?: string; weightKg: number; offer: number; deliveryRequiredBy: string; recipientName?: string; phone: string; address: string; city: string; country: string; note?: string; serviceScope: "domestic" | "international"; declaredValue?: number; declarationCurrency?: string; itemPurpose?: string; commercialUse?: boolean }) {
+export async function upsertNativeListingInterest(input: { listing: NativeInterestListing; senderId: string; categories: string[]; itemQuantities?: Record<string, number>; quantityDescription?: string; weightKg: number; offer: number; deliveryRequiredBy: string; recipientName?: string; phone: string; address: string; city: string; country: string; note?: string; serviceScope: "domestic" | "international"; declaredValue?: number; declarationCurrency?: string; itemPurpose?: string; commercialUse?: boolean }) {
   const { data: existing, error: existingError } = await supabase.from("listing_interests").select("id,status").eq("listing_id", input.listing.id).eq("sender_id", input.senderId).maybeSingle();
   if (existingError) throw existingError;
   if (existing?.status === "accepted") throw new Error("Your interest in this carry space is already accepted. Open Messages to continue the protected deal.");
   const international = input.serviceScope === "international";
-  const payload = { listing_id: input.listing.id, sender_id: input.senderId, note: input.note?.trim() || null, status: "pending", categories: input.categories, quantity_description: input.quantityDescription?.trim() || null, item_quantities: {}, weight_kg: input.weightKg, total_offer_bdt: input.offer, currency: input.listing.currency || "BDT", delivery_required_by: input.deliveryRequiredBy, delivery_recipient_name: input.recipientName?.trim() || null, delivery_phone: input.phone.trim(), delivery_address: input.address.trim(), delivery_city: input.city.trim(), delivery_country: input.country.trim(), service_scope: input.serviceScope, declared_item_value: international ? input.declaredValue : null, declared_item_currency: international ? input.declarationCurrency : null, item_purpose: international ? input.itemPurpose?.trim() : null, declared_commercial_use: international ? Boolean(input.commercialUse) : null, declaration_confirmed_at: international ? new Date().toISOString() : null, terms_accepted_at: new Date().toISOString(), terms_version: TERMS_VERSION };
+  const payload = { listing_id: input.listing.id, sender_id: input.senderId, note: input.note?.trim() || null, status: "pending", categories: input.categories, quantity_description: input.quantityDescription?.trim() || null, item_quantities: input.itemQuantities || {}, weight_kg: input.weightKg, total_offer_bdt: input.offer, currency: input.listing.currency || "BDT", delivery_required_by: input.deliveryRequiredBy, delivery_recipient_name: input.recipientName?.trim() || null, delivery_phone: input.phone.trim(), delivery_address: input.address.trim(), delivery_city: input.city.trim(), delivery_country: input.country.trim(), service_scope: input.serviceScope, declared_item_value: international ? input.declaredValue : null, declared_item_currency: international ? input.declarationCurrency : null, item_purpose: international ? input.itemPurpose?.trim() : null, declared_commercial_use: international ? Boolean(input.commercialUse) : null, declaration_confirmed_at: international ? new Date().toISOString() : null, terms_accepted_at: new Date().toISOString(), terms_version: TERMS_VERSION };
   const result = existing ? await supabase.from("listing_interests").update(payload).eq("id", existing.id).select("id").single() : await supabase.from("listing_interests").insert(payload).select("id").single();
   if (result.error) throw result.error;
   await supabase.from("bridgex_legal_acknowledgements").insert({ user_id: input.senderId, action: "listing_interest", terms_version: TERMS_VERSION, acknowledgement_text: "I have read and accept the BridgeX Terms, Safety, and truthful-item requirements.", related_type: "listing_interest", related_id: result.data.id });
