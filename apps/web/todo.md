@@ -389,3 +389,18 @@
 - [x] Refine native category filters for screenshot-scale readability and ensure media states distinguish a post with no attachment from an attachment that failed to load.
 - [x] Update the footer’s legacy Android entry to the requested Android app version 1.0.11 wording, with no automatic update badge or inaccurate browser-shell description.
 - [x] Validate, release, and document the screenshot-driven blocking-defect repair build.
+- [ ] Compare the user’s installed APK behavior against its signed build metadata, embedded JavaScript bundle, and release configuration to identify why claimed fixes are absent.
+- [ ] Verify native OAuth, protected-payment RPC, guest-route, notification, category, and media flows against the actual packaged Android runtime rather than source-only tests.
+- [ ] Repair the root cause, publish a replacement APK only after runtime-representative validation, and document the verified build identity.
+- [x] Replace the wide native Marketplace category chips with a compact category-picker icon beside search, keeping selected categories clearly visible and accessible.
+- [x] Enrich native Marketplace post previews with poster name, verification state, average rating and review count, and improve full-feed visibility while keeping browsing controls reachable.
+- [x] Ensure My requests and My carry space have dedicated management pages with working open, edit, delete, offer, and interest actions for each eligible record.
+- [x] Repair native Payment-record back navigation; add a paginated Payment records page loading 30 records per page and link it from the payments overview.
+- [x] Show authorized manual payment QR details and currency conversion information in the native payment flow without exposing private payout details to unauthorized users.
+- [x] Route unread badges from More to their actual Profile, Payments, Workspace, Messages, or Updates destination cards after the member enters More.
+- [x] Add profile-photo change controls and complete permitted profile settings parity, including corrected save-confirmation feedback.
+- [ ] Implement persisted native language, preferred-currency, and dark/system/light theme preferences with visible, accessible text and controls.
+- [ ] Expand native localization coverage for all member-facing labels and feedback, rather than changing only the language selector.
+- [ ] Refresh native pages with restrained modern color, brand visuals, touch feedback, and differentiated optional sound/haptic feedback without intrusive automatic audio.
+- [ ] Add web-equivalent contextual information to key native post, legal, discovery, workspace, payment, profile, and account pages without duplicating private data.
+- [ ] Validate, release, and document the native web-parity experience after complete workflow and theme/localization regression tests.

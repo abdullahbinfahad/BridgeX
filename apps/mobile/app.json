@@ -2,10 +2,10 @@
   "expo": {
     "name": "BridgeX",
     "slug": "bridgex",
-    "version": "1.6.2",
+    "version": "1.6.3",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
-    "userInterfaceStyle": "light",
+    "userInterfaceStyle": "automatic",
     "scheme": "bridgex",
     "ios": {
       "supportsTablet": true,
@@ -13,7 +13,7 @@
     },
     "android": {
       "package": "im.bridgex.marketplace",
-      "versionCode": 19,
+      "versionCode": 20,
       "navigationBarColor": "#f7f5ef",
       "statusBarColor": "#f7f5ef",
       "statusBarStyle": "dark-content",

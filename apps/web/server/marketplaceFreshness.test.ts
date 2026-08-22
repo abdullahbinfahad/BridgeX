@@ -10,10 +10,11 @@ describe("BridgeX marketplace cache and public-review regression coverage", () =
     const screen = read("apps/mobile/src/screens/MarketplaceScreen.tsx");
     const migration = read("supabase/migrations/202608220815_marketplace_realtime.sql");
     expect(api).toContain("loadCachedMarketplace");
-    expect(screen).toContain("loadCachedMarketplace(tab)");
+    expect(screen).toContain("loadCachedMarketplace(tab, 0)");
     expect(screen).toContain('tab === "requests" ? "send_requests" : "carry_listings"');
     expect(screen).toContain("native-marketplace-${table}");
-    expect(screen).toContain("load(false, true)");
+    expect(screen).toContain("loadPage(0, { replace: true, quiet: Boolean(cached?.length) })");
+    expect(screen).toContain("onEndReached={loadMore}");
     expect(migration).toContain("ADD TABLE public.send_requests");
     expect(migration).toContain("ADD TABLE public.carry_listings");
   });

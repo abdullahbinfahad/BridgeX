@@ -3,13 +3,14 @@ import { ActivityIndicator, Alert, Pressable, ScrollView, StyleSheet, Text, Text
 import { SUPPORTED_CURRENCIES } from "../lib/constants";
 import { deleteNativeManagedPost, loadNativeManagedPosts, updateNativeManagedPost, type NativeManagedPost } from "../lib/api";
 
-export function ManagePostsScreen({ userId, onBack }: { userId: string; onBack: () => void }) {
+export function ManagePostsScreen({ userId, onBack, initialPostId }: { userId: string; onBack: () => void; initialPostId?: string }) {
   const [posts, setPosts] = useState<NativeManagedPost[]>([]);
   const [selected, setSelected] = useState<NativeManagedPost | null>(null);
   const [loading, setLoading] = useState(true);
   const [busy, setBusy] = useState(false);
   const load = useCallback(async () => { setLoading(true); try { setPosts(await loadNativeManagedPosts(userId)); } catch (error: any) { Alert.alert("BridgeX", error?.message || "Could not load your posts."); } finally { setLoading(false); } }, [userId]);
   useEffect(() => { void load(); }, [load]);
+  useEffect(() => { if (!initialPostId || !posts.length || selected) return; const post = posts.find(item => item.id === initialPostId); if (post) setSelected(post); }, [initialPostId, posts, selected]);
   const change = (key: keyof NativeManagedPost, value: string) => setSelected(current => current ? { ...current, [key]: value } : current);
   const save = async () => { if (!selected) return; setBusy(true); try { await updateNativeManagedPost(userId, selected); setSelected(null); await load(); Alert.alert("Post updated", "Your open post was updated."); } catch (error: any) { Alert.alert("Could not update post", error?.message || "Only open posts can be edited."); } finally { setBusy(false); } };
   const remove = (post: NativeManagedPost) => Alert.alert("Delete open post?", "Open posts can be removed. Protected matched records are retained and cannot be deleted here.", [{ text: "Keep", style: "cancel" }, { text: "Delete", style: "destructive", onPress: () => void (async () => { setBusy(true); try { await deleteNativeManagedPost(userId, post); await load(); } catch (error: any) { Alert.alert("Could not delete post", error?.message || "Only eligible open posts can be deleted."); } finally { setBusy(false); } })() }]);
