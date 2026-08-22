@@ -337,3 +337,5 @@
 - [x] Build native verification, payments, payout details, notifications, settings, and administrator controls using the existing API and access policies.
 - [x] Add offline-safe cache, draft persistence, image upload retry, and a secure queue for supported write actions.
 - [ ] Produce and validate a new Android APK/AAB with a native-first startup path and update the public Android download destination. Blocked pending Expo access to EAS project `79a0cf5c-1667-471c-a9fd-4c79444363f8` or an authorized replacement project.
+- [ ] Create or relink BridgeX to an Expo EAS project accessible to the configured `abdullahbinfahad` build account, then produce the independent-native APK and Play Store AAB.
+- [ ] Link the completed independent-native app to new Expo project `459e7ae1-9dc7-4318-b642-814abe9ace20`, then queue its production APK and Play Store AAB builds.
