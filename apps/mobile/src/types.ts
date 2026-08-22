@@ -1,4 +1,4 @@
-export type AppRoute = "home" | "marketplace" | "create" | "workspace" | "workspace_records" | "messages" | "notifications" | "payments" | "payment_list" | "settings" | "verification" | "admin" | "post" | "profile" | "member" | "respond" | "more" | "info";
+export type AppRoute = "home" | "marketplace" | "create" | "workspace" | "workspace_records" | "manage_posts" | "workspace_responses" | "messages" | "notifications" | "payments" | "payment_list" | "settings" | "verification" | "admin" | "post" | "profile" | "member" | "respond" | "more" | "info";
 export type MarketplaceTab = "requests" | "carry";
 export type ServiceScope = "domestic" | "international";
 export type NativeInfoSection = "about" | "how_it_works" | "safety" | "contact" | "downloads" | "legal" | "terms" | "privacy";

@@ -139,7 +139,7 @@ export default function Access() {
             <h2 className="mt-2 font-display text-3xl font-bold tracking-[-0.05em]">
               {mode === "signin" ? t("signIn") : t("createAccount")}
             </h2>
-            <label className="mt-5 block text-xs font-bold uppercase tracking-[0.12em] text-[#637073]">{t("chooseLanguage")}<select value={language} onChange={event => setLanguage(event.target.value as SystemLanguage)} className="mt-2 h-10 w-full rounded-xl border border-[#172126]/12 bg-[#faf9f5] px-3 text-sm font-semibold normal-case tracking-normal text-[#172126]">{LANGUAGE_OPTIONS.map(option => <option key={option.code} value={option.code}>{option.nativeLabel} · {option.label}</option>)}</select></label>
+            <label className="mt-5 block text-xs font-bold uppercase tracking-[0.12em] text-[#637073]">{t("chooseLanguage")}<select value={language} onChange={event => setLanguage(event.target.value as SystemLanguage)} className="mt-2 h-10 w-full rounded-xl border border-[#172126]/12 bg-[#faf9f5] px-3 text-sm font-semibold normal-case tracking-normal text-[#172126]">{LANGUAGE_OPTIONS.map(option => <option key={option.code} value={option.code}>{option.code === "en" ? option.label : `${option.nativeLabel} · ${option.label}`}</option>)}</select></label>
 
             <Button
               disabled={sending || googleStarting}

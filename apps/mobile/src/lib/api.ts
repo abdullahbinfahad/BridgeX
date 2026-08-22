@@ -61,12 +61,35 @@ export async function loadNativeMemberReviews(memberId: string): Promise<NativeM
   return (data ?? []).filter((review: any) => typeof review.comment === "string" && review.comment.trim().length > 0) as NativeMemberReview[];
 }
 
-export async function loadNotifications(userId: string): Promise<NativeNotification[]> {
-  const { data, error } = await supabase.from("notifications").select("id,title,body,created_at,read_at,related_id,type,link").eq("user_id", userId).order("created_at", { ascending: false }).limit(30);
+export type NativeNotificationPage = { items: NativeNotification[]; nextBefore: string | null; hasMore: boolean };
+export type NativeUnreadCounts = { updates: number; messages: number; workspace: number; more: number };
+
+export async function loadNotifications(userId: string, before?: string | null, pageSize = 30): Promise<NativeNotificationPage> {
+  const base = supabase.from("notifications").select("id,title,body,created_at,read_at,related_id,type,link").eq("user_id", userId).order("created_at", { ascending: false });
+  const { data, error } = before ? await base.lt("created_at", before).limit(pageSize + 1) : await base.limit(pageSize + 1);
   if (error) throw error;
-  const notices = data ?? [];
-  await cacheSet(`notifications:${userId}`, notices);
-  return notices;
+  const rows = (data ?? []) as NativeNotification[];
+  const items = rows.slice(0, pageSize);
+  if (!before) await cacheSet(`notifications:${userId}`, items);
+  return { items, nextBefore: items.at(-1)?.created_at ?? null, hasMore: rows.length > pageSize };
+}
+
+export async function loadNativeNotificationById(userId: string, notificationId: string): Promise<NativeNotification | null> {
+  const { data, error } = await supabase.from("notifications").select("id,title,body,created_at,read_at,related_id,type,link").eq("user_id", userId).eq("id", notificationId).maybeSingle();
+  if (error) throw error;
+  return data as NativeNotification | null;
+}
+
+export async function loadNativeUnreadCounts(): Promise<NativeUnreadCounts> {
+  const { data, error } = await supabase.rpc("bridgex_native_unread_counts");
+  if (error) throw error;
+  const values = (data || {}) as Partial<NativeUnreadCounts>;
+  return { updates: Number(values.updates || 0), messages: Number(values.messages || 0), workspace: Number(values.workspace || 0), more: Number(values.more || 0) };
+}
+
+export async function registerNativePushToken(userId: string, token: string) {
+  const { error } = await supabase.from("device_push_tokens").upsert({ user_id: userId, expo_push_token: token, platform: "android", active: true, updated_at: new Date().toISOString() }, { onConflict: "expo_push_token" });
+  if (error) throw error;
 }
 
 export async function markNotificationRead(userId: string, notificationId: string) {
@@ -173,6 +196,70 @@ export async function archiveNativeRequest(requestId: string) {
   if (error) throw error;
 }
 
+export type NativeManagedPost = { id: string; kind: "request" | "listing"; status: string; title: string; description: string; origin: string; destination: string; amount: string; currency: string; weight: string; departure: string };
+
+export async function loadNativeManagedPosts(userId: string): Promise<NativeManagedPost[]> {
+  const [requests, listings] = await Promise.all([
+    supabase.from("send_requests").select("id,status,title,description,purchase_country,destination_country,destination_city,budget_bdt,currency,weight_kg").eq("user_id", userId).order("created_at", { ascending: false }).limit(100),
+    supabase.from("carry_listings").select("id,status,notes,origin_country,origin_city,destination_country,destination_city,price_bdt,currency,available_weight_kg,departure_at").eq("user_id", userId).order("created_at", { ascending: false }).limit(100),
+  ]);
+  if (requests.error || listings.error) throw requests.error || listings.error;
+  const requestPosts = (requests.data ?? []).map((item: any): NativeManagedPost => ({ id: item.id, kind: "request", status: item.status, title: item.title, description: item.description || "", origin: item.purchase_country || "Origin", destination: [item.destination_city, item.destination_country].filter(Boolean).join(", ") || "Destination", amount: String(item.budget_bdt ?? ""), currency: item.currency || "BDT", weight: String(item.weight_kg ?? ""), departure: "" }));
+  const listingPosts = (listings.data ?? []).map((item: any): NativeManagedPost => ({ id: item.id, kind: "listing", status: item.status, title: "Carry space listing", description: item.notes || "", origin: [item.origin_city, item.origin_country].filter(Boolean).join(", ") || "Origin", destination: [item.destination_city, item.destination_country].filter(Boolean).join(", ") || "Destination", amount: String(item.price_bdt ?? ""), currency: item.currency || "BDT", weight: String(item.available_weight_kg ?? ""), departure: item.departure_at || "" }));
+  return [...requestPosts, ...listingPosts];
+}
+
+export async function updateNativeManagedPost(userId: string, post: NativeManagedPost) {
+  const changes = post.kind === "request" ? { title: post.title.trim(), description: post.description.trim(), budget_bdt: Number(post.amount), currency: post.currency, weight_kg: Number(post.weight) } : { notes: post.description.trim() || null, price_bdt: Number(post.amount), currency: post.currency, available_weight_kg: Number(post.weight), departure_at: post.departure ? new Date(post.departure).toISOString() : undefined };
+  const table = post.kind === "request" ? "send_requests" : "carry_listings";
+  const { error } = await supabase.from(table).update(changes).eq("id", post.id).eq("user_id", userId).eq("status", "open");
+  if (error) throw error;
+}
+
+export async function deleteNativeManagedPost(userId: string, post: NativeManagedPost) {
+  if (post.kind === "request") return archiveNativeRequest(post.id);
+  const { error } = await supabase.from("carry_listings").delete().eq("id", post.id).eq("user_id", userId).eq("status", "open");
+  if (error) throw error;
+}
+
+export type NativeOwnerResponse = { id: string; kind: "offer" | "interest"; postId: string; postTitle: string; participantId: string; participantName: string; participantVerified: boolean; amount: number; currency: string; status: string; note: string; createdAt: string; details: string };
+
+export async function loadNativeOwnerResponses(userId: string): Promise<NativeOwnerResponse[]> {
+  const [requests, listings] = await Promise.all([
+    supabase.from("send_requests").select("id,title").eq("user_id", userId).in("status", ["open", "payment_pending"]).limit(100),
+    supabase.from("carry_listings").select("id,origin_city,destination_city").eq("user_id", userId).in("status", ["open", "payment_pending"]).limit(100),
+  ]);
+  if (requests.error || listings.error) throw requests.error || listings.error;
+  const requestIds = (requests.data ?? []).map((row: any) => row.id); const listingIds = (listings.data ?? []).map((row: any) => row.id);
+  const [offers, interests] = await Promise.all([
+    requestIds.length ? supabase.from("offers").select("id,request_id,traveler_id,amount_bdt,currency,estimated_delivery_at,note,status,created_at").in("request_id", requestIds).order("created_at", { ascending: false }) : Promise.resolve({ data: [], error: null }),
+    listingIds.length ? supabase.from("listing_interests").select("id,listing_id,sender_id,total_offer_bdt,currency,weight_kg,categories,item_quantities,delivery_required_by,note,status,created_at").in("listing_id", listingIds).order("created_at", { ascending: false }) : Promise.resolve({ data: [], error: null }),
+  ]);
+  if (offers.error || interests.error) throw offers.error || interests.error;
+  const participantIds = Array.from(new Set([...(offers.data ?? []).map((row: any) => row.traveler_id), ...(interests.data ?? []).map((row: any) => row.sender_id)].filter(Boolean)));
+  const badges = participantIds.length ? await supabase.from("bridgex_member_badges").select("id,display_name,is_verified").in("id", participantIds) : { data: [], error: null };
+  if (badges.error) throw badges.error;
+  const badgeById = new Map((badges.data ?? []).map((badge: any) => [badge.id, badge]));
+  const requestById = new Map((requests.data ?? []).map((row: any) => [row.id, row.title]));
+  const listingById = new Map((listings.data ?? []).map((row: any) => [row.id, `${row.origin_city || "Origin"} → ${row.destination_city || "Destination"}`]));
+  return [
+    ...(offers.data ?? []).map((row: any): NativeOwnerResponse => { const badge = badgeById.get(row.traveler_id); return { id: row.id, kind: "offer", postId: row.request_id, postTitle: requestById.get(row.request_id) || "Item request", participantId: row.traveler_id, participantName: badge?.display_name || "BridgeX member", participantVerified: Boolean(badge?.is_verified), amount: Number(row.amount_bdt || 0), currency: row.currency || "BDT", status: row.status, note: row.note || "", createdAt: row.created_at, details: row.estimated_delivery_at ? `Estimated delivery ${new Date(row.estimated_delivery_at).toLocaleDateString()}` : "Delivery date not stated" }; }),
+    ...(interests.data ?? []).map((row: any): NativeOwnerResponse => { const badge = badgeById.get(row.sender_id); const quantities = Object.entries(row.item_quantities || {}).filter(([, value]) => Number(value) > 0).map(([item, value]) => `${item}: ${value}`).join(" · "); return { id: row.id, kind: "interest", postId: row.listing_id, postTitle: listingById.get(row.listing_id) || "Carry space", participantId: row.sender_id, participantName: badge?.display_name || "BridgeX member", participantVerified: Boolean(badge?.is_verified), amount: Number(row.total_offer_bdt || 0), currency: row.currency || "BDT", status: row.status, note: row.note || "", createdAt: row.created_at, details: `${row.weight_kg || 0} kg${row.categories?.length ? ` · ${row.categories.join(", ")}` : ""}${quantities ? ` · ${quantities}` : ""}` }; }),
+  ].sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+}
+
+export async function startNativeOwnerPayment(kind: NativeOwnerResponse["kind"], responseId: string) {
+  const { data, error } = await supabase.rpc("start_bridgex_payment", { p_kind: kind, p_response_id: responseId });
+  if (error) throw error;
+  return data as string;
+}
+
+export async function declineNativeOwnerResponse(kind: NativeOwnerResponse["kind"], responseId: string) {
+  const table = kind === "offer" ? "offers" : "listing_interests";
+  const { error } = await supabase.from(table).update({ status: "rejected", updated_at: new Date().toISOString() }).eq("id", responseId).eq("status", "pending");
+  if (error) throw error;
+}
+
 export async function updateNativeTravelerOrder(orderId: string, fulfillmentStatus: string) {
   const { error } = await supabase.rpc("update_bridgex_traveler_order", { p_order_id: orderId, p_fulfillment_status: fulfillmentStatus });
   if (error) throw error;
@@ -208,8 +295,9 @@ export async function markNativeDealRead(matchId: string) {
 export async function sendNativeDealMessage(userId: string, matchId: string, body: string) {
   const trimmed = body.trim();
   if (!trimmed) return;
-  const { error } = await supabase.rpc("send_bridgex_match_message", { p_match_id: matchId, p_body: trimmed });
+  const { data, error } = await supabase.rpc("send_bridgex_match_message", { p_match_id: matchId, p_body: trimmed });
   if (error) throw error;
+  return data as string;
 }
 
 export async function createNativeOffer(input: { requestId: string; travelerId: string; requestOwnerId: string; requestTitle: string; amount: number; currency: string; estimatedDeliveryAt?: string; note?: string }) {

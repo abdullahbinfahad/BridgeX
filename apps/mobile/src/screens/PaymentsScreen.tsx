@@ -5,10 +5,10 @@ import { confirmNativePayoutReceived, loadNativePayments, submitNativePaymentPro
 import { uploadNativePaymentProof } from "../lib/media";
 
 export type PaymentFilter = "pending" | "verifying" | "verified" | "received";
-type Props = { userId: string; filter?: PaymentFilter; onOpenFilter?: (filter: PaymentFilter) => void; onBack?: () => void };
+type Props = { userId: string; filter?: PaymentFilter; initialPaymentId?: string; onOpenFilter?: (filter: PaymentFilter) => void; onBack?: () => void };
 const label = (value: string) => value.replace(/_/g, " ").replace(/\b\w/g, character => character.toUpperCase());
 
-export function PaymentsScreen({ userId, filter, onOpenFilter, onBack }: Props) {
+export function PaymentsScreen({ userId, filter, initialPaymentId, onOpenFilter, onBack }: Props) {
   const [payments, setPayments] = useState<NativePayment[]>([]);
   const [payouts, setPayouts] = useState<NativeTravelerPayout[]>([]);
   const [selected, setSelected] = useState<NativePayment | null>(null);
@@ -20,6 +20,7 @@ export function PaymentsScreen({ userId, filter, onOpenFilter, onBack }: Props) 
   const [busy, setBusy] = useState(false);
   const load = useCallback(async () => { setLoading(true); try { const data = await loadNativePayments(userId); setPayments(data.payments); setPayouts(data.payouts); } catch (error: any) { Alert.alert("BridgeX", error?.message || "Could not load payments."); } finally { setLoading(false); } }, [userId]);
   useEffect(() => { void load(); }, [load]);
+  useEffect(() => { if (!initialPaymentId || !payments.length) return; const payment = payments.find(item => item.id === initialPaymentId); if (payment) setSelected(payment); }, [initialPaymentId, payments]);
   const counts = useMemo(() => ({ pending: payments.filter(item => ["pending_payment", "rejected"].includes(item.status)).length, verifying: payments.filter(item => item.status === "payment_verifying").length, verified: payments.filter(item => item.status === "verified").length, received: payouts.filter(item => item.payout_status === "received").length }), [payments, payouts]);
   const chooseProof = async () => { const result = await ImagePicker.launchImageLibraryAsync({ mediaTypes: ["images"] as any, quality: 0.68 }); if (!result.canceled) setProof(result.assets[0]); };
   const submit = async () => { if (!selected || !proof) return Alert.alert("Payment screenshot required", "Choose a clear screenshot before submitting payment evidence."); if (!["pending_payment", "rejected"].includes(selected.status)) return; setBusy(true); try { const path = await uploadNativePaymentProof(userId, selected.id, { uri: proof.uri, name: proof.fileName, mimeType: proof.mimeType }); await submitNativePaymentProof({ paymentId: selected.id, method, proofPath: path, payerReference: reference, payerNote: note }); Alert.alert("Payment evidence submitted", "Your screenshot has been sent for authorized review."); setSelected(null); setProof(null); setReference(""); setNote(""); await load(); } catch (error: any) { Alert.alert("Could not submit evidence", error?.message || "Please try again."); } finally { setBusy(false); } };

@@ -372,3 +372,14 @@
 - [x] Optimize the web Contact page for narrow mobile viewports and touch input.
 - [x] Publish separate, accurately labeled web-shell and independent-native Android download paths in the public website footer.
 - [x] Validate, release, and document the native and web workspace, payments, deletion, media, keyboard, search, contact, and download-link update.
+- [x] Add cursor-based native Updates pagination: load the newest 30 first and append 30 older notifications on deliberate bottom scroll until history is exhausted.
+- [x] Make native notification and message data merge incremental Realtime updates without resetting an already-loaded history.
+- [x] Repair native Google authentication so OAuth returns safely into the independent app session, and add an accessible password visibility toggle on sign-in fields.
+- [x] Add exact unread-count badges to native navigation entries for Updates, Messages, Workspace, and More, with secure per-user counts.
+- [x] Strengthen Android push-notification registration and handling for permitted device notifications, including background and lock-screen delivery where the operating system allows it.
+- [x] Improve native Marketplace category-chip contrast, wrapping, selected-state feedback, and readability.
+- [x] Diagnose and fix authenticated native post image/video rendering against real `request-media` storage paths and signed/public access rules.
+- [x] Extend native Workspace record pages with permitted post edit, offer/interest review, and accept-and-pay/payment-verification workflows matching current web rules.
+- [x] Diagnose and repair the payment-evidence submission conflict without weakening the one-active-traveler-per-request integrity rule.
+- [ ] Correct footer download labels: retain the existing Android web/shell entry as version 1.0.11 without forcing in-app updates, and label the completed independent-native APK separately.
+- [ ] Validate, version, publish, and document the next native reliability release after regression coverage passes.

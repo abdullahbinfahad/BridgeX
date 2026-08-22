@@ -49,17 +49,17 @@ describe("BridgeX currency, cargo, support, and brand release safeguards", () =>
     expect(read("apps/web/client/src/components/bridgex/Brand.tsx")).toContain("/bridgex-logo.webp");
     expect(read("apps/web/client/index.html")).toContain("/favicon.ico");
     expect(read("apps/mobile/app.json")).toContain("./assets/icon.png");
-    expect(read("apps/mobile/app.json")).toContain('"versionCode": 17');
+    expect(read("apps/mobile/app.json")).toContain('"versionCode": 18');
   });
 
-  it("uses the independent native app shell in the BridgeX Android 1.5.0 release", () => {
+  it("uses the independent native app shell in the BridgeX Android 1.6.1 release", () => {
     const mobileApp = read("apps/mobile/App.tsx");
     const nativeApp = read("apps/mobile/src/NativeApp.tsx");
     expect(mobileApp).toContain('import NativeApp from "./src/NativeApp"');
     expect(nativeApp).toContain("SafeAreaView");
     expect(nativeApp).not.toContain("WebView");
-    expect(read("apps/mobile/android/app/build.gradle")).toContain("versionCode 17");
-    expect(read("apps/mobile/android/app/build.gradle")).toContain('versionName "1.6.0"');
+    expect(read("apps/mobile/android/app/build.gradle")).toContain("versionCode 18");
+    expect(read("apps/mobile/android/app/build.gradle")).toContain('versionName "1.6.1"');
   });
 
   it("pairs sound categories with lightweight visual feedback cues that respect motion preferences", () => {
@@ -70,7 +70,7 @@ describe("BridgeX currency, cargo, support, and brand release safeguards", () =>
     expect(styles).toContain("prefers-reduced-motion: reduce");
   });
 
-  it("uses the completed independent-native Android v1.6.0 APK link alongside the Windows download entry", () => {
+  it("keeps the current independent-native Android APK link alongside the Windows download entry", () => {
     const layout = read("apps/web/client/src/components/bridgex/PublicLayout.tsx");
     expect(layout).toContain("AZMzmc1K1bIIQPZG-EvsPuWzEZSc5AaWaYlv-OBr6E4.apk");
     expect(layout).toContain("BridgeX-Windows-x64.zip");
@@ -185,12 +185,12 @@ describe("BridgeX currency, cargo, support, and brand release safeguards", () =>
     expect(layout).toContain('t("harmonyOS")');
     expect(layout).toContain('t("macOS")');
     expect(layout).not.toContain("allow that app to install unknown apps");
-    expect(appConfig).toContain('"versionCode": 17');
+    expect(appConfig).toContain('"versionCode": 18');
     expect(eas).toContain('"play"');
     expect(eas).toContain('"buildType": "app-bundle"');
     expect(gradle).toContain("EAS_BUILD_ANDROID_KEYSTORE_PATH");
-    expect(gradle).toContain("versionCode 17");
-    expect(gradle).toContain('versionName "1.6.0"');
+    expect(gradle).toContain("versionCode 18");
+    expect(gradle).toContain('versionName "1.6.1"');
     expect(gradle).not.toContain("signingConfig signingConfigs.debug\n            def enableShrinkResources");
   });
 
