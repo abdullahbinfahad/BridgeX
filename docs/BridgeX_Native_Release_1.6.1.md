@@ -22,8 +22,15 @@ The payment-evidence RPC now checks an offer or interest’s current protected s
 
 ## Web footer labels
 
-The public footer distinguishes the retained **Android web shell · 1.0.11 — open in browser** path from the newer **Android app — independent native** APK. Automatic in-app update prompts are disabled for the retained web-shell path. The browser link opens the public web experience; the independent-native entry will be updated to the verified build-18 APK after artifact completion.
+The public footer distinguishes the retained **Android web shell · 1.0.11 — open in browser** path from the newer **Android app — independent native** APK. Automatic in-app update prompts are disabled for the retained web-shell path. The browser link opens the public web experience; the independent-native entry points to the verified build-18 APK.
 
 ## Validation and artifacts
 
-Native TypeScript, native architecture checks, web tests, and the web production build were run before Android build submission. Signed APK and AAB artifact links will be recorded here after both build-18 jobs complete.
+Native TypeScript, native architecture checks, web tests, and the web production build passed before Android submission. The completed signed Android artifacts are listed below.
+
+| Deliverable | Completed artifact | Availability |
+|---|---|---|
+| Independent Android APK | [BridgeX 1.6.1 build 18 APK](https://expo.dev/artifacts/eas/WBEqsix8wvwOHdovgS6j15EsdzajwEztCxMPLSj7nqg.apk) | Expires 2026-09-05 |
+| Google Play App Bundle | [BridgeX 1.6.1 build 18 AAB](https://expo.dev/artifacts/eas/DRpUHkBZC8sDA3yL3C2BgfvbCTW2WC4xby4JR1bgUAU.aab) | Upload this bundle in the Google Play Console before a Play Store rollout |
+
+The APK was produced from source commit `1255ab8` for Expo project `459e7ae1-9dc7-4318-b642-814abe9ace20`.

@@ -381,5 +381,5 @@
 - [x] Diagnose and fix authenticated native post image/video rendering against real `request-media` storage paths and signed/public access rules.
 - [x] Extend native Workspace record pages with permitted post edit, offer/interest review, and accept-and-pay/payment-verification workflows matching current web rules.
 - [x] Diagnose and repair the payment-evidence submission conflict without weakening the one-active-traveler-per-request integrity rule.
-- [ ] Correct footer download labels: retain the existing Android web/shell entry as version 1.0.11 without forcing in-app updates, and label the completed independent-native APK separately.
-- [ ] Validate, version, publish, and document the next native reliability release after regression coverage passes.
+- [x] Correct footer download labels: retain the existing Android web/shell entry as version 1.0.11 without forcing in-app updates, and label the completed independent-native APK separately.
+- [x] Validate, version, publish, and document the next native reliability release after regression coverage passes.
