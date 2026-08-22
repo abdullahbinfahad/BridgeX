@@ -74,6 +74,35 @@ export async function markNotificationRead(userId: string, notificationId: strin
   if (error) throw error;
 }
 
+export type NativeNotificationDestination =
+  | { route: "messages" }
+  | { route: "payments"; filter?: "pending" | "verifying" | "verified" | "received" }
+  | { route: "workspace_records"; section: "active_orders" | "requests" | "carry" | "completed" }
+  | { route: "workspace" }
+  | { route: "profile" }
+  | { route: "admin" }
+  | { route: "marketplace" };
+
+export function resolveNativeNotificationDestination(notification: NativeNotification): NativeNotificationDestination {
+  const link = (notification.link || "").toLowerCase();
+  const type = (notification.type || "").toLowerCase();
+  if (link.startsWith("/admin") || type.includes("admin_") || type.includes("verification_review")) return { route: "admin" };
+  if (link.includes("/payments") || type.startsWith("payment_")) {
+    if (type.includes("required") || type.includes("rejected") || type.includes("pending")) return { route: "payments", filter: "pending" };
+    if (type.includes("verifying")) return { route: "payments", filter: "verifying" };
+    if (type.includes("verified")) return { route: "payments", filter: "verified" };
+    if (type.includes("payout") || type.includes("received")) return { route: "payments", filter: "received" };
+    return { route: "payments" };
+  }
+  if (link.includes("/deals") || link.includes("/messages") || type.includes("match_") || type.includes("message") || type.includes("contact_")) return { route: "messages" };
+  if (link.includes("/orders") || type.includes("order_") || type.includes("traveler_update")) return { route: "workspace_records", section: "active_orders" };
+  if (link.includes("/offers") || type.includes("offer")) return { route: "workspace_records", section: "requests" };
+  if (link.includes("/interests") || type.includes("interest")) return { route: "workspace_records", section: "carry" };
+  if (link.includes("/profile") || link.includes("/verification") || type.includes("verification") || type.includes("account")) return { route: "profile" };
+  if (link.includes("/workspace")) return { route: "workspace" };
+  return { route: "marketplace" };
+}
+
 async function recordAcknowledgement(userId: string, action: "send_request" | "carry_listing", relatedId: string) {
   const { error } = await supabase.from("bridgex_legal_acknowledgements").insert({ user_id: userId, action, terms_version: TERMS_VERSION, acknowledgement_text: "I have read and accept the BridgeX Terms, Safety, and truthful-item requirements.", related_type: action, related_id: relatedId });
   if (error) throw error;
@@ -137,6 +166,11 @@ export async function loadNativeWorkspace(userId: string): Promise<NativeWorkspa
   const workspace = { requests: requests.data ?? [], listings: listings.data ?? [], orders: enrichedOrders } as NativeWorkspace;
   await cacheSet(`workspace:${userId}`, workspace);
   return workspace;
+}
+
+export async function archiveNativeRequest(requestId: string) {
+  const { error } = await supabase.rpc("archive_bridgex_member_request", { p_request_id: requestId });
+  if (error) throw error;
 }
 
 export async function updateNativeTravelerOrder(orderId: string, fulfillmentStatus: string) {

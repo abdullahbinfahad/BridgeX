@@ -18,6 +18,11 @@ const response = read("src/screens/ResponseScreen.tsx");
 const memberProfile = read("src/screens/MemberProfileScreen.tsx");
 const more = read("src/screens/MoreScreen.tsx");
 const info = read("src/screens/InfoScreen.tsx");
+const notifications = read("src/screens/NotificationsScreen.tsx");
+const workspaceRecords = read("src/screens/WorkspaceRecordsScreen.tsx");
+const marketplace = read("src/screens/MarketplaceScreen.tsx");
+const messages = read("src/screens/MessagesScreen.tsx");
+const postDetail = read("src/screens/PostDetailScreen.tsx");
 const packageJson = read("package.json");
 
 assert.match(entry, /NativeApp/);
@@ -38,6 +43,16 @@ assert.match(response, /itemQuantities/);
 assert.match(memberProfile, /Public BridgeX posts/);
 assert.match(more, /How it works/);
 assert.match(info, /Open current website page/);
+assert.match(api, /resolveNativeNotificationDestination/);
+assert.match(notifications, /onOpenDestination/);
+assert.match(workspaceRecords, /Swipeable/);
+assert.match(workspaceRecords, /archiveNativeRequest/);
+assert.match(shell, /workspace_records/);
+assert.match(marketplace, /PRODUCT_CATEGORIES/);
+assert.match(marketplace, /categoryFilters/);
+assert.match(messages, /keyboardShouldPersistTaps/);
+assert.match(messages, /Platform\.OS === "ios" \? "padding" : "height"/);
+assert.match(postDetail, /nativePublicMediaUrl/);
 assert.doesNotMatch(packageJson, /react-native-webview/);
 
 console.log("BridgeX independent native architecture checks passed.");

@@ -361,3 +361,14 @@
 - [x] Show accurate completed-order rating summaries and permitted public review comments on sender and traveler member profiles.
 - [x] Retain cached marketplace content after initial load and merge authorized realtime public-post and account-update changes without repeated full reloads.
 - [x] Validate, publish, and document the permission, review, and cache-first realtime fixes after regression tests pass. BridgeX 1.5.0 (16) APK and Play Store AAB are finished.
+- [x] Replace native Workspace summaries with dedicated, navigable pages for active orders, item requests, carry space, completed orders, and other personal records.
+- [x] Create dedicated native payment list and payment-detail screens for each payment state instead of presenting all payment data in one crowded page.
+- [x] Add a confirmation-based native left-swipe deletion action for eligible personal item requests, while retaining immutable protected-order records after release.
+- [x] Add actionable deep links from native update notifications into the exact order, payment, workspace, profile, or message destination.
+- [x] Repair native post-card and post-detail media rendering so authorized public images appear reliably on Android.
+- [x] Apply resilient keyboard-aware scroll and focus behavior to native messages, authentication, and remaining form screens.
+- [x] Add searchable post categories to the native marketplace filter experience.
+- [x] Extend native visual feedback with performant, accessible branded imagery and interaction motion without intrusive automatic audio.
+- [x] Optimize the web Contact page for narrow mobile viewports and touch input.
+- [x] Publish separate, accurately labeled web-shell and independent-native Android download paths in the public website footer.
+- [ ] Validate, release, and document the native and web workspace, payments, deletion, media, keyboard, search, contact, and download-link update.
