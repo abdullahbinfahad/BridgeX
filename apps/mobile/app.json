@@ -2,7 +2,7 @@
   "expo": {
     "name": "BridgeX",
     "slug": "bridgex",
-    "version": "1.3.0",
+    "version": "1.4.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
@@ -13,7 +13,7 @@
     },
     "android": {
       "package": "im.bridgex.marketplace",
-      "versionCode": 14,
+      "versionCode": 15,
       "navigationBarColor": "#f7f5ef",
       "statusBarColor": "#f7f5ef",
       "statusBarStyle": "dark-content",
@@ -60,7 +60,8 @@
         {
           "iCloudContainerEnvironment": "Production"
         }
-      ]
+      ],
+      "@react-native-community/datetimepicker"
     ],
     "owner": "abdullahbinfahadbridexs-team"
   }

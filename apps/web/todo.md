@@ -348,3 +348,11 @@
 - [x] Add native About, How It Works, Safety, Contact, Downloads, Legal, Terms, and Privacy entry points and screens.
 - [x] Complete native parity for marketplace detail, offers, carry interests, protected deals, profile identity, ratings, and counterpart information using the existing secured API.
 - [x] Run native architecture and release validation, then publish an incremented APK/AAB only after the parity changes are tested. BridgeX 1.3.0 (14) APK and Play Store AAB are finished.
+- [x] Reserve a deliberately empty 0.5 cm BridgeX-colored Android top system area with no in-app text or controls.
+- [x] Replace text-symbol Android navigation with modern native iconography, move Post actions into Marketplace, and add Updates as a bottom-navigation destination.
+- [x] Remove the redundant Workspace post action while preserving Marketplace request and carry-space creation actions.
+- [x] Replace native manual date/time typing with accessible calendar/time picker controls wherever route, departure, delivery, or schedule fields are collected.
+- [x] Make Android and web forms reliably keyboard-safe so active fields and typed text remain visible above mobile keyboards.
+- [x] Extend the native loading, visual feedback, and motion treatment from the existing web experience while preserving performance and accessibility.
+- [x] Make authorized native administrator controls visibly discoverable without exposing administration functions to non-admin members.
+- [ ] Validate and publish the next native Android APK/AAB only after the requested navigation, picker, keyboard, visual, and admin controls pass regression checks.

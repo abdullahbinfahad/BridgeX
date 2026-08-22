@@ -78,6 +78,23 @@ function GlobalInteractionFeedback() {
   return null;
 }
 
+function GlobalKeyboardFocusGuard() {
+  useEffect(() => {
+    const updateViewport = () => document.documentElement.style.setProperty("--bridgex-visible-height", `${window.visualViewport?.height || window.innerHeight}px`);
+    const revealField = (event: FocusEvent) => {
+      const target = event.target as HTMLElement | null;
+      if (!target?.matches("input, textarea, select, [contenteditable='true']")) return;
+      window.setTimeout(() => target.scrollIntoView({ behavior: "smooth", block: "center", inline: "nearest" }), 180);
+    };
+    updateViewport();
+    window.visualViewport?.addEventListener("resize", updateViewport);
+    window.visualViewport?.addEventListener("scroll", updateViewport);
+    document.addEventListener("focusin", revealField);
+    return () => { window.visualViewport?.removeEventListener("resize", updateViewport); window.visualViewport?.removeEventListener("scroll", updateViewport); document.removeEventListener("focusin", revealField); };
+  }, []);
+  return null;
+}
+
 function LanguageProfileSync() {
   const { user } = useAuth();
   const { setLanguage } = useLanguage();
@@ -121,6 +138,7 @@ function App() {
             <Toaster />
             <LanguageProfileSync />
             <GlobalInteractionFeedback />
+            <GlobalKeyboardFocusGuard />
             <GlobalBackButton />
             <Suspense fallback={<DeliveryLoader />}><Router /></Suspense>
           </TooltipProvider>

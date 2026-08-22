@@ -1,45 +1,6 @@
+import Ionicons from "@expo/vector-icons/Ionicons";
 import { useEffect, useRef } from "react";
 import { Animated, Easing, StyleSheet, Text, View } from "react-native";
-
 type Props = { label?: string; compact?: boolean };
-
-export function NativeLoading({ label = "Loading BridgeX…", compact = false }: Props) {
-  const route = useRef(new Animated.Value(0)).current;
-  const lift = useRef(new Animated.Value(0)).current;
-
-  useEffect(() => {
-    const journey = Animated.loop(Animated.sequence([
-      Animated.timing(route, { toValue: 1, duration: 1350, easing: Easing.inOut(Easing.quad), useNativeDriver: true }),
-      Animated.timing(route, { toValue: 0, duration: 1350, easing: Easing.inOut(Easing.quad), useNativeDriver: true }),
-    ]));
-    const luggage = Animated.loop(Animated.sequence([
-      Animated.timing(lift, { toValue: -5, duration: 520, easing: Easing.inOut(Easing.quad), useNativeDriver: true }),
-      Animated.timing(lift, { toValue: 0, duration: 520, easing: Easing.inOut(Easing.quad), useNativeDriver: true }),
-    ]));
-    journey.start();
-    luggage.start();
-    return () => { journey.stop(); luggage.stop(); };
-  }, [lift, route]);
-
-  return <View style={[styles.wrap, compact && styles.compact]} accessibilityRole="progressbar" accessibilityLabel={label}>
-    <View style={styles.scene}>
-      <View style={styles.route}><Animated.View style={[styles.plane, { transform: [{ translateX: route.interpolate({ inputRange: [0, 1], outputRange: [-47, 47] }) }] }]}><Text style={styles.planeText}>✈</Text></Animated.View></View>
-      <Animated.View style={[styles.luggage, { transform: [{ translateY: lift }] }]}><Text style={styles.luggageText}>▣</Text></Animated.View>
-    </View>
-    <Text style={styles.brand}>BRIDGEX</Text>
-    <Text style={styles.label}>{label}</Text>
-  </View>;
-}
-
-const styles = StyleSheet.create({
-  wrap: { alignItems: "center", gap: 7, justifyContent: "center", padding: 24 },
-  compact: { minHeight: 175 },
-  scene: { alignItems: "center", height: 58, justifyContent: "center", width: 136 },
-  route: { backgroundColor: "#d7ebe0", borderRadius: 999, height: 3, overflow: "hidden", width: 116 },
-  plane: { alignItems: "center", height: 30, justifyContent: "center", position: "absolute", top: -24, width: 30 },
-  planeText: { color: "#2d8d62", fontSize: 25 },
-  luggage: { alignItems: "center", backgroundColor: "#172126", borderRadius: 7, bottom: 0, height: 24, justifyContent: "center", position: "absolute", width: 29 },
-  luggageText: { color: "#a8e5c3", fontSize: 16, fontWeight: "900", marginTop: -1 },
-  brand: { color: "#2d8d62", fontSize: 10, fontWeight: "900", letterSpacing: 2.2 },
-  label: { color: "#59686a", fontSize: 13, fontWeight: "800" },
-});
+export function NativeLoading({ label = "Loading BridgeX…", compact = false }: Props) { const journey = useRef(new Animated.Value(0)).current; const lift = useRef(new Animated.Value(0)).current; const roll = useRef(new Animated.Value(0)).current; useEffect(() => { const plane = Animated.loop(Animated.sequence([Animated.timing(journey, { toValue: 1, duration: 1450, easing: Easing.inOut(Easing.quad), useNativeDriver: true }), Animated.timing(journey, { toValue: 0, duration: 1450, easing: Easing.inOut(Easing.quad), useNativeDriver: true })])); const parcel = Animated.loop(Animated.sequence([Animated.timing(lift, { toValue: -7, duration: 620, easing: Easing.inOut(Easing.quad), useNativeDriver: true }), Animated.timing(lift, { toValue: 0, duration: 620, easing: Easing.inOut(Easing.quad), useNativeDriver: true })])); const luggage = Animated.loop(Animated.sequence([Animated.timing(roll, { toValue: 1, duration: 1180, easing: Easing.inOut(Easing.quad), useNativeDriver: true }), Animated.timing(roll, { toValue: 0, duration: 1180, easing: Easing.inOut(Easing.quad), useNativeDriver: true })])); plane.start(); parcel.start(); luggage.start(); return () => { plane.stop(); parcel.stop(); luggage.stop(); }; }, [journey, lift, roll]); return <View style={[styles.wrap, compact && styles.compact]} accessibilityRole="progressbar" accessibilityLabel={label}><View style={styles.scene}><View style={styles.route} /><Animated.View style={[styles.plane, { transform: [{ translateX: journey.interpolate({ inputRange: [0, 1], outputRange: [-66, 68] }) }, { translateY: journey.interpolate({ inputRange: [0, 1], outputRange: [8, -10] }) }] }]}><Ionicons name="airplane" size={21} color="#176447" /></Animated.View><Animated.View style={[styles.parcel, { transform: [{ translateY: lift }, { rotate: lift.interpolate({ inputRange: [-7, 0], outputRange: ["-4deg", "3deg"] }) }] }]}><Ionicons name="cube-outline" size={19} color="#8d5a0b" /></Animated.View><Animated.View style={[styles.luggage, { transform: [{ translateX: roll.interpolate({ inputRange: [0, 1], outputRange: [-5, 5] }) }] }]}><Ionicons name="briefcase-outline" size={20} color="#d6f0df" /></Animated.View></View><Text style={styles.brand}>BRIDGEX</Text><Text style={styles.label}>{label}</Text></View>; }
+const styles = StyleSheet.create({ wrap: { alignItems: "center", flex: 1, gap: 7, justifyContent: "center", padding: 24 }, compact: { flex: undefined, minHeight: 175 }, scene: { height: 98, position: "relative", width: 196 }, route: { borderColor: "#9ecfb0", borderStyle: "dashed", borderTopWidth: 2, bottom: 28, left: 8, position: "absolute", transform: [{ rotate: "-7deg" }], width: 180 }, plane: { alignItems: "center", backgroundColor: "#dff5ea", borderRadius: 18, height: 35, justifyContent: "center", left: 80, position: "absolute", top: 10, width: 35 }, parcel: { alignItems: "center", backgroundColor: "#fff1cc", borderRadius: 10, height: 37, justifyContent: "center", left: 80, position: "absolute", top: 41, width: 37 }, luggage: { alignItems: "center", backgroundColor: "#172126", borderRadius: 12, bottom: 0, height: 45, justifyContent: "center", position: "absolute", right: 16, width: 41 }, brand: { color: "#2d8d62", fontSize: 10, fontWeight: "900", letterSpacing: 2.2 }, label: { color: "#59686a", fontSize: 13, fontWeight: "800" } });

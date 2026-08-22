@@ -121,6 +121,7 @@
     @apply bg-background text-foreground;
     font-family: "DM Sans", sans-serif;
     background-image: radial-gradient(circle at 8% 6%, rgba(211, 246, 228, 0.72), transparent 30rem), radial-gradient(circle at 94% 12%, rgba(226, 163, 63, 0.13), transparent 27rem);
+    min-height: var(--bridgex-visible-height, 100dvh);
   }
   button:not(:disabled),
   [role="button"]:not([aria-disabled="true"]),
@@ -133,6 +134,11 @@
   input[type="radio"]:not(:disabled) {
     @apply cursor-pointer;
   }
+}
+
+@media (max-width: 768px) {
+  input, textarea, select, [contenteditable="true"] { scroll-margin-bottom: 12rem; }
+  input:focus, textarea:focus, select:focus, [contenteditable="true"]:focus { outline: 2px solid color-mix(in oklab, #2d8d62 58%, transparent); outline-offset: 2px; }
 }
 
 @layer utilities {

@@ -9,6 +9,12 @@ const secureStorage = readFileSync(new URL("../../mobile/src/lib/secureStorage.t
 const sessionHook = readFileSync(new URL("../../mobile/src/hooks/useBridgeXSession.ts", import.meta.url), "utf8");
 const mobileConfig = readFileSync(new URL("../../mobile/app.json", import.meta.url), "utf8");
 const androidManifest = readFileSync(new URL("../../mobile/android/app/src/main/AndroidManifest.xml", import.meta.url), "utf8");
+const marketplaceScreen = readFileSync(new URL("../../mobile/src/screens/MarketplaceScreen.tsx", import.meta.url), "utf8");
+const workspaceScreen = readFileSync(new URL("../../mobile/src/screens/WorkspaceScreen.tsx", import.meta.url), "utf8");
+const composeScreen = readFileSync(new URL("../../mobile/src/screens/ComposeScreen.tsx", import.meta.url), "utf8");
+const responseScreen = readFileSync(new URL("../../mobile/src/screens/ResponseScreen.tsx", import.meta.url), "utf8");
+const moreScreen = readFileSync(new URL("../../mobile/src/screens/MoreScreen.tsx", import.meta.url), "utf8");
+const dateTimeField = readFileSync(new URL("../../mobile/src/components/NativeDateTimeField.tsx", import.meta.url), "utf8");
 
 describe("BridgeX independent Android native shell", () => {
   it("resizes around the Android keyboard and renders native authentication instead of a browser wrapper", () => {
@@ -38,5 +44,35 @@ describe("BridgeX independent Android native shell", () => {
     expect(mobileConfig).toContain('"expo-image-picker"');
     expect(nativeApp).not.toContain("webView.current?.goBack()");
     expect(nativeApp).not.toContain("allowFileAccess");
+  });
+
+  it("keeps an empty BridgeX-colored system area and exposes modern native navigation with Updates", () => {
+    expect(nativeApp).toContain('topBlank: { backgroundColor: "#f7f5ef", height: 18 }');
+    expect(nativeApp).toContain('label: "Updates", icon: "notifications-outline"');
+    expect(nativeApp).toContain('Ionicons name={tab.icon}');
+    expect(nativeApp).toContain('shield-checkmark-outline');
+  });
+
+  it("keeps post creation in Marketplace and removes redundant Workspace posting controls", () => {
+    expect(marketplaceScreen).toContain("onCreateRequest");
+    expect(marketplaceScreen).toContain("onCreateCarry");
+    expect(marketplaceScreen).toContain("Request");
+    expect(marketplaceScreen).toContain("Carry");
+    expect(workspaceScreen).toContain("onBrowseMarketplace");
+    expect(workspaceScreen).not.toContain("postButton");
+  });
+
+  it("uses native date-time selection and keyboard-safe form containers instead of manual schedule typing", () => {
+    expect(dateTimeField).toContain("@react-native-community/datetimepicker");
+    expect(dateTimeField).toContain('mode="date"');
+    expect(dateTimeField).toContain('mode="time"');
+    expect(composeScreen).toContain("KeyboardAvoidingView");
+    expect(responseScreen).toContain("KeyboardAvoidingView");
+    expect(authScreen).toContain("KeyboardAvoidingView");
+  });
+
+  it("keeps administrator controls discoverable only to authorized accounts", () => {
+    expect(moreScreen).toContain('role === "admin" || role === "super_admin"');
+    expect(moreScreen).toContain("Administrator control");
   });
 });
