@@ -360,4 +360,4 @@
 - [x] Add authenticated write-path regression tests for protected messages and other affected BridgeX submit actions.
 - [x] Show accurate completed-order rating summaries and permitted public review comments on sender and traveler member profiles.
 - [x] Retain cached marketplace content after initial load and merge authorized realtime public-post and account-update changes without repeated full reloads.
-- [ ] Validate, publish, and document the permission, review, and cache-first realtime fixes after regression tests pass.
+- [x] Validate, publish, and document the permission, review, and cache-first realtime fixes after regression tests pass. BridgeX 1.5.0 (16) APK and Play Store AAB are finished.
