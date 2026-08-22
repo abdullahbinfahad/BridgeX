@@ -371,4 +371,4 @@
 - [x] Extend native visual feedback with performant, accessible branded imagery and interaction motion without intrusive automatic audio.
 - [x] Optimize the web Contact page for narrow mobile viewports and touch input.
 - [x] Publish separate, accurately labeled web-shell and independent-native Android download paths in the public website footer.
-- [ ] Validate, release, and document the native and web workspace, payments, deletion, media, keyboard, search, contact, and download-link update.
+- [x] Validate, release, and document the native and web workspace, payments, deletion, media, keyboard, search, contact, and download-link update.

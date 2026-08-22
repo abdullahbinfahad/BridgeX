@@ -70,9 +70,9 @@ describe("BridgeX currency, cargo, support, and brand release safeguards", () =>
     expect(styles).toContain("prefers-reduced-motion: reduce");
   });
 
-  it("uses the completed independent-native Android v1.5.0 APK link alongside the Windows download entry", () => {
+  it("uses the completed independent-native Android v1.6.0 APK link alongside the Windows download entry", () => {
     const layout = read("apps/web/client/src/components/bridgex/PublicLayout.tsx");
-    expect(layout).toContain("_Zbcq6iIMBttyPUQ69vYhBgtV1yPUpiAdrr27NXRYMY.apk");
+    expect(layout).toContain("AZMzmc1K1bIIQPZG-EvsPuWzEZSc5AaWaYlv-OBr6E4.apk");
     expect(layout).toContain("BridgeX-Windows-x64.zip");
   });
 

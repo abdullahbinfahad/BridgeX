@@ -16,8 +16,15 @@ Messages use Android `height` keyboard avoidance, a keyboard-aware conversation 
 
 ## Mobile web and distribution
 
-The public Contact page now uses compact mobile spacing, 48-pixel-equivalent controls, readable field typography, keyboard-accessible focus treatment, and an updated platform-safety message. The footer presents two accurate choices: **Web app — open in browser**, linking to the public website, and **Android app — independent native**, which will be updated to the completed build-17 APK after EAS artifacts finish successfully.
+The public Contact page now uses compact mobile spacing, 48-pixel-equivalent controls, readable field typography, keyboard-accessible focus treatment, and an updated platform-safety message. The footer presents two accurate choices: **Web app — open in browser**, linking to the public website, and **Android app — independent native**, which points to the completed build-17 APK.
 
-## Validation
+## Validation and artifacts
 
-Before release, the repository must pass native TypeScript, native architecture regression checks, web unit tests, and the web production build. APK and Play Store AAB artifacts are produced only after those checks pass. Artifact URLs are added after the completed build identifiers are returned by Expo.
+Native TypeScript, native architecture regression checks, web unit tests, and the web production build passed before build submission. The completed signed artifacts are listed below.
+
+| Deliverable | Completed artifact | Availability |
+|---|---|---|
+| Independent Android APK | [BridgeX 1.6.0 build 17 APK](https://expo.dev/artifacts/eas/AZMzmc1K1bIIQPZG-EvsPuWzEZSc5AaWaYlv-OBr6E4.apk) | Expires 2026-09-05 |
+| Google Play App Bundle | [BridgeX 1.6.0 build 17 AAB](https://expo.dev/artifacts/eas/SMs9fO-XkHUQ0nSVEOBXhFqR_PphTg9346tqpDWtLNg.aab) | Follow Play Console testing or production release procedures before public store distribution |
+
+The APK was produced from source commit `a9d1590` with Expo project `459e7ae1-9dc7-4318-b642-814abe9ace20`. The public footer now points to this completed independent-native APK, while the separate web-app link opens the browser experience and does not claim a separate web-shell APK exists.
