@@ -20,4 +20,11 @@ The footer now presents the retained legacy entry exactly as **Android app · ve
 
 ## Validation and artifacts
 
-Before Android submission, native TypeScript, native architecture checks, web tests, and the web production build must pass. Completed signed APK and Google Play App Bundle links will be added after the build service finishes.
+Native TypeScript, native architecture checks, web tests, and the web production build passed before Android submission. The signed build-19 artifacts are listed below.
+
+| Deliverable | Completed artifact | Availability |
+|---|---|---|
+| Independent Android APK | [BridgeX 1.6.2 build 19 APK](https://expo.dev/artifacts/eas/gvKYcGm-EOEkMHrYlfXecz3myOsJoCBtOWHkPh3KAsQ.apk) | Expires 2026-09-05 |
+| Google Play App Bundle | [BridgeX 1.6.2 build 19 AAB](https://expo.dev/artifacts/eas/qumqkxh36p-6qOJxaQOAZBnihjjsEH8uvZAS2IpCjBE.aab) | Upload to Google Play Console before a Play Store rollout |
+
+The APK was built from source commit `37d7f42` for Expo project `459e7ae1-9dc7-4318-b642-814abe9ace20`.

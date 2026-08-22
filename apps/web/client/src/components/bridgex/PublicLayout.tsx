@@ -13,8 +13,8 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import { LANGUAGE_OPTIONS, SystemLanguage } from "@/lib/language";
 
 const displayName = (user: ReturnType<typeof useAuth>["user"]) => user?.name || user?.email?.split("@")[0] || "Member";
-const ANDROID_BUILD = 17;
-const ANDROID_DOWNLOAD_URL = "https://expo.dev/artifacts/eas/WBEqsix8wvwOHdovgS6j15EsdzajwEztCxMPLSj7nqg.apk";
+const ANDROID_BUILD = 19;
+const ANDROID_DOWNLOAD_URL = "https://expo.dev/artifacts/eas/gvKYcGm-EOEkMHrYlfXecz3myOsJoCBtOWHkPh3KAsQ.apk";
 const WEB_APP_URL = "https://bridgex.abdullahbinfahad.info";
 const LEGACY_WEB_SHELL_VERSION = "1.0.11";
 

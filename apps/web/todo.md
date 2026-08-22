@@ -388,4 +388,4 @@
 - [x] Verify and correct the end-to-end Google OAuth redirect allow-list and native deep-link code exchange so successful sign-in returns to the app session.
 - [x] Refine native category filters for screenshot-scale readability and ensure media states distinguish a post with no attachment from an attachment that failed to load.
 - [x] Update the footer’s legacy Android entry to the requested Android app version 1.0.11 wording, with no automatic update badge or inaccurate browser-shell description.
-- [ ] Validate, release, and document the screenshot-driven blocking-defect repair build.
+- [x] Validate, release, and document the screenshot-driven blocking-defect repair build.
