@@ -7,14 +7,15 @@ import { CURRENCY_NAMES, PRODUCT_CATEGORIES, QUANTITY_AWARE_ITEMS, SERVICE_TYPES
 import { uploadNativePostMedia } from "../lib/media";
 import { NativeDateTimeField } from "../components/NativeDateTimeField";
 
-type Props = { userId: string; initialMode: Mode; onPublished: () => void };
+type Props = { userId: string; initialMode: Mode; defaultCurrency?: string; onPublished: () => void };
 type Mode = "request" | "carry";
 type Form = Record<string, string | boolean | string[]>;
 
 const initial: Form = { mode: "request", title: "", serviceType: "Personal item", serviceScope: "international", categories: [], description: "", weight: "", size: "", source: "", budget: "", currency: "BDT", originCountry: "", originCity: "", destinationCountry: "", destinationCity: "", destinationAddress: "", deliveryDays: "", specialHandling: "None", declaredValue: "", declarationCurrency: "BDT", itemPurpose: "", commercialUse: "personal", declarationConfirmed: false, termsAccepted: false, transportMode: "flight", departureAt: "", estimatedDeliveryAt: "", pricingMode: "per_kg", airline: "", flightNumber: "", provider: "", reference: "", notes: "" };
 
-export function ComposeScreen({ userId, initialMode, onPublished }: Props) {
-  const [form, setForm] = useState<Form>(() => ({ ...initial, mode: initialMode }));
+export function ComposeScreen({ userId, initialMode, defaultCurrency = "BDT", onPublished }: Props) {
+  const [form, setForm] = useState<Form>(() => ({ ...initial, mode: initialMode, currency: defaultCurrency, declarationCurrency: defaultCurrency }));
+  useEffect(() => { setForm(current => current.title || current.originCountry || current.destinationCountry ? current : { ...current, currency: defaultCurrency, declarationCurrency: defaultCurrency }); }, [defaultCurrency]);
   const [media, setMedia] = useState<ImagePicker.ImagePickerAsset[]>([]);
   const [itemQuantities, setItemQuantities] = useState<Record<string, string>>({});
   const [itemBudgets, setItemBudgets] = useState<Record<string, string>>({});
@@ -48,7 +49,7 @@ export function ComposeScreen({ userId, initialMode, onPublished }: Props) {
       if (mode === "request") await createNativeSendRequest(userId, { title: String(form.title), serviceType: String(form.serviceType), categories, description: String(form.description), weightKg: Number(form.weight), size: String(form.size), source: String(form.source), originCountry: String(form.originCountry), purchaseCity: String(form.originCity), destinationCountry: String(form.destinationCountry), destinationCity: String(form.destinationCity), destinationAddress: String(form.destinationAddress), deliveryDays: Number(form.deliveryDays), specialHandling: String(form.specialHandling), budget: Number(form.budget), currency: String(form.currency), serviceScope: scope, declaredValue: Number(form.declaredValue || 0), declarationCurrency: String(form.declarationCurrency), itemPurpose: String(form.itemPurpose), commercialUse: form.commercialUse === "commercial", mediaPaths: paths });
       else await createNativeCarryListing(userId, { originCountry: String(form.originCountry), originCity: String(form.originCity), destinationCountry: String(form.destinationCountry), destinationCity: String(form.destinationCity), destinationAddress: String(form.destinationAddress), transportMode: form.transportMode as "flight" | "train" | "cargo", departureAt: String(form.departureAt), estimatedDeliveryAt: String(form.estimatedDeliveryAt) || undefined, availableWeightKg: Number(form.weight), pricingMode: form.pricingMode as "per_kg" | "per_item", price: Number(form.budget), currency: String(form.currency), categories, acceptedItemQuantities: Object.fromEntries(QUANTITY_AWARE_ITEMS.filter(item => categories.includes(item) && Number(itemQuantities[item]) > 0).map(item => [item, Number(itemQuantities[item])])), acceptedItemBudgets: Object.fromEntries(QUANTITY_AWARE_ITEMS.filter(item => categories.includes(item) && Number(itemBudgets[item]) > 0).map(item => [item, Number(itemBudgets[item])])), airline: String(form.airline), flightNumber: String(form.flightNumber), provider: String(form.provider), reference: String(form.reference), notes: String(form.notes), mediaPaths: paths });
       Alert.alert("Post published", mode === "request" ? "Your native BridgeX send request is now live." : "Your native carry-space listing is now live.");
-      setForm(initial); setMedia([]); setItemQuantities({}); setItemBudgets({}); onPublished();
+      setForm({ ...initial, mode, currency: defaultCurrency, declarationCurrency: defaultCurrency }); setMedia([]); setItemQuantities({}); setItemBudgets({}); onPublished();
     } catch (failure: any) { Alert.alert("Could not publish", failure?.message || "Check your connection and try again. Your draft remains on this device."); }
     finally { setBusy(false); }
   };

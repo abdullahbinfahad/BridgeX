@@ -39,6 +39,18 @@ export async function uploadNativeVerificationDocument(userId: string, kind: "na
   return path;
 }
 
+export async function uploadNativeProfileAvatar(userId: string, asset: { uri: string; name?: string | null; mimeType?: string | null }) {
+  if (!asset.mimeType?.startsWith("image/")) throw new Error("Choose a JPG, PNG, or WEBP profile image.");
+  const prepared = await ImageManipulator.manipulateAsync(asset.uri, [], { compress: 0.72, format: ImageManipulator.SaveFormat.JPEG });
+  const response = await fetch(prepared.uri);
+  const buffer = await response.arrayBuffer();
+  if (buffer.byteLength > 2 * 1024 * 1024) throw new Error("Profile image is still larger than 2 MB after compression.");
+  const path = `${userId}/${Date.now()}-${Math.random().toString(36).slice(2)}.jpg`;
+  const { error } = await supabase.storage.from("profile-avatars").upload(path, buffer, { contentType: "image/jpeg", upsert: false });
+  if (error) throw error;
+  return path;
+}
+
 export async function uploadNativePaymentProof(userId: string, paymentId: string, asset: { uri: string; name?: string | null; mimeType?: string | null }) {
   if (!asset.mimeType?.startsWith("image/")) throw new Error("Choose a clear payment screenshot image.");
   const prepared = await ImageManipulator.manipulateAsync(asset.uri, [], { compress: 0.64, format: ImageManipulator.SaveFormat.JPEG });

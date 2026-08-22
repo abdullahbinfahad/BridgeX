@@ -62,7 +62,7 @@ export async function loadNativeMemberReviews(memberId: string): Promise<NativeM
 }
 
 export type NativeNotificationPage = { items: NativeNotification[]; nextBefore: string | null; hasMore: boolean };
-export type NativeUnreadCounts = { updates: number; messages: number; workspace: number; more: number };
+export type NativeUnreadCounts = { updates: number; messages: number; workspace: number; payments: number; more: number };
 
 export async function loadNotifications(userId: string, before?: string | null, pageSize = 30): Promise<NativeNotificationPage> {
   const base = supabase.from("notifications").select("id,title,body,created_at,read_at,related_id,type,link").eq("user_id", userId).order("created_at", { ascending: false });
@@ -84,7 +84,8 @@ export async function loadNativeUnreadCounts(): Promise<NativeUnreadCounts> {
   const { data, error } = await supabase.rpc("bridgex_native_unread_counts");
   if (error) throw error;
   const values = (data || {}) as Partial<NativeUnreadCounts>;
-  return { updates: Number(values.updates || 0), messages: Number(values.messages || 0), workspace: Number(values.workspace || 0), more: Number(values.more || 0) };
+  const payments = Number(values.payments || 0);
+  return { updates: Number(values.updates || 0), messages: Number(values.messages || 0), workspace: Number(values.workspace || 0), payments, more: Number(values.more || 0) + payments };
 }
 
 export async function registerNativePushToken(userId: string, token: string) {
@@ -218,7 +219,11 @@ export async function updateNativeManagedPost(userId: string, post: NativeManage
 
 export async function deleteNativeManagedPost(userId: string, post: NativeManagedPost) {
   if (post.kind === "request") return archiveNativeRequest(post.id);
-  const { error } = await supabase.from("carry_listings").delete().eq("id", post.id).eq("user_id", userId).eq("status", "open");
+  return deleteNativeListing(userId, post.id);
+}
+
+export async function deleteNativeListing(userId: string, listingId: string) {
+  const { error } = await supabase.from("carry_listings").delete().eq("id", listingId).eq("user_id", userId).eq("status", "open");
   if (error) throw error;
 }
 
@@ -328,7 +333,7 @@ export async function upsertNativeListingInterest(input: { listing: NativeIntere
   return result.data.id as string;
 }
 
-export async function updateNativeProfile(userId: string, values: { full_name: string; phone: string; current_country: string; current_city: string; current_address: string; home_country: string; home_city: string; home_address: string; china_address: string; preferred_currency: string; preferred_language: string }) {
+export async function updateNativeProfile(userId: string, values: { full_name: string; phone: string; current_country: string; current_city: string; current_address: string; home_country: string; home_city: string; home_address: string; china_address: string; preferred_currency: string; preferred_language: string; avatar_path?: string | null }) {
   const { error } = await supabase.from("users").update({ ...values, onboarding_complete: Boolean(values.full_name.trim() && values.phone.trim() && values.current_country.trim() && values.current_city.trim() && values.current_address.trim()) }).eq("id", userId);
   if (error) throw error;
 }
@@ -344,16 +349,25 @@ export async function markNativeVerificationPending(userId: string) {
 }
 
 export type NativePayment = { id: string; reference: string; response_kind: "offer" | "interest"; amount: number; currency: string; settlement_currency: string | null; settlement_amount: number | null; exchange_rate: number | null; status: string; payment_method: "alipay" | "wechat_pay" | null; payer_reference: string | null; payer_note: string | null; submitted_at: string | null; reviewer_note: string | null; created_at: string };
-export type NativeTravelerPayout = { id: string; order_id: string; amount: number; currency: string; payout_status: string; payout_method: string | null; account_holder: string | null; account_reference: string | null; payment_reference: string | null; administrator_note: string | null; paid_at: string | null; received_at: string | null; created_at: string };
+export type NativeTravelerPayout = { id: string; order_id: string; amount: number; currency: string; payout_status: string; payout_method: string | null; account_holder: string | null; account_reference: string | null; qr_path: string | null; payment_reference: string | null; administrator_note: string | null; paid_at: string | null; received_at: string | null; created_at: string };
+export type NativePaymentInstructions = { alipay: string; wechat_pay: string };
 
 export async function loadNativePayments(userId: string) {
   const [paymentResult, payoutResult] = await Promise.all([
     supabase.from("bridgex_payment_proofs").select("id,reference,response_kind,amount,currency,settlement_currency,settlement_amount,exchange_rate,status,payment_method,payer_reference,payer_note,submitted_at,reviewer_note,created_at").eq("payer_id", userId).order("created_at", { ascending: false }).limit(100),
-    supabase.from("bridgex_traveler_payouts").select("id,order_id,amount,currency,payout_status,payout_method,account_holder,account_reference,payment_reference,administrator_note,paid_at,received_at,created_at").eq("traveler_id", userId).order("created_at", { ascending: false }).limit(100),
+    supabase.from("bridgex_traveler_payouts").select("id,order_id,amount,currency,payout_status,payout_method,account_holder,account_reference,qr_path,payment_reference,administrator_note,paid_at,received_at,created_at").eq("traveler_id", userId).order("created_at", { ascending: false }).limit(100),
   ]);
   const error = paymentResult.error || payoutResult.error;
   if (error) throw error;
   return { payments: paymentResult.data as NativePayment[] ?? [], payouts: payoutResult.data as NativeTravelerPayout[] ?? [] };
+}
+
+export async function loadNativePaymentInstructions(): Promise<NativePaymentInstructions> {
+  const [alipay, wechat] = await Promise.all([
+    supabase.storage.from("payment-instructions").createSignedUrl("alipay-qr.jpg.jpg", 60 * 60),
+    supabase.storage.from("payment-instructions").createSignedUrl("wechat-pay-qr.jpg.jpg", 60 * 60),
+  ]);
+  return { alipay: alipay.data?.signedUrl || "", wechat_pay: wechat.data?.signedUrl || "" };
 }
 
 export async function submitNativePaymentProof(input: { paymentId: string; method: "alipay" | "wechat_pay"; proofPath: string; payerReference?: string; payerNote?: string }) {

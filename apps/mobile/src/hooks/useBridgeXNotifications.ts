@@ -6,7 +6,7 @@ import { loadNativeNotificationById, loadNativeUnreadCounts, markNotificationRea
 import { supabase } from "../lib/supabase";
 import type { NativeNotification } from "../types";
 
-const emptyCounts: NativeUnreadCounts = { updates: 0, messages: 0, workspace: 0, more: 0 };
+const emptyCounts: NativeUnreadCounts = { updates: 0, messages: 0, workspace: 0, payments: 0, more: 0 };
 
 if (Platform.OS !== "web") {
   Notifications.setNotificationHandler({
