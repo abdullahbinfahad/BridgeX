@@ -383,3 +383,9 @@
 - [x] Diagnose and repair the payment-evidence submission conflict without weakening the one-active-traveler-per-request integrity rule.
 - [x] Correct footer download labels: retain the existing Android web/shell entry as version 1.0.11 without forcing in-app updates, and label the completed independent-native APK separately.
 - [x] Validate, version, publish, and document the next native reliability release after regression coverage passes.
+- [x] Remove guest-route placeholder panels for Profile and Updates; show guest-safe content and a clear sign-in path instead.
+- [x] Diagnose and repair the production `start_bridgex_payment` RPC signature mismatch shown by the native Accept & pay error, while retaining safe protected-payment constraints.
+- [x] Verify and correct the end-to-end Google OAuth redirect allow-list and native deep-link code exchange so successful sign-in returns to the app session.
+- [x] Refine native category filters for screenshot-scale readability and ensure media states distinguish a post with no attachment from an attachment that failed to load.
+- [x] Update the footer’s legacy Android entry to the requested Android app version 1.0.11 wording, with no automatic update badge or inaccurate browser-shell description.
+- [ ] Validate, release, and document the screenshot-driven blocking-defect repair build.

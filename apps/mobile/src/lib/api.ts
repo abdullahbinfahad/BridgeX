@@ -249,7 +249,7 @@ export async function loadNativeOwnerResponses(userId: string): Promise<NativeOw
 }
 
 export async function startNativeOwnerPayment(kind: NativeOwnerResponse["kind"], responseId: string) {
-  const { data, error } = await supabase.rpc("start_bridgex_payment", { p_kind: kind, p_response_id: responseId });
+  const { data, error } = await supabase.rpc("start_bridgex_payment", { p_kind: kind, p_response_id: responseId, p_terms_version: TERMS_VERSION });
   if (error) throw error;
   return data as string;
 }
