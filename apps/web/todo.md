@@ -355,4 +355,4 @@
 - [x] Make Android and web forms reliably keyboard-safe so active fields and typed text remain visible above mobile keyboards.
 - [x] Extend the native loading, visual feedback, and motion treatment from the existing web experience while preserving performance and accessibility.
 - [x] Make authorized native administrator controls visibly discoverable without exposing administration functions to non-admin members.
-- [ ] Validate and publish the next native Android APK/AAB only after the requested navigation, picker, keyboard, visual, and admin controls pass regression checks.
+- [x] Validate and publish the next native Android APK/AAB only after the requested navigation, picker, keyboard, visual, and admin controls pass regression checks. BridgeX 1.4.0 (15) APK and Play Store AAB are finished.

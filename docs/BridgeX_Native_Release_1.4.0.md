@@ -14,4 +14,13 @@ The release removes manual schedule-string entry in native posting and response 
 
 The Android loader now mirrors the BridgeX web delivery scene with a route, plane, package, and luggage. The Workspace no longer contains a redundant Post button. Authorized administrators see a clearly labeled, role-gated control entry in the header and More hub; this entry is not rendered for standard members or guests.
 
-All updated native TypeScript checks, independent-native architecture checks, web regression tests, and production web bundle checks must pass before the signed artifacts are requested.
+All updated native TypeScript checks, independent-native architecture checks, web regression tests, and production web bundle checks passed before the signed artifacts were requested.
+
+## Signed artifacts
+
+| Artifact | Direct download | Build page |
+|---|---|---|
+| Android APK for direct distribution | https://expo.dev/artifacts/eas/wd0I0lEt6WSxDGHye9k0qhzVsFsKSSJuqnUAgzjG5ik.apk | https://expo.dev/accounts/abdullahbinfahadbridexs-team/projects/bridgex/builds/6cd85dcd-1c2a-4efc-9a49-f59de3a32141 |
+| Google Play Android App Bundle | https://expo.dev/artifacts/eas/TNz4gF2B2YDyPMfObv7eS65j63-D1Xp2992clBJdJnk.aab | https://expo.dev/accounts/abdullahbinfahadbridexs-team/projects/bridgex/builds/368e8c4b-d737-4677-b731-62af6f0664aa |
+
+The APK is valid until **2026-09-05**. The public website footer is updated to the signed 1.4.0 APK.
