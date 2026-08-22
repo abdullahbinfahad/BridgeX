@@ -69,16 +69,15 @@ describe("BridgeX feedback and update navigation", () => {
     expect(publicLayout).toContain('Payments{updateBadge(updates.payments)}');
   });
 
-  it("keeps the browser Back control while durably suppressing it for Android WebView routes", () => {
+  it("keeps the browser Back control while the independent native app relies on native system navigation", () => {
     const mobileApp = readFileSync(new URL("../../mobile/App.tsx", import.meta.url), "utf8");
+    const nativeApp = readFileSync(new URL("../../mobile/src/NativeApp.tsx", import.meta.url), "utf8");
     expect(app).toContain('new URLSearchParams(window.location.search).get("app") === "android"');
     expect(app).toContain('window.sessionStorage.setItem("bridgex-android-wrapper", "true")');
     expect(app).toContain('/BridgeXAndroid\\//i.test(navigator.userAgent)');
-    expect(mobileApp).toContain("document.documentElement.dataset.bridgexAndroidWrapper = 'true'");
-    expect(mobileApp).toContain("window.__BRIDGEX_ANDROID_WRAPPER__ = true");
-    expect(mobileApp).toContain("bridgex-android-back-control-style");
-    expect(mobileApp).toContain("[data-bridgex-global-back=\"true\"]");
-    expect(mobileApp).toContain("MutationObserver(hideBridgeXBack)");
+    expect(mobileApp).toContain('import NativeApp from "./src/NativeApp"');
+    expect(nativeApp).toContain("SafeAreaView");
+    expect(nativeApp).not.toContain("WebView");
     expect(app).toContain("nativeBridgeMarker");
     expect(app).toContain('data-bridgex-global-back="true"');
   });

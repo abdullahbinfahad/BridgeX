@@ -49,17 +49,17 @@ describe("BridgeX currency, cargo, support, and brand release safeguards", () =>
     expect(read("apps/web/client/src/components/bridgex/Brand.tsx")).toContain("/bridgex-logo.webp");
     expect(read("apps/web/client/index.html")).toContain("/favicon.ico");
     expect(read("apps/mobile/app.json")).toContain("./assets/icon.png");
-    expect(read("apps/mobile/app.json")).toContain('"versionCode": 11');
+    expect(read("apps/mobile/app.json")).toContain('"versionCode": 13');
   });
 
-  it("uses the compact 0.5 cm application-color Android top spacer in the next native build", () => {
+  it("uses the independent native app shell in the finished Android 1.2.0 release", () => {
     const mobileApp = read("apps/mobile/App.tsx");
-    expect(mobileApp).toContain("const HALF_CENTIMETER_DP = 160 / 2.54 / 2");
-    expect(mobileApp).toContain("backgroundColor: \"#f7f5ef\", height: HALF_CENTIMETER_DP");
-    expect(mobileApp).toContain("?app=android&build=11");
-    expect(mobileApp).toContain('userAgent="BridgeXAndroid/11"');
-    expect(read("apps/mobile/android/app/build.gradle")).toContain("versionCode 11");
-    expect(read("apps/mobile/android/app/build.gradle")).toContain('versionName "1.0.11"');
+    const nativeApp = read("apps/mobile/src/NativeApp.tsx");
+    expect(mobileApp).toContain('import NativeApp from "./src/NativeApp"');
+    expect(nativeApp).toContain("SafeAreaView");
+    expect(nativeApp).not.toContain("WebView");
+    expect(read("apps/mobile/android/app/build.gradle")).toContain("versionCode 13");
+    expect(read("apps/mobile/android/app/build.gradle")).toContain('versionName "1.2.0"');
   });
 
   it("pairs sound categories with lightweight visual feedback cues that respect motion preferences", () => {
@@ -70,9 +70,9 @@ describe("BridgeX currency, cargo, support, and brand release safeguards", () =>
     expect(styles).toContain("prefers-reduced-motion: reduce");
   });
 
-  it("uses the completed Android v1.0.5 build link alongside the Windows download entry", () => {
+  it("uses the completed independent-native Android v1.2.0 APK link alongside the Windows download entry", () => {
     const layout = read("apps/web/client/src/components/bridgex/PublicLayout.tsx");
-    expect(layout).toContain("builds/1ecca5d1-5f3e-4ac5-8dc5-b22781d0ea5c");
+    expect(layout).toContain("1Hz8Wl01Eu8BZjpFFQP-9dhYdBgQZekvOhw6dFmTvL4.apk");
     expect(layout).toContain("BridgeX-Windows-x64.zip");
   });
 
@@ -185,12 +185,12 @@ describe("BridgeX currency, cargo, support, and brand release safeguards", () =>
     expect(layout).toContain('t("harmonyOS")');
     expect(layout).toContain('t("macOS")');
     expect(layout).not.toContain("allow that app to install unknown apps");
-    expect(appConfig).toContain('"versionCode": 11');
+    expect(appConfig).toContain('"versionCode": 13');
     expect(eas).toContain('"play"');
     expect(eas).toContain('"buildType": "app-bundle"');
     expect(gradle).toContain("EAS_BUILD_ANDROID_KEYSTORE_PATH");
-    expect(gradle).toContain("versionCode 11");
-    expect(gradle).toContain('versionName "1.0.11"');
+    expect(gradle).toContain("versionCode 13");
+    expect(gradle).toContain('versionName "1.2.0"');
     expect(gradle).not.toContain("signingConfig signingConfigs.debug\n            def enableShrinkResources");
   });
 

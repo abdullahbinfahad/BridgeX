@@ -13,8 +13,8 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import { LANGUAGE_OPTIONS, SystemLanguage } from "@/lib/language";
 
 const displayName = (user: ReturnType<typeof useAuth>["user"]) => user?.name || user?.email?.split("@")[0] || "Member";
-const ANDROID_BUILD = 7;
-const ANDROID_DOWNLOAD_URL = "https://expo.dev/accounts/abdullahbinfahadabfs-team/projects/bridgex/builds/1ecca5d1-5f3e-4ac5-8dc5-b22781d0ea5c";
+const ANDROID_BUILD = 13;
+const ANDROID_DOWNLOAD_URL = "https://expo.dev/artifacts/eas/1Hz8Wl01Eu8BZjpFFQP-9dhYdBgQZekvOhw6dFmTvL4.apk";
 
 function AndroidUpdatePrompt() {
   const [visible, setVisible] = useState(false);
