@@ -3,7 +3,7 @@ import Ionicons from "@expo/vector-icons/Ionicons";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { FlatList, Image, Pressable, RefreshControl, StyleSheet, Text, TextInput, View } from "react-native";
 import { NativeLoading } from "../components/NativeLoading";
-import { loadMarketplace } from "../lib/api";
+import { loadCachedMarketplace, loadMarketplace } from "../lib/api";
 import { supabase } from "../lib/supabase";
 import type { MarketplacePost, MarketplaceTab } from "../types";
 
@@ -17,8 +17,8 @@ export function MarketplaceScreen({ onOpenPost, onCreateRequest, onCreateCarry }
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [error, setError] = useState("");
-  const load = useCallback(async (refresh = false) => { refresh ? setRefreshing(true) : setLoading(true); try { setError(""); setPosts(await loadMarketplace(tab)); } catch (failure: any) { setError(failure?.message || "BridgeX could not load posts right now."); } finally { setLoading(false); setRefreshing(false); } }, [tab]);
-  useEffect(() => { void load(); }, [load]);
+  const load = useCallback(async (refresh = false, quiet = false) => { if (refresh) setRefreshing(true); else if (!quiet) setLoading(true); try { setError(""); setPosts(await loadMarketplace(tab)); } catch (failure: any) { setError(failure?.message || "BridgeX could not load posts right now."); } finally { if (!quiet) setLoading(false); setRefreshing(false); } }, [tab]);
+  useEffect(() => { let active = true; const prime = async () => { const cached = await loadCachedMarketplace(tab); if (!active) return; if (cached?.length) { setPosts(cached); setLoading(false); void load(false, true); } else void load(); }; void prime(); const table = tab === "requests" ? "send_requests" : "carry_listings"; const channel = supabase.channel(`native-marketplace-${table}`).on("postgres_changes", { event: "*", schema: "public", table }, () => void load(false, true)).subscribe(); return () => { active = false; void supabase.removeChannel(channel); }; }, [load, tab]);
   const filtered = useMemo(() => posts.filter(post => `${post.title} ${post.route} ${post.category || ""}`.toLowerCase().includes(query.toLowerCase().trim())), [posts, query]);
   const selectTab = (value: MarketplaceTab) => { void Haptics.selectionAsync(); setTab(value); };
   const compose = (kind: "request" | "carry") => { void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium); kind === "request" ? onCreateRequest() : onCreateCarry(); };

@@ -356,3 +356,8 @@
 - [x] Extend the native loading, visual feedback, and motion treatment from the existing web experience while preserving performance and accessibility.
 - [x] Make authorized native administrator controls visibly discoverable without exposing administration functions to non-admin members.
 - [x] Validate and publish the next native Android APK/AAB only after the requested navigation, picker, keyboard, visual, and admin controls pass regression checks. BridgeX 1.4.0 (15) APK and Play Store AAB are finished.
+- [x] Diagnose and repair the `match_messages` row-level security failure and audit protected submit mutations for equivalent permission errors.
+- [x] Add authenticated write-path regression tests for protected messages and other affected BridgeX submit actions.
+- [x] Show accurate completed-order rating summaries and permitted public review comments on sender and traveler member profiles.
+- [x] Retain cached marketplace content after initial load and merge authorized realtime public-post and account-update changes without repeated full reloads.
+- [ ] Validate, publish, and document the permission, review, and cache-first realtime fixes after regression tests pass.

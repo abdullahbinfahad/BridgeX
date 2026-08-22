@@ -43,6 +43,24 @@ export async function loadMarketplace(kind: "requests" | "carry", page = 0, page
   return posts;
 }
 
+export async function loadCachedMarketplace(kind: "requests" | "carry", page = 0): Promise<MarketplacePost[] | null> {
+  return cacheGet<MarketplacePost[]>(`marketplace:${kind}:${page}`);
+}
+
+export type NativeMemberReview = { id: string; rating: number; comment: string; created_at: string };
+
+export async function loadNativeMemberReviews(memberId: string): Promise<NativeMemberReview[]> {
+  const { data, error } = await supabase
+    .from("completed_order_reviews")
+    .select("id,rating,comment,created_at")
+    .eq("reviewed_user_id", memberId)
+    .not("comment", "is", null)
+    .order("created_at", { ascending: false })
+    .limit(20);
+  if (error) throw error;
+  return (data ?? []).filter((review: any) => typeof review.comment === "string" && review.comment.trim().length > 0) as NativeMemberReview[];
+}
+
 export async function loadNotifications(userId: string): Promise<NativeNotification[]> {
   const { data, error } = await supabase.from("notifications").select("id,title,body,created_at,read_at,related_id,type,link").eq("user_id", userId).order("created_at", { ascending: false }).limit(30);
   if (error) throw error;
@@ -156,7 +174,7 @@ export async function markNativeDealRead(matchId: string) {
 export async function sendNativeDealMessage(userId: string, matchId: string, body: string) {
   const trimmed = body.trim();
   if (!trimmed) return;
-  const { error } = await supabase.from("match_messages").insert({ match_id: matchId, sender_id: userId, body: trimmed });
+  const { error } = await supabase.rpc("send_bridgex_match_message", { p_match_id: matchId, p_body: trimmed });
   if (error) throw error;
 }
 
