@@ -48,7 +48,7 @@ describe("BridgeX independent Android native shell", () => {
 
   it("keeps an empty BridgeX-colored system area and exposes modern native navigation with Updates", () => {
     expect(nativeApp).toContain('topBlank: { backgroundColor: "#f7f5ef", height: 18 }');
-    expect(nativeApp).toContain('label: "Updates", icon: "notifications-outline"');
+    expect(nativeApp).toContain('labelKey: "updates", icon: "notifications-outline"');
     expect(nativeApp).toContain('Ionicons name={tab.icon}');
     expect(nativeApp).toContain('shield-checkmark-outline');
   });

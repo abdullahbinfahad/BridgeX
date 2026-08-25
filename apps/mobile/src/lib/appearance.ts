@@ -1,4 +1,6 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { createContext, createElement, useContext } from "react";
+import type { ReactNode } from "react";
 import { Appearance, type ColorSchemeName } from "react-native";
 
 export type BridgeXThemePreference = "system" | "light" | "dark";
@@ -49,6 +51,14 @@ const dark: BridgeXPalette = {
   success: "#77d99a",
   danger: "#ff9c90",
 };
+
+const BridgeXAppearanceContext = createContext<BridgeXPalette>(light);
+
+export function BridgeXAppearanceProvider({ palette, children }: { palette: BridgeXPalette; children: ReactNode }) {
+  return createElement(BridgeXAppearanceContext.Provider, { value: palette }, children);
+}
+
+export function useBridgeXAppearance() { return useContext(BridgeXAppearanceContext); }
 
 export function resolveBridgeXPalette(preference: BridgeXThemePreference, systemScheme?: ColorSchemeName | null): BridgeXPalette {
   const effective = preference === "system" ? (systemScheme === "dark" ? "dark" : "light") : preference;

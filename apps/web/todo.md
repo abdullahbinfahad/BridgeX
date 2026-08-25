@@ -404,3 +404,19 @@
 - [ ] Refresh native pages with restrained modern color, brand visuals, touch feedback, and differentiated optional sound/haptic feedback without intrusive automatic audio.
 - [ ] Add web-equivalent contextual information to key native post, legal, discovery, workspace, payment, profile, and account pages without duplicating private data.
 - [ ] Validate, release, and document the native web-parity experience after complete workflow and theme/localization regression tests.
+- [ ] Apply distinct accessible visual colors to native marketplace categories and add category, time, and price filters.
+- [ ] Redesign the native Updates page with a modern, colorful, readable activity-card system.
+- [ ] Add restrained distinct tap feedback and notification handling while respecting platform sound and permission controls.
+- [ ] Complete actual system-language application for native member and administrator-facing screens.
+- [ ] Expose the authorized BridgeX administrator control modules in native app routes, including users, verification, payments, payouts, orders, reports, posts, rates, enquiries, and chat review.
+- [ ] Validate every administrator submit, review, message, and status action against existing protected backend functions and RLS policies.
+- [ ] Configure a BridgeX iOS release profile and document the Apple build/distribution prerequisites without fabricating an iPhone artifact.
+- [ ] Complete the listed native and public Marketplace improvements autonomously, push verified source to GitHub, and provide only verified Android/iOS release guidance.
+- [ ] Publish a newly built and archive-verified Android APK link after the requested fixes pass regression and runtime-relevant checks.
+- [ ] Verify that all administrator routes and admin data requests require an authenticated authorized role; remediate any public route or data exposure immediately.
+- [ ] Improve the Render-hosted website’s perceived and repeat-visit performance, and document the hosting limitation or necessary always-on option honestly.
+- [ ] Move the mobile-web language control into the three-dot menu beside the navigation trigger rather than above primary post actions.
+- [ ] Recover and verify a real legacy BridgeX Android 1.0.11 APK from the former Expo account before exposing any legacy download link; otherwise label it unavailable.
+- [ ] Remove an item request from public web and native marketplace feeds once its sender accepts an offer, while preserving private access for the matched members and administrators.
+- [ ] Complete the complete requested native, web, administrator, and iOS release scope autonomously before issuing the next verified Android artifact link.
+- [ ] Maintain visible, accurate task-progress updates and mark BridgeX implementation items complete only after validation.

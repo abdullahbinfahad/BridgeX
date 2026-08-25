@@ -20,6 +20,18 @@
       "android": {
         "buildType": "app-bundle"
       }
+    },
+    "ios-preview": {
+      "distribution": "internal",
+      "ios": {
+        "simulator": false
+      }
+    },
+    "ios-production": {
+      "distribution": "store",
+      "ios": {
+        "simulator": false
+      }
     }
   }
 }

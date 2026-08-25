@@ -305,6 +305,31 @@ export async function sendNativeDealMessage(userId: string, matchId: string, bod
   return data as string;
 }
 
+export type NativeSupportConversation = { id: string; subject: string; message: string; status: string; created_at: string; reply_body: string | null; replied_at: string | null };
+export type NativeSupportMessage = { id: string; enquiry_id: string; sender_id: string; body: string; created_at: string };
+
+export async function loadNativeSupportConversations(userId: string): Promise<NativeSupportConversation[]> {
+  const { data, error } = await supabase.from("contact_enquiries").select("id,subject,message,status,created_at,reply_body,replied_at").eq("user_id", userId).order("replied_at", { ascending: false, nullsFirst: false }).order("created_at", { ascending: false }).limit(50);
+  if (error) throw error;
+  return data ?? [];
+}
+
+export async function loadNativeSupportMessages(userId: string, enquiry: NativeSupportConversation): Promise<NativeSupportMessage[]> {
+  const { data, error } = await supabase.from("contact_enquiry_messages").select("id,enquiry_id,sender_id,body,created_at").eq("enquiry_id", enquiry.id).order("created_at", { ascending: true }).limit(300);
+  if (error) throw error;
+  const initial: NativeSupportMessage = { id: `${enquiry.id}:initial`, enquiry_id: enquiry.id, sender_id: userId, body: enquiry.message, created_at: enquiry.created_at };
+  const rows = (data ?? []) as NativeSupportMessage[];
+  const hasLegacyReply = Boolean(enquiry.reply_body) && !rows.some(item => item.body === enquiry.reply_body);
+  return [initial, ...rows, ...(hasLegacyReply ? [{ id: `${enquiry.id}:legacy-reply`, enquiry_id: enquiry.id, sender_id: "bridgex-admin", body: enquiry.reply_body as string, created_at: enquiry.replied_at || enquiry.created_at }] : [])];
+}
+
+export async function sendNativeSupportMessage(enquiryId: string, body: string) {
+  const clean = body.trim();
+  if (!clean) return;
+  const { error } = await supabase.rpc("send_bridgex_support_message", { p_enquiry_id: enquiryId, p_body: clean });
+  if (error) throw error;
+}
+
 export async function createNativeOffer(input: { requestId: string; travelerId: string; requestOwnerId: string; requestTitle: string; amount: number; currency: string; estimatedDeliveryAt?: string; note?: string }) {
   const { data, error } = await supabase.from("offers").insert({ request_id: input.requestId, traveler_id: input.travelerId, amount_bdt: input.amount, currency: input.currency, estimated_delivery_at: input.estimatedDeliveryAt ? new Date(input.estimatedDeliveryAt).toISOString() : null, note: input.note?.trim() || null, status: "pending", terms_accepted_at: new Date().toISOString(), terms_version: TERMS_VERSION }).select("id").single();
   if (error) throw error;
