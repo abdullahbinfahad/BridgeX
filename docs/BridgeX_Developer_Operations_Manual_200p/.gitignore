@@ -1,0 +1,5 @@
+assets/page_*.png
+main.pdf
+main-review/
+main.typst-diagnostics.log
+main.verify.json

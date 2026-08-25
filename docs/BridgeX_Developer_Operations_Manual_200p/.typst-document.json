@@ -1,0 +1,10 @@
+{
+  "entry": "main.typ",
+  "metadata": {
+    "author": "Manus AI",
+    "subtitle": "200-page technical, security, release, administration, and scaling handbook",
+    "title": "BridgeX Developer Operations Manual"
+  },
+  "mode": "report",
+  "theme": "report-theme.typ"
+}
