@@ -1,5 +1,6 @@
 # BridgeX Implementation Tracker
 
+- [x] Diagnose the failed Google Drive connection, configure an authorized Drive upload path, and upload the checksum-verified sanitized BridgeX team handover package.
 - [x] Establish the refined BridgeX design system, navigation model, and responsive visual foundation.
 - [x] Define and migrate database models for profiles, verification, requests, listings, offers, orders, wallet activity, messages, reviews, reports, and disputes.
 - [x] Build the public landing page with a prominent sender-to-escrow-to-traveler payment flow.
@@ -420,3 +421,9 @@
 - [ ] Remove an item request from public web and native marketplace feeds once its sender accepts an offer, while preserving private access for the matched members and administrators.
 - [ ] Complete the complete requested native, web, administrator, and iOS release scope autonomously before issuing the next verified Android artifact link.
 - [ ] Maintain visible, accurate task-progress updates and mark BridgeX implementation items complete only after validation.
+- [ ] Review the submitted Chinese competition project plan and provide an evidence-based strengths, gaps, and improvement assessment.
+- [ ] Create a structured team task sheet and developer handover workflow for continued BridgeX work without AI assistance.
+- [ ] Produce a complete technical operations manual covering website, mobile app, frontend, backend, Supabase, Render, Expo/EAS, administration, release, monitoring, and incident response.
+- [ ] Document scalability, migration, and data-portability procedures for moving from Render and/or Supabase to future infrastructure.
+- [ ] Create and verify a sanitized sale-ready BridgeX transfer archive that excludes live secrets, credentials, private user data, and payment information.
+- [ ] Upload the completed handover package to the user’s Google Drive and provide verified access links.
