@@ -2,10 +2,10 @@
   "task_kind": "new-document",
   "output": "pdf",
   "signals": [],
-  "hard_constraints": ["200 pages", "technical operations handbook", "visual content on every page", "truthful implementation status"],
+  "hard_constraints": ["200 pages", "technical operations handbook", "text-first", "no graphs charts pictures captions or logos", "no Manus AI text", "truthful implementation status", "detailed actionable procedures"],
   "content_features": {
-    "code_blocks": 45,
-    "defined_terms": 90,
+    "code_blocks": 70,
+    "defined_terms": 120,
     "portrait_images": 0
   }
 }
