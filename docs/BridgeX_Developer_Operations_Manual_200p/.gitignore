@@ -3,3 +3,5 @@ main.pdf
 main-review/
 main.typst-diagnostics.log
 main.verify.json
+main-v1.pdf
+__pycache__/
