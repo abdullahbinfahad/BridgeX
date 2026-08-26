@@ -11,6 +11,7 @@
 - [x] Publish the verified BridgeX Android Build 20 APK to a public GitHub release with its SHA-256 checksum and accurate version 1.6.3/versionCode 20 labeling.
 - [x] Audit and remove or replace README-only placeholder folders in the public BridgeX repository so every visible platform directory contains real implementation files or is omitted.
 - [x] Add the official Render deployment URL to the public BridgeX README and repository metadata.
+- [x] Clarify the public BridgeX description and README as a peer-to-peer marketplace connecting independent senders and independent travelers or cargo providers.
 - [x] Produce and visually validate a 200-page BridgeX developer operations manual with detailed diagrams and visual evidence on every page, then add it to the secure handover delivery.
 - [x] Rebuild the visual developer manual with topic-specific real technical diagrams, full actionable frontend/backend/operations instructions, growth planning, and Render/Supabase migration procedures; remove repeated generic process boxes from every page.
 - [x] Rebuild the developer manual as a more detailed text-first 200-page handbook with no graphs, charts, pictures, captions, branding, or “Manus AI” text; replace the secure delivery copy.

@@ -1,15 +1,21 @@
 # BridgeX
 
-> **An open-source, community-first marketplace for arranging lawful goods-carrying requests and spare travel or cargo capacity.**
+> **An open-source, peer-to-peer marketplace that connects independent senders with independent travelers or cargo providers for lawful goods-carrying requests.**
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-2ea44f.svg)](./LICENSE)
 [![Web](https://img.shields.io/badge/Web-React%20%2B%20Vite-3178c6.svg)](./apps/web)
 [![Mobile](https://img.shields.io/badge/Mobile-Expo%20React%20Native-6f5cff.svg)](./apps/mobile)
 [![Backend](https://img.shields.io/badge/Backend-Supabase-3ecf8e.svg)](./supabase)
 
-BridgeX helps senders publish requests and travelers or cargo providers publish available carrying capacity. The software includes public discovery, protected member spaces, private deal messaging, verification review, payment-evidence workflows, moderation, and role-gated administration.
+BridgeX helps independent senders publish requests and independent travelers or cargo providers publish available carrying capacity. The software provides public discovery, protected member spaces, private deal messaging, verification review, payment-evidence workflows, moderation, and role-gated administration.
 
 BridgeX is **not** a carrier, customs broker, payment institution, or legal adviser. Deployers are responsible for local law, customs rules, prohibited-item policies, privacy requirements, payment-provider terms, and operational review before using it with real people or goods.
+
+## Peer-to-peer model
+
+BridgeX is designed as a **peer-to-peer (P2P) marketplace**. A sender and a traveler or cargo provider are independent members who decide whether to create or accept a request. The platform can present listings, support protected workflows, record agreed states, help authorized administrators review safety or payment evidence, and provide private communication tools. It does not become the seller of the item, the owner of a member’s goods, the transport carrier, the customs declarant, or the party responsible for an independent member’s legal duties.
+
+Every deployment should make this distinction clear in its terms, onboarding, post-creation warnings, payment disclosures, and incident process. Members remain responsible for truthful item descriptions, permissions to send or carry an item, route-specific deadlines, applicable customs declarations, and all local transport and consumer-protection requirements.
 
 ## Live deployments
 
