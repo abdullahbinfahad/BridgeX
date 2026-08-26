@@ -1,0 +1,35 @@
+{
+  "name": "bridgex-desktop",
+  "version": "1.6.4",
+  "private": true,
+  "description": "Cross-platform BridgeX desktop wrapper for a self-hosted BridgeX web deployment.",
+  "main": "src/main.cjs",
+  "scripts": {
+    "dev": "electron .",
+    "package:win": "electron-builder --win",
+    "package:mac": "electron-builder --mac",
+    "package:linux": "electron-builder --linux"
+  },
+  "devDependencies": {
+    "electron": "^39.2.7",
+    "electron-builder": "^26.0.12"
+  },
+  "build": {
+    "appId": "im.bridgex.desktop",
+    "productName": "BridgeX",
+    "files": [
+      "src/**/*",
+      "package.json"
+    ],
+    "asar": true,
+    "win": {
+      "target": "nsis"
+    },
+    "mac": {
+      "target": "dmg"
+    },
+    "linux": {
+      "target": "AppImage"
+    }
+  }
+}

@@ -1,0 +1,26 @@
+name: Feature request
+description: Propose a privacy-safe, lawful improvement to BridgeX.
+title: "[Feature]: "
+labels: [enhancement, needs-triage]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem to solve
+      description: Explain the member or operator problem before proposing a solution.
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed approach
+      description: Include affected platform(s), security implications, and success criteria.
+    validations:
+      required: true
+  - type: checkboxes
+    id: safety
+    attributes:
+      label: Safety check
+      options:
+        - label: This proposal does not request exposure of user documents, payment details, passwords, or private messages.
+          required: true

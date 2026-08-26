@@ -1,0 +1,32 @@
+name: Bug report
+description: Report a reproducible defect without including private user or credential data.
+title: "[Bug]: "
+labels: [bug, needs-triage]
+body:
+  - type: markdown
+    attributes:
+      value: "Do not include passwords, API keys, payment proofs, identity documents, phone numbers, addresses, private message content, or production user data. Use SECURITY.md for a security issue."
+  - type: textarea
+    id: summary
+    attributes:
+      label: What happened?
+      description: Describe the observed and expected behavior.
+    validations:
+      required: true
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: Safe reproduction steps
+      placeholder: "1. Use a local/test account\n2. …"
+    validations:
+      required: true
+  - type: input
+    id: environment
+    attributes:
+      label: Environment
+      placeholder: "web/mobile, browser or device, local/test deployment"
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Safe evidence
+      description: Add redacted logs or screenshots only.

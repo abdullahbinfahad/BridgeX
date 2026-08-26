@@ -1,37 +1,27 @@
 # Deploy BridgeX From GitHub to Your Own Domain
 
-> **GitHub stores the BridgeX source code. It does not run the Node.js backend.** Deploy the repository to a Node-capable host, then point `bridgex.abdullahbinfahad.info` to that host.
+> **GitHub stores source code; it does not run the BridgeX server.** Deploy this repository to a Node-capable host, configure your own Supabase project, and connect a domain that you control.
 
-## 1. Create the web service
+## 1. Create a web service
 
-1. Open [Render](https://render.com/) and create a new **Blueprint** service.
-2. Connect the GitHub repository: `abdullahbinfahad/BridgeX`.
-3. Render detects `render.yaml` and builds the web service from `apps/web/Dockerfile`.
-4. In the Render service environment settings, enter every required value from `apps/web/.env.example`. Do not place real secrets in GitHub.
-5. Deploy. Wait until the service health check returns `200`.
+1. Fork or clone the BridgeX repository into your own GitHub organization.
+2. Choose a Node-capable host such as Render, Fly.io, Railway, a container platform, or your own server.
+3. Point the service build at `apps/web` and use the deployment configuration appropriate to your provider. The included `render.yaml` is an example, not a transfer of any existing service.
+4. Copy `apps/web/.env.example` to a private deployment environment and replace every placeholder with values from services you control.
+5. Deploy and verify that the health check and authenticated/public routes return successfully.
 
-## 2. Connect your domain
+## 2. Connect a custom domain
 
-1. In Render, open the BridgeX service and choose **Settings → Custom Domains**.
-2. Add `bridgex.abdullahbinfahad.info`.
-3. Render displays the exact DNS record. At the DNS provider for `abdullahbinfahad.info`, add that exact CNAME or A record.
-4. Wait for Render to confirm HTTPS. Then test:
+1. In the host’s custom-domain settings, add your own domain, for example `app.example.com`.
+2. Create the DNS record shown by the host at your DNS provider.
+3. Wait for TLS/HTTPS to be active before accepting user sign-ins or uploads.
+4. Configure the exact HTTPS origin in your authentication provider, Supabase redirect allow-list, and any allowed-origin/CORS rules.
+5. Test the public marketplace, sign-in return path, mobile deep link, and password reset on the final domain.
 
-```text
-https://bridgex.abdullahbinfahad.info/access
-```
+## 3. Configure mobile and desktop clients
 
-## 3. Update the Android app
+For the Expo mobile client, update only public client configuration for your own Supabase project and build with your own Expo account and signing credentials. For the desktop wrapper, set `BRIDGEX_WEB_URL` to your HTTPS deployment before packaging. Do not embed passwords, service-role keys, payment secrets, or signing identities in any client application.
 
-When the custom domain returns a valid HTTPS page, set the value shown in `apps/mobile/ANDROID_ENDPOINT_TEMPLATE.txt` as an EAS production environment variable, then run:
+## Authentication note
 
-```bash
-cd apps/mobile
-npx eas-cli@latest build --platform android --profile production
-```
-
-The production APK will then open your own domain, not the free BridgeX address.
-
-## Important authentication note
-
-The current web app uses a managed OAuth setup. For an external host, configure an authentication provider with `https://bridgex.abdullahbinfahad.info` as an approved callback/redirect URL. Direct Google sign-in and email-password sign-in need the corresponding provider credentials before they can be enabled safely.
+The public source does not include active Google, Apple, Facebook, WeChat, or Alipay credentials. Create and approve provider applications under accounts you control, then store their secrets in the host environment. See [`SOCIAL_LOGIN_SETUP_STATUS.md`](./SOCIAL_LOGIN_SETUP_STATUS.md) for a safe setup sequence.
