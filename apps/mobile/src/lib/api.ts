@@ -416,3 +416,56 @@ export async function moderateNativeMember(memberId: string, action: "restrict" 
   const { error } = await supabase.rpc("moderate_bridgex_member", { p_user_id: memberId, p_action: action, p_reason: reason?.trim() || null });
   if (error) throw error;
 }
+
+export type NativeAdminSection = "users" | "verification" | "payments" | "payouts" | "orders" | "reports" | "requests" | "listings" | "exchange_rates" | "enquiries" | "chats";
+export type NativeAdminRecord = Record<string, any> & { id: string };
+const nativeAdminConfig: Record<NativeAdminSection, { table: string; order: string }> = {
+  users: { table: "users", order: "created_at" }, verification: { table: "verification_submissions", order: "created_at" }, payments: { table: "bridgex_payment_proofs", order: "created_at" }, payouts: { table: "bridgex_traveler_payouts", order: "created_at" }, orders: { table: "orders", order: "updated_at" }, reports: { table: "incident_reports", order: "created_at" }, requests: { table: "send_requests", order: "created_at" }, listings: { table: "carry_listings", order: "created_at" }, exchange_rates: { table: "bridgex_exchange_rates", order: "updated_at" }, enquiries: { table: "contact_enquiries", order: "created_at" }, chats: { table: "matches", order: "accepted_at" },
+};
+
+export async function loadNativeAdminSection(section: NativeAdminSection, page = 0, pageSize = 50): Promise<NativeAdminRecord[]> {
+  const config = nativeAdminConfig[section];
+  const { data, error } = await supabase.from(config.table).select("*").order(config.order, { ascending: false, nullsFirst: false }).range(page * pageSize, page * pageSize + pageSize - 1);
+  if (error) throw error;
+  return (data ?? []) as NativeAdminRecord[];
+}
+
+export async function reviewNativeVerification(userId: string, approved: boolean) {
+  const stamp = new Date().toISOString();
+  const { error: docsError } = await supabase.from("verification_submissions").update({ status: approved ? "approved" : "rejected", reviewed_at: stamp }).eq("user_id", userId);
+  if (docsError) throw docsError;
+  const { error: userError } = await supabase.from("users").update({ verification_status: approved ? "approved" : "rejected", is_verified: approved }).eq("id", userId);
+  if (userError) throw userError;
+  const { error: notificationError } = await supabase.from("notifications").insert({ user_id: userId, type: approved ? "verification_approved" : "verification_rejected", title: approved ? "BridgeX verification approved" : "BridgeX verification needs attention", body: approved ? "Your identity verification was approved. Your Verified badge is now active." : "Your verification was not approved. Please review your documents and submit corrected information.", link: "/dashboard" });
+  if (notificationError) throw notificationError;
+}
+
+export async function verifyNativeAdminPayment(paymentId: string, decision: "verified" | "rejected", note?: string) {
+  const { error } = await supabase.rpc("verify_bridgex_payment", { p_payment_id: paymentId, p_decision: decision, p_reviewer_note: note?.trim() || null });
+  if (error) throw error;
+}
+
+export async function markNativeAdminPayoutSent(payoutId: string, reference?: string, note?: string) {
+  const { error } = await supabase.rpc("mark_bridgex_traveler_payout_sent", { p_payout_id: payoutId, p_payment_reference: reference?.trim() || null, p_note: note?.trim() || null });
+  if (error) throw error;
+}
+
+export async function updateNativeAdminOrder(orderId: string, action: string) {
+  const { error } = await supabase.rpc("update_bridgex_admin_order", { p_order_id: orderId, p_action: action });
+  if (error) throw error;
+}
+
+export async function moderateNativeAdminMarketplacePost(kind: "request" | "listing", postId: string, action: "pause" | "restore", reason?: string) {
+  const { error } = await supabase.rpc("moderate_bridgex_marketplace_post", { p_kind: kind, p_post_id: postId, p_action: action, p_reason: reason?.trim() || null });
+  if (error) throw error;
+}
+
+export async function saveNativeAdminExchangeRate(baseCurrency: string, quoteCurrency: string, rate: number, effectiveAt: string) {
+  const { error } = await supabase.rpc("save_bridgex_exchange_rate", { p_base_currency: baseCurrency, p_quote_currency: quoteCurrency, p_rate: rate, p_effective_at: new Date(effectiveAt).toISOString() });
+  if (error) throw error;
+}
+
+export async function updateNativeAdminReport(reportId: string, status: "under_review" | "closed") {
+  const { error } = await supabase.from("incident_reports").update({ status, updated_at: new Date().toISOString() }).eq("id", reportId);
+  if (error) throw error;
+}

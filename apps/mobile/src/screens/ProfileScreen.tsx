@@ -8,14 +8,18 @@ import { SUPPORTED_CURRENCIES } from "../lib/constants";
 import { uploadNativeProfileAvatar, uploadNativeVerificationDocument } from "../lib/media";
 import { supabase } from "../lib/supabase";
 import type { BridgeXThemePreference } from "../lib/appearance";
+import { useBridgeXAppearance } from "../lib/appearance";
+import { useNativeLanguage } from "../lib/i18n";
 import type { BridgeXProfile } from "../types";
 
-type Props = { userId: string; profile: BridgeXProfile | null; themePreference: BridgeXThemePreference; onThemeChange: (value: BridgeXThemePreference) => void; onSaved: () => void; onSignOut: () => void; onOpenAdmin: () => void };
+type Props = { userId: string; profile: BridgeXProfile | null; themePreference: BridgeXThemePreference; onThemeChange: (value: BridgeXThemePreference) => void; onLanguageChange: (value: string) => void; onSaved: () => void; onSignOut: () => void; onOpenAdmin: () => void };
 type DocKind = "national_id" | "passport" | "student_id";
 type ProfileForm = { full_name: string; phone: string; current_country: string; current_city: string; current_address: string; home_country: string; home_city: string; home_address: string; china_address: string; preferred_currency: string; preferred_language: string };
 const languages = [["en", "English"], ["zh-CN", "中文"], ["bn", "বাংলা"], ["ar", "العربية"], ["fr", "Français"], ["es", "Español"], ["de", "Deutsch"], ["ja", "日本語"], ["ko", "한국어"], ["hi", "हिन्दी"], ["ur", "اردو"]] as const;
 
-export function ProfileScreen({ userId, profile, themePreference, onThemeChange, onSaved, onSignOut, onOpenAdmin }: Props) {
+export function ProfileScreen({ userId, profile, themePreference, onThemeChange, onLanguageChange, onSaved, onSignOut, onOpenAdmin }: Props) {
+  const palette = useBridgeXAppearance();
+  const { t } = useNativeLanguage();
   const [tab, setTab] = useState<"profile" | "verification">("profile");
   const [form, setForm] = useState<ProfileForm>({ full_name: profile?.full_name || "", phone: profile?.phone || "", current_country: profile?.current_country || "", current_city: profile?.current_city || "", current_address: profile?.current_address || "", home_country: profile?.home_country || "", home_city: profile?.home_city || "", home_address: profile?.home_address || "", china_address: profile?.china_address || "", preferred_currency: profile?.preferred_currency || "BDT", preferred_language: profile?.preferred_language || "en" });
   const [saving, setSaving] = useState(false);
@@ -48,6 +52,7 @@ export function ProfileScreen({ userId, profile, themePreference, onThemeChange,
     try {
       const avatarPath = avatar ? await uploadNativeProfileAvatar(userId, { uri: avatar.uri, name: avatar.fileName, mimeType: avatar.mimeType }) : profile?.avatar_path || null;
       await updateNativeProfile(userId, { ...form, avatar_path: avatarPath });
+      onLanguageChange(form.preferred_language);
       onSaved();
       setAvatar(null);
       Alert.alert("Profile details saved.", "Your profile, language, currency, and private location details were updated.");

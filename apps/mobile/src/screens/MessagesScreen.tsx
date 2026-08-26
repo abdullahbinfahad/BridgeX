@@ -44,6 +44,15 @@ export function MessagesScreen({ userId }: Props) {
     }).subscribe();
     return () => { void supabase.removeChannel(channel); };
   }, [selected?.kind, selected?.kind === "deal" ? selected.item.id : undefined, updatePreview, userId]);
+  useEffect(() => {
+    const channel = supabase.channel(`native-live-support-${userId}`).on("postgres_changes", { event: "INSERT", schema: "public", table: "contact_enquiry_messages" }, payload => {
+      const message = payload.new as NativeSupportMessage;
+      if (!message?.id) return;
+      if (selected?.kind === "support" && selected.item.id === message.enquiry_id) setMessages(current => [...current, { id: message.id, sender_id: message.sender_id, body: message.body, created_at: message.created_at }]);
+      void loadDeals();
+    }).subscribe();
+    return () => { void supabase.removeChannel(channel); };
+  }, [loadDeals, selected?.kind, selected?.kind === "support" ? selected.item.id : undefined, userId]);
   useEffect(() => { if (!selected) { setMessages([]); return; } if (selected.kind === "deal") void loadMessages(selected.item.id); else void loadNativeSupportMessages(userId, selected.item).then(setMessages).catch((failure: any) => setError(failure?.message || "BridgeX could not load this support conversation.")); }, [loadMessages, selected, userId]);
   const counterpart = (deal: NativeDeal) => deal.sender_id === userId ? deal.traveler_name || "Traveler" : deal.sender_name || "Sender";
   const unread = (deal: NativeDeal) => { const read = deal.sender_id === userId ? deal.sender_last_read_at : deal.traveler_last_read_at; return Boolean(deal.last_message_at && deal.last_message_sender_id !== userId && (!read || new Date(deal.last_message_at).getTime() > new Date(read).getTime())); };

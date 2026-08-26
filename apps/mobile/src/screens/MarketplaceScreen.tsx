@@ -8,6 +8,8 @@ import { loadCachedMarketplace, loadMarketplace } from "../lib/api";
 import { supabase } from "../lib/supabase";
 import { isNativeImagePath, isNativeVideoPath, nativeSignedPostMediaUrl, withMediaRetry } from "../lib/publicMedia";
 import { PRODUCT_CATEGORIES } from "../lib/constants";
+import { useBridgeXAppearance } from "../lib/appearance";
+import { useNativeLanguage } from "../lib/i18n";
 import type { MarketplacePost, MarketplaceTab } from "../types";
 
 type Props = { onOpenPost: (post: MarketplacePost) => void; onCreateRequest: () => void; onCreateCarry: () => void };
@@ -32,6 +34,8 @@ function NativeVideoPreview({ url }: { url: string }) {
 }
 
 export function MarketplaceScreen({ onOpenPost, onCreateRequest, onCreateCarry }: Props) {
+  const palette = useBridgeXAppearance();
+  const { t } = useNativeLanguage();
   const [tab, setTab] = useState<MarketplaceTab>("requests");
   const [posts, setPosts] = useState<MarketplacePost[]>([]);
   const [query, setQuery] = useState("");
@@ -86,8 +90,8 @@ export function MarketplaceScreen({ onOpenPost, onCreateRequest, onCreateCarry }
   const header = <View style={styles.headerContent}>
     <View style={styles.switcherRow}>
       <View style={styles.switcher}>
-        <Pressable onPress={() => selectTab("requests")} style={[styles.switch, tab === "requests" && styles.switchActive]}><Text style={[styles.switchText, tab === "requests" && styles.switchTextActive]}>Requests</Text></Pressable>
-        <Pressable onPress={() => selectTab("carry")} style={[styles.switch, tab === "carry" && styles.switchActive]}><Text style={[styles.switchText, tab === "carry" && styles.switchTextActive]}>Carry space</Text></Pressable>
+        <Pressable onPress={() => selectTab("requests")} style={[styles.switch, tab === "requests" && styles.switchActive]}><Text style={[styles.switchText, tab === "requests" && styles.switchTextActive]}>{t("requests")}</Text></Pressable>
+        <Pressable onPress={() => selectTab("carry")} style={[styles.switch, tab === "carry" && styles.switchActive]}><Text style={[styles.switchText, tab === "carry" && styles.switchTextActive]}>{t("carrySpace")}</Text></Pressable>
       </View>
       <View style={styles.composeActions}>
         <Pressable accessibilityLabel="Post a send request" onPress={() => compose("request")} style={({ pressed }) => [styles.composeAction, pressed && styles.pressed]}><Ionicons name="add" size={18} color="#fff" /></Pressable>
@@ -96,7 +100,7 @@ export function MarketplaceScreen({ onOpenPost, onCreateRequest, onCreateCarry }
     </View>
     {!toolsCollapsed ? <>
       <View style={styles.searchRow}>
-        <View style={styles.searchWrap}><Ionicons name="search-outline" size={18} color="#647079" /><TextInput value={query} onChangeText={setQuery} placeholder="Search route, item, or member" placeholderTextColor="#657377" selectionColor="#6f5cff" style={styles.search} autoCorrect={false} returnKeyType="search" /></View>
+        <View style={[styles.searchWrap, { backgroundColor: palette.surface, borderColor: palette.border }]}><Ionicons name="search-outline" size={18} color={palette.muted} /><TextInput value={query} onChangeText={setQuery} placeholder={t("search")} placeholderTextColor={palette.muted} selectionColor={palette.primary} style={[styles.search, { color: palette.text }]} autoCorrect={false} returnKeyType="search" /></View>
         <Pressable accessibilityLabel="Choose product categories" onPress={toggleCategories} style={[styles.categoryIcon, categoryOpen && styles.categoryIconActive, category && styles.categoryIconSelected]}><Ionicons name={categoryOpen ? "close-outline" : "options-outline"} size={21} color={categoryOpen || category ? "#fff" : "#5e48d7"} /></Pressable>
       </View>
       {categoryOpen ? <View style={styles.categoryPanel}>
@@ -111,7 +115,7 @@ export function MarketplaceScreen({ onOpenPost, onCreateRequest, onCreateCarry }
     {error ? <View style={styles.error}><Text style={styles.errorText}>{error}</Text><Pressable onPress={() => void load()}><Text style={styles.retry}>Try again</Text></Pressable></View> : null}
   </View>;
 
-  return <View style={styles.page}><FlatList data={loading ? [] : filtered} keyExtractor={post => post.id} onScroll={onScroll} scrollEventThrottle={16} refreshControl={<RefreshControl refreshing={refreshing} onRefresh={() => void load(true)} tintColor="#6f5cff" />} contentContainerStyle={styles.list} ListHeaderComponent={header} ListEmptyComponent={!loading && !error ? <View style={styles.empty}><View style={styles.emptyIcon}><Ionicons name="sparkles-outline" size={28} color="#6f5cff" /></View><Text style={styles.emptyTitle}>No matching posts yet</Text><Text style={styles.emptyCopy}>Try a route, choose another category, or be the first to publish a safe, well-described post.</Text></View> : null} renderItem={({ item }) => <PostCard post={item} onPress={() => onOpenPost(item)} />} /></View>;
+  return <View style={[styles.page, { backgroundColor: palette.background }]}><FlatList data={loading ? [] : filtered} keyExtractor={post => post.id} onScroll={onScroll} scrollEventThrottle={16} refreshControl={<RefreshControl refreshing={refreshing} onRefresh={() => void load(true)} tintColor={palette.primary} />} contentContainerStyle={styles.list} ListHeaderComponent={header} ListEmptyComponent={!loading && !error ? <View style={[styles.empty, { backgroundColor: palette.surface, borderColor: palette.border }]}><View style={[styles.emptyIcon, { backgroundColor: palette.primarySoft }]}><Ionicons name="sparkles-outline" size={28} color={palette.primary} /></View><Text style={[styles.emptyTitle, { color: palette.text }]}>{t("noPosts")}</Text><Text style={[styles.emptyCopy, { color: palette.muted }]}>Try a route, choose another category, or be the first to publish a safe, well-described post.</Text></View> : null} renderItem={({ item }) => <PostCard post={item} onPress={() => onOpenPost(item)} />} /></View>;
 }
 
 function PostCard({ post, onPress }: { post: MarketplacePost; onPress: () => void }) {

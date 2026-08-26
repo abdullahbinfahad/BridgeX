@@ -28,6 +28,9 @@ const packageJson = read("package.json");
 const auth = read("src/components/AuthScreen.tsx");
 const managePosts = read("src/screens/ManagePostsScreen.tsx");
 const workspaceResponses = read("src/screens/WorkspaceResponsesScreen.tsx");
+const admin = read("src/screens/AdminScreen.tsx");
+const i18n = read("src/lib/i18n.ts");
+const appearance = read("src/lib/appearance.ts");
 const paymentGuardMigration = read("../../supabase/migrations/202608221000_native_unread_counts_and_payment_stale_guard.sql");
 const paymentUnreadMigration = read("../../supabase/migrations/202608230900_payment_unread_counts.sql");
 
@@ -84,6 +87,8 @@ assert.match(managePosts, /Save open post/);
 assert.match(workspaceResponses, /Accept & pay/);
 assert.match(shell, /workspace_responses/);
 assert.match(shell, /initialPaymentId/);
+assert.match(shell, /onLanguageChange=\{setInterfaceLanguage\}/);
+assert.match(shell, /headerAvatarUrl/);
 assert.match(shell, /Sign in to manage your profile/);
 assert.match(shell, /Sign in to view your updates/);
 assert.doesNotMatch(shell, /is ready next\./);
@@ -91,6 +96,14 @@ assert.match(paymentGuardMigration, /Another traveler is already the active prot
 assert.match(paymentGuardMigration, /v_offer\.status <> 'pending_payment'/);
 assert.match(paymentUnreadMigration, /'payments', v_payments/);
 assert.match(paymentUnreadMigration, /\(payment\|payout\)/);
+assert.match(profile, /onLanguageChange\(form\.preferred_language\)/);
+assert.match(i18n, /NativeLanguageProvider/);
+assert.match(appearance, /BridgeXAppearanceProvider/);
+assert.match(admin, /Payment verification/);
+assert.match(admin, /Payment exchange rates/);
+assert.match(admin, /loadNativeAdminSection/);
+assert.match(api, /verifyNativeAdminPayment/);
+assert.match(api, /saveNativeAdminExchangeRate/);
 assert.doesNotMatch(packageJson, /react-native-webview/);
 
 console.log("BridgeX independent native architecture checks passed.");
