@@ -1,0 +1,26 @@
+name: Mirror verified Android Build 20 APK
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  mirror-release-asset:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download verified EAS artifact
+        run: |
+          curl --fail --location --retry 6 --retry-all-errors --output BridgeX-1.6.3-build20.apk https://expo.dev/artifacts/eas/wLOnGYR6xVoxQUtQYNhZomZZ2PEnf8-n0ZRnbpLNSiw.apk
+          test "$(wc -c < BridgeX-1.6.3-build20.apk)" -gt 10000000
+      - name: Verify archive and write checksum
+        run: |
+          unzip -t BridgeX-1.6.3-build20.apk >/dev/null
+          unzip -l BridgeX-1.6.3-build20.apk | grep -E 'AndroidManifest.xml|assets/index.android.bundle' >/dev/null
+          sha256sum BridgeX-1.6.3-build20.apk > BridgeX-1.6.3-build20.apk.sha256
+      - name: Attach verified files to public release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release upload android-v1.6.3-build20 BridgeX-1.6.3-build20.apk BridgeX-1.6.3-build20.apk.sha256 --repo "$GITHUB_REPOSITORY" --clobber
