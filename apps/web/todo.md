@@ -5,9 +5,9 @@
 - [ ] Complete native marketplace category color treatment plus category/time/price filters, update-feed UI, notification behavior, and accessibility-safe interaction feedback.
 - [ ] Improve corresponding web marketplace refresh, footer behavior, responsive language placement, theme/accessibility checks, and existing authorized administrator controls.
 - [ ] Retain the existing Expo project identity, validate Android/iOS source release configuration, and do not claim a fresh APK or IPA until a build completes and is inspected.
-- [ ] Audit the BridgeX repository for credentials, private data, generated artifacts, and sale-only handover material before making the GitHub project public.
-- [ ] Add professional open-source release documentation, licensing, contribution, security, and cross-platform build guidance for web, Android, Windows, macOS, and HarmonyOS source users.
-- [ ] Publish the reviewed safe BridgeX source to GitHub with a public description, topics, and public repository visibility.
+- [x] Audit the BridgeX repository for credentials, private data, generated artifacts, and sale-only handover material before making the GitHub project public.
+- [x] Add professional open-source release documentation, licensing, contribution, security, and cross-platform build guidance for web, Android, Windows, macOS, and HarmonyOS source users.
+- [x] Publish the reviewed safe BridgeX source to GitHub with a public description, topics, and public repository visibility.
 - [x] Produce and visually validate a 200-page BridgeX developer operations manual with detailed diagrams and visual evidence on every page, then add it to the secure handover delivery.
 - [x] Rebuild the visual developer manual with topic-specific real technical diagrams, full actionable frontend/backend/operations instructions, growth planning, and Render/Supabase migration procedures; remove repeated generic process boxes from every page.
 - [x] Rebuild the developer manual as a more detailed text-first 200-page handbook with no graphs, charts, pictures, captions, branding, or “Manus AI” text; replace the secure delivery copy.
