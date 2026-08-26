@@ -11,6 +11,13 @@ BridgeX helps senders publish requests and travelers or cargo providers publish 
 
 BridgeX is **not** a carrier, customs broker, payment institution, or legal adviser. Deployers are responsible for local law, customs rules, prohibited-item policies, privacy requirements, payment-provider terms, and operational review before using it with real people or goods.
 
+## Live deployments
+
+| Deployment | Link | Purpose |
+|---|---|---|
+| Render application | [bridgex-q2h5.onrender.com](https://bridgex-q2h5.onrender.com/) | Public Render deployment of the BridgeX web application. |
+| Custom domain | [bridgex.abdullahbinfahad.info](https://bridgex.abdullahbinfahad.info/) | Public custom-domain entry point. |
+
 ## What is in this repository
 
 | Area | Source location | Purpose |
