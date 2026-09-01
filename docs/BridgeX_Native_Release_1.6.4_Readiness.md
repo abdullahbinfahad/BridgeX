@@ -29,3 +29,10 @@ node tests/native-architecture.test.mjs
 ```
 
 For the web companion application, run the regression suite and production build from `apps/web` before release. A bundle-size warning may remain; it is a performance follow-up rather than a release-artifact claim.
+
+
+## Direct APK build attempt — 1 September 2026
+
+A production-profile Android build was submitted to the existing Expo project `459e7ae1-9dc7-4318-b642-814abe9ace20` under build ID `3941deba-846c-422f-95bf-9839c688d2c3`. Expo reports package `im.bridgex.marketplace`, SDK `57.0.0`, app version `1.6.4`, Android build `21`, and status `IN_QUEUE`. The build page is https://expo.dev/accounts/abdullahbinfahadbridexs-team/projects/bridgex/builds/3941deba-846c-422f-95bf-9839c688d2c3. No artifact URL exists yet; do not publish or claim a Build 21 APK until status is complete and the APK is archive-inspected.
+
+The separate legacy Web-Scrapped APK URL supplied by the owner and validated by a lightweight HTTP test is https://expo.dev/artifacts/eas/gvKYcGm-EOEkMHrYlfXecz3myOsJoCBtOWHkPh3KAsQ.apk. It is labeled as version 1.0.11 and is not the new native Build 21 artifact.
