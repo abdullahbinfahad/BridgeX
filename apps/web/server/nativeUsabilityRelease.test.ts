@@ -10,7 +10,8 @@ describe("native usability release public surfaces", () => {
     const layout = read("client/src/components/bridgex/PublicLayout.tsx");
     expect(layout).toContain('const WEB_APP_URL = "https://bridgex.abdullahbinfahad.info"');
     expect(layout).toContain('const LEGACY_WEB_SHELL_VERSION = "1.0.11"');
-    expect(layout).toContain("Android app · version {LEGACY_WEB_SHELL_VERSION}");
+    expect(layout).toContain("Web-Scrapped APK · version {LEGACY_WEB_SHELL_VERSION}");
+    expect(layout).toContain('const LEGACY_ANDROID_DOWNLOAD_URL = "https://expo.dev/artifacts/eas/gvKYcGm-EOEkMHrYlfXecz3myOsJoCBtOWHkPh3KAsQ.apk"');
     expect(layout).toContain("data-bridgex-android-legacy");
     expect(layout).toContain("Android app — independent native");
     expect(layout).toContain("data-bridgex-android-download");

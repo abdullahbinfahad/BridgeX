@@ -107,6 +107,7 @@
 - [x] Add an administrator verification-person detail route with identity documents, personal contact/location fields, and working approve/reject controls.
 - [x] Show administrators current phone and operational location in user details while never exposing member passwords.
 - [ ] Diagnose and eliminate the Android WebView Loading BridgeX stall, then release a tested replacement APK.
+- [ ] Replace the legacy Android 1.0.11 download label with the validated user-supplied Web-Scrapped Expo APK URL, and prepare a fresh Expo APK for current web updates without using the Play Store route.
 - [x] Add technical SEO foundations for Google, Bing, Brave Search, Baidu, and QQ-compatible crawling, including metadata, sitemap, robots rules, canonical URLs, and structured data without ranking guarantees.
 - [x] Add multi-category selection to I need to send posts while retaining multiple compressed image and optional video uploads.
 - [x] Replace the remaining landing-page “I need an item” wording with “I need to send.”
