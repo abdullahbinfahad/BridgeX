@@ -30,8 +30,9 @@ export function useBridgeXNotifications(userId: string | undefined, onOpenDestin
     if (!userId) { setCounts(emptyCounts); if (Platform.OS !== "web") await Notifications.setBadgeCountAsync(0); return; }
     try {
       const next = await loadNativeUnreadCounts();
-      setCounts(next);
-      if (Platform.OS !== "web") await Notifications.setBadgeCountAsync(next.updates);
+      const aggregate = next.updates + next.messages + next.workspace + next.payments;
+      setCounts({ ...next, more: aggregate });
+      if (Platform.OS !== "web") await Notifications.setBadgeCountAsync(aggregate);
     } catch { /* The app remains usable with the last known badge state during a temporary outage. */ }
   }, [userId]);
 

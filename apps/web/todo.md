@@ -108,6 +108,7 @@
 - [x] Show administrators current phone and operational location in user details while never exposing member passwords.
 - [ ] Diagnose and eliminate the Android WebView Loading BridgeX stall, then release a tested replacement APK.
 - [ ] Replace the legacy Android 1.0.11 download label with the validated user-supplied Web-Scrapped Expo APK URL, and prepare a fresh Expo APK for current web updates without using the Play Store route.
+- [ ] Prioritize the updated direct Android APK; defer Play Store publishing and keep iOS as source configuration until the Android release is verified.
 - [x] Add technical SEO foundations for Google, Bing, Brave Search, Baidu, and QQ-compatible crawling, including metadata, sitemap, robots rules, canonical URLs, and structured data without ranking guarantees.
 - [x] Add multi-category selection to I need to send posts while retaining multiple compressed image and optional video uploads.
 - [x] Replace the remaining landing-page “I need an item” wording with “I need to send.”
@@ -443,3 +444,12 @@
 - [ ] Document scalability, migration, and data-portability procedures for moving from Render and/or Supabase to future infrastructure.
 - [ ] Create and verify a sanitized sale-ready BridgeX transfer archive that excludes live secrets, credentials, private user data, and payment information.
 - [ ] Upload the completed handover package to the user’s Google Drive and provide verified access links.
+- [ ] Replace the independent Android footer link with verified Expo Build 21 (v1.6.4) APK.
+- [ ] Make the slogan stay in English in all web languages except Chinese, which uses the Chinese translation.
+- [ ] Make native localization propagate through the app shell and visible screens.
+- [ ] Fix native administrator back navigation, unread badges, and contrast in light/dark themes.
+- [ ] Remove marketplace color tags and the filter “Show all” control.
+- [ ] Improve the web Contact page layout for narrow mobile screens.
+- [ ] Prepare a lawyer-review issue document for China/international cross-border marketplace legal review.
+- [ ] Prepare and deliver the China/international counsel-review document before continuing product fixes.
+- [ ] Continue implementation after the lawyer-review document: verify Build 21 APK link, fix web/native localization, admin back navigation, unread badges, marketplace filters/cards, theme contrast, and mobile Contact layout.

@@ -1,11 +1,11 @@
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { ActivityIndicator, Alert, FlatList, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
+import { ActivityIndicator, Alert, BackHandler, FlatList, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
 import { loadNativeAdminSection, markNativeAdminPayoutSent, moderateNativeAdminMarketplacePost, moderateNativeMember, reviewNativeVerification, saveNativeAdminExchangeRate, type NativeAdminRecord, type NativeAdminSection, updateNativeAdminOrder, updateNativeAdminReport, verifyNativeAdminPayment } from "../lib/api";
 import { useBridgeXAppearance } from "../lib/appearance";
 import { useNativeLanguage } from "../lib/i18n";
 
-type Props = { role?: string | null };
+type Props = { role?: string | null; onBack?: () => boolean };
 type SectionCard = { key: NativeAdminSection; label: string; description: string; icon: keyof typeof Ionicons.glyphMap };
 const sections: SectionCard[] = [
   { key: "users", label: "Users", description: "Search members and manage account access with recorded reasons.", icon: "people-outline" },
@@ -21,7 +21,7 @@ const sections: SectionCard[] = [
   { key: "chats", label: "Chat review", description: "Review protected-match headings for safety and dispute triage.", icon: "chatbubbles-outline" },
 ];
 
-export function AdminScreen({ role }: Props) {
+export function AdminScreen({ role, onBack }: Props) {
   const palette = useBridgeXAppearance();
   const { t } = useNativeLanguage();
   const [section, setSection] = useState<NativeAdminSection | null>(null);
@@ -46,6 +46,14 @@ export function AdminScreen({ role }: Props) {
     finally { setLoading(false); }
   }, [section]);
   useEffect(() => { setSelected(null); setQuery(""); setNote(""); setRate(""); if (section) void load(0); }, [section, load]);
+  useEffect(() => {
+    const subscription = BackHandler.addEventListener("hardwareBackPress", () => {
+      if (selected) { setSelected(null); return true; }
+      if (section) { setSection(null); return true; }
+      return onBack ? onBack() : false;
+    });
+    return () => subscription.remove();
+  }, [onBack, section, selected]);
   const filtered = useMemo(() => {
     const term = query.trim().toLowerCase(); if (!term) return records;
     return records.filter(record => JSON.stringify(record).toLowerCase().includes(term));
