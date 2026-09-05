@@ -453,3 +453,4 @@
 - [ ] Prepare a lawyer-review issue document for China/international cross-border marketplace legal review.
 - [ ] Prepare and deliver the China/international counsel-review document before continuing product fixes.
 - [ ] Continue implementation after the lawyer-review document: verify Build 21 APK link, fix web/native localization, admin back navigation, unread badges, marketplace filters/cards, theme contrast, and mobile Contact layout.
+- [ ] Submit a new native Android production build containing the latest navigation, unread-badge, marketplace, and theme fixes, then verify its artifact.

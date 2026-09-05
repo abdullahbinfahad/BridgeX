@@ -14,7 +14,7 @@ import { LANGUAGE_OPTIONS, SystemLanguage } from "@/lib/language";
 
 const displayName = (user: ReturnType<typeof useAuth>["user"]) => user?.name || user?.email?.split("@")[0] || "Member";
 const ANDROID_BUILD = 21;
-const ANDROID_DOWNLOAD_URL = "https://expo.dev/artifacts/eas/LuR9uyHyeMpH8vUDro-S_LPC1NS5n1L7NKHETNBMieQ.apk";
+const ANDROID_DOWNLOAD_URL = "https://expo.dev/artifacts/eas/x8QJDAMrUUwg3FX1nJEVpoTKHhBaS7a_w4TsxdN1l4E.apk";
 const LEGACY_ANDROID_DOWNLOAD_URL = "https://expo.dev/artifacts/eas/gvKYcGm-EOEkMHrYlfXecz3myOsJoCBtOWHkPh3KAsQ.apk";
 const WEB_APP_URL = "https://bridgex.abdullahbinfahad.info";
 const LEGACY_WEB_SHELL_VERSION = "1.0.11";

@@ -19,12 +19,15 @@ const shouldSkipLocalization = (element: Element | null) => Boolean(
   element.closest("[data-bridgex-user-content], [data-bridgex-no-translate], [contenteditable='true']"),
 );
 
+const PRESERVED_SLOGAN_FRAGMENTS = new Set(["Post it.", "Match it.", "Carry it safely.", "Post it. Match it. Carry it safely."]);
+
 const translateTextNode = (node: Text, language: SystemLanguage) => {
   const parent = node.parentElement;
   if (shouldSkipLocalization(parent)) return;
   const raw = node.nodeValue || "";
   const trimmed = raw.trim();
   if (!trimmed) return;
+  if (language !== "zh-CN" && PRESERVED_SLOGAN_FRAGMENTS.has(trimmed)) return;
   const translated = translateFixedInterfaceText(language, trimmed);
   if (translated === trimmed) return;
   const leading = raw.match(/^\s*/)?.[0] || "";
