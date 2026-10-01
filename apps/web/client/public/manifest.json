@@ -1,0 +1,13 @@
+{
+  "name": "BridgeX — Global Delivery Marketplace",
+  "short_name": "BridgeX",
+  "description": "A trusted peer-to-peer marketplace connecting senders with travelers and cargo carriers.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f7f5ef",
+  "theme_color": "#172126",
+  "icons": [
+    { "src": "/favicon.ico", "sizes": "any", "type": "image/x-icon" },
+    { "src": "/bridgex-logo.webp", "sizes": "512x512", "type": "image/webp", "purpose": "any" }
+  ]
+}
