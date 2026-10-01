@@ -1,8 +1,27 @@
 import { createContext, createElement, useContext } from "react";
 import type { ReactNode } from "react";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { translationFor, type TranslationKey } from "./accountLanguage";
 
 export const NATIVE_LANGUAGES = ["en", "zh-CN", "fr", "es", "de", "ar", "ja", "ko", "bn", "hi", "ur"] as const;
 export type NativeLanguage = (typeof NATIVE_LANGUAGES)[number];
+const LANGUAGE_KEY = "bridgex:native-language";
+
+export async function loadNativeLanguagePreference(): Promise<NativeLanguage> {
+  try {
+    const value = await AsyncStorage.getItem(LANGUAGE_KEY);
+    return NATIVE_LANGUAGES.includes(value as NativeLanguage) ? value as NativeLanguage : "en";
+  } catch { return "en"; }
+}
+
+export async function saveNativeLanguagePreference(language: NativeLanguage): Promise<void> {
+  await AsyncStorage.setItem(LANGUAGE_KEY, language);
+}
+
+export function translateAccount(language: string | null | undefined, key: TranslationKey): string {
+  const normalized = NATIVE_LANGUAGES.includes(language as NativeLanguage) ? language as NativeLanguage : "en";
+  return translationFor(normalized, key);
+}
 
 const english = {
   marketplace: "Marketplace",

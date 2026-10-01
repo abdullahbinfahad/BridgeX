@@ -308,6 +308,22 @@ export async function sendNativeDealMessage(userId: string, matchId: string, bod
 export type NativeSupportConversation = { id: string; subject: string; message: string; status: string; created_at: string; reply_body: string | null; replied_at: string | null };
 export type NativeSupportMessage = { id: string; enquiry_id: string; sender_id: string; body: string; created_at: string };
 
+export async function requestNativeAccountDeletion(userId: string, fullName: string): Promise<void> {
+  const { data, error: authError } = await supabase.auth.getUser();
+  if (authError || !data.user || data.user.id !== userId || !data.user.email) {
+    throw new Error("Sign in with the account you want to delete before requesting deletion.");
+  }
+  const { error } = await supabase.from("contact_enquiries").insert({
+    user_id: userId,
+    name: fullName.trim().slice(0, 120) || "BridgeX member",
+    email: data.user.email,
+    subject: "Account and data deletion request",
+    message: "I request deletion of my BridgeX account and associated personal data. Please confirm my identity, any legally required record retention, and completion of this request.",
+    enquiry_kind: "privacy_request",
+  });
+  if (error) throw error;
+}
+
 export async function loadNativeSupportConversations(userId: string): Promise<NativeSupportConversation[]> {
   const { data, error } = await supabase.from("contact_enquiries").select("id,subject,message,status,created_at,reply_body,replied_at").eq("user_id", userId).order("replied_at", { ascending: false, nullsFirst: false }).order("created_at", { ascending: false }).limit(50);
   if (error) throw error;

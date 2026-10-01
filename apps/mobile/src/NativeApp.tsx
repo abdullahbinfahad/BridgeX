@@ -28,7 +28,7 @@ import type { PaymentFilter } from "./screens/PaymentsScreen";
 import type { NativeNotificationDestination } from "./lib/api";
 import { useBridgeXNotifications } from "./hooks/useBridgeXNotifications";
 import { BridgeXAppearanceProvider, loadThemePreference, resolveBridgeXPalette, saveThemePreference, type BridgeXThemePreference } from "./lib/appearance";
-import { NativeLanguageProvider, translate } from "./lib/i18n";
+import { loadNativeLanguagePreference, NativeLanguageProvider, saveNativeLanguagePreference, translate, NATIVE_LANGUAGES, type NativeLanguage } from "./lib/i18n";
 import { loadNativeProfileAvatarUrl } from "./lib/media";
 import type { AppRoute, NativeInfoSection, MarketplacePost } from "./types";
 
@@ -43,7 +43,7 @@ const tabs = [
 
 export default function NativeApp() {
   const { session, profile, loading, online, refreshProfile, signOut } = useBridgeXSession();
-  const [guest, setGuest] = useState(false);
+  const [guest, setGuest] = useState(true);
   const [route, setRoute] = useState<AppRoute>("marketplace");
   const [selectedPost, setSelectedPost] = useState<MarketplacePost | null>(null);
   const [infoSection, setInfoSection] = useState<NativeInfoSection>("about");
@@ -94,7 +94,20 @@ export default function NativeApp() {
     void loadNativeProfileAvatarUrl(profile.avatar_path).then(url => { if (active) setHeaderAvatarUrl(url); }).catch(() => { if (active) setHeaderAvatarUrl(""); });
     return () => { active = false; };
   }, [profile?.avatar_path]);
-  useEffect(() => { setInterfaceLanguage(profile?.preferred_language || "en"); }, [profile?.preferred_language]);
+  useEffect(() => {
+    let active = true;
+    void loadNativeLanguagePreference().then(saved => { if (active && !profile?.preferred_language) setInterfaceLanguage(saved); });
+    return () => { active = false; };
+  }, []);
+  useEffect(() => {
+    const preferred = profile?.preferred_language;
+    if (NATIVE_LANGUAGES.includes(preferred as NativeLanguage)) setInterfaceLanguage(preferred as NativeLanguage);
+  }, [profile?.preferred_language]);
+  const updateLanguage = (next: string) => {
+    if (!NATIVE_LANGUAGES.includes(next as NativeLanguage)) return;
+    setInterfaceLanguage(next);
+    void saveNativeLanguagePreference(next as NativeLanguage);
+  };
   useEffect(() => {
     const subscription = BackHandler.addEventListener("hardwareBackPress", () => goBack());
     return () => subscription.remove();
@@ -103,8 +116,8 @@ export default function NativeApp() {
   const palette = resolveBridgeXPalette(themePreference, systemScheme);
   const language = interfaceLanguage;
 
-  if (loading) return <NativeLanguageProvider language={language}><SafeAreaView style={[styles.loading, { backgroundColor: palette.background }]}><StatusBar style={palette.mode === "dark" ? "light" : "dark"} /><View style={[styles.topBlank, { backgroundColor: palette.background }]} /><NativeLoading label={translate(language, "loadingPosts")} /></SafeAreaView></NativeLanguageProvider>;
-  if (!session && !guest) return <NativeLanguageProvider language={language}><SafeAreaView style={[styles.root, { backgroundColor: palette.background }]}><StatusBar style={palette.mode === "dark" ? "light" : "dark"} /><View style={[styles.topBlank, { backgroundColor: palette.background }]} /><AuthScreen onGuest={() => setGuest(true)} /></SafeAreaView></NativeLanguageProvider>;
+  if (loading) return <NativeLanguageProvider language={language}><BridgeXAppearanceProvider palette={palette}><SafeAreaView style={[styles.loading, { backgroundColor: palette.background }]}><StatusBar style={palette.mode === "dark" ? "light" : "dark"} /><View style={[styles.topBlank, { backgroundColor: palette.background }]} /><NativeLoading label={translate(language, "loadingPosts")} /></SafeAreaView></BridgeXAppearanceProvider></NativeLanguageProvider>;
+  if (!session && !guest) return <NativeLanguageProvider language={language}><BridgeXAppearanceProvider palette={palette}><SafeAreaView style={[styles.root, { backgroundColor: palette.background }]}><StatusBar style={palette.mode === "dark" ? "light" : "dark"} /><View style={[styles.topBlank, { backgroundColor: palette.background }]} /><AuthScreen onGuest={() => setGuest(true)} onLanguageChange={updateLanguage} /></SafeAreaView></BridgeXAppearanceProvider></NativeLanguageProvider>;
 
   const displayName = profile?.full_name || session?.user.user_metadata?.full_name || session?.user.user_metadata?.name || "BridgeX member";
   const openPost = (post: MarketplacePost) => { setSelectedPost(post); navigate("post"); };
@@ -114,7 +127,7 @@ export default function NativeApp() {
   const hideTabs = ["post", "respond", "profile", "member", "info", "admin", "create", "workspace_records", "manage_posts", "workspace_responses", "payment_list"].includes(route);
   const headerTitle = route === "post" ? translate(language, "postDetails") : route === "marketplace" ? translate(language, "marketplace") : route === "notifications" ? translate(language, "updates") : route === "workspace_records" || route === "manage_posts" || route === "workspace_responses" ? translate(language, "workspace") : route === "payment_list" || route === "payments" ? translate(language, "payments") : route === "more" ? translate(language, "more") : route === "profile" ? translate(language, "profile") : route === "messages" ? translate(language, "messages") : route === "info" ? "BridgeX" : route[0].toUpperCase() + route.slice(1);
   const badgeFor = (tab: typeof tabs[number]["route"]) => tab === "notifications" ? unreadCounts.updates : tab === "messages" ? unreadCounts.messages : tab === "workspace" ? unreadCounts.workspace : tab === "more" ? unreadCounts.more : 0;
-  return <NativeLanguageProvider language={language}><BridgeXAppearanceProvider palette={palette}><GestureHandlerRootView style={styles.gestureRoot}><SafeAreaView style={[styles.root, { backgroundColor: palette.background }]}><StatusBar style={palette.mode === "dark" ? "light" : "dark"} /><View style={[styles.topBlank, { backgroundColor: palette.background }]} /><OfflineBanner visible={!online} /><View style={[styles.header, { backgroundColor: palette.background }]}><View><View style={styles.brandRow}><Text style={styles.eyebrow}>BRIDGEX</Text>{unreadCounts.updates > 0 ? <View style={styles.headerBadge}><Text style={styles.headerBadgeText}>{unreadCounts.updates}</Text></View> : null}</View><Text style={[styles.headerTitle, { color: palette.text }]}>{headerTitle}</Text></View><View style={styles.headerActions}>{isAdmin ? <Pressable accessibilityLabel="Open administrator control" onPress={() => tap("admin")} style={({ pressed }) => [styles.adminShortcut, pressed && styles.iconPressed]}><Ionicons name="shield-checkmark-outline" size={19} color="#9a6c0e" /></Pressable> : null}{session ? <Pressable accessibilityLabel="Open profile" onPress={() => tap("profile")} style={({ pressed }) => [styles.account, pressed && styles.iconPressed]}>{headerAvatarUrl ? <Image source={{ uri: headerAvatarUrl }} style={styles.accountAvatar} accessibilityLabel="Profile photo" /> : <Text style={styles.accountText}>{String(displayName).slice(0, 1).toUpperCase()}</Text>}</Pressable> : <Pressable onPress={() => setGuest(false)} style={styles.signIn}><Text style={styles.signInText}>{translate(language, "signIn")}</Text></Pressable>}</View></View>{content}{!hideTabs ? <View style={[styles.tabs, { backgroundColor: palette.mode === "dark" ? "#211f35" : "#fff", borderTopColor: palette.border }]}>{tabs.map(tab => { const badge = badgeFor(tab.route); return <Pressable key={tab.route} onPress={() => tap(tab.route)} style={({ pressed }) => [styles.tab, route === tab.route && styles.tabActive, pressed && styles.tabPressed]}><View style={styles.tabIconWrap}><Ionicons name={tab.icon} size={20} color={route === tab.route ? "#176447" : "#718082"} />{badge > 0 ? <View style={styles.tabBadge}><Text style={styles.tabBadgeText}>{badge}</Text></View> : null}</View><Text style={[styles.tabText, route === tab.route && styles.tabTextActive]}>{translate(language, tab.labelKey)}</Text></Pressable>; })}</View> : null}</SafeAreaView></GestureHandlerRootView></BridgeXAppearanceProvider></NativeLanguageProvider>;
+  return <NativeLanguageProvider language={language}><BridgeXAppearanceProvider palette={palette}><GestureHandlerRootView style={styles.gestureRoot}><SafeAreaView style={[styles.root, { backgroundColor: palette.background }]}><StatusBar style={palette.mode === "dark" ? "light" : "dark"} /><View style={[styles.topBlank, { backgroundColor: palette.background }]} /><OfflineBanner visible={!online} /><View style={[styles.header, { backgroundColor: palette.background }]}><View><View style={styles.brandRow}><Text style={styles.eyebrow}>BRIDGEX</Text>{unreadCounts.updates > 0 ? <View style={styles.headerBadge}><Text style={styles.headerBadgeText}>{unreadCounts.updates}</Text></View> : null}</View><Text style={[styles.headerTitle, { color: palette.text }]}>{headerTitle}</Text></View><View style={styles.headerActions}>{isAdmin ? <Pressable accessibilityLabel="Open administrator control" onPress={() => tap("admin")} style={({ pressed }) => [styles.adminShortcut, pressed && styles.iconPressed]}><Ionicons name="shield-checkmark-outline" size={19} color="#9a6c0e" /></Pressable> : null}{session ? <Pressable accessibilityLabel="Open profile" onPress={() => tap("profile")} style={({ pressed }) => [styles.account, pressed && styles.iconPressed]}>{headerAvatarUrl ? <Image source={{ uri: headerAvatarUrl }} style={styles.accountAvatar} accessibilityLabel="Profile photo" /> : <Text style={styles.accountText}>{String(displayName).slice(0, 1).toUpperCase()}</Text>}</Pressable> : <Pressable onPress={() => setGuest(false)} style={styles.signIn}><Text style={styles.signInText}>{translate(language, "signIn")}</Text></Pressable>}</View></View>{content}{!hideTabs ? <View style={[styles.tabs, { backgroundColor: palette.mode === "dark" ? "#211f35" : "#fff", borderTopColor: palette.border }]}>{tabs.map(tab => { const badge = badgeFor(tab.route); return <Pressable key={tab.route} onPress={() => tap(tab.route)} style={({ pressed }) => [styles.tab, route === tab.route && { backgroundColor: palette.primarySoft }, pressed && styles.tabPressed]}><View style={styles.tabIconWrap}><Ionicons name={tab.icon} size={20} color={route === tab.route ? palette.primary : palette.muted} />{badge > 0 ? <View style={styles.tabBadge}><Text style={styles.tabBadgeText}>{badge}</Text></View> : null}</View><Text style={[styles.tabText, { color: route === tab.route ? palette.primary : palette.muted }]}>{translate(language, tab.labelKey)}</Text></Pressable>; })}</View> : null}</SafeAreaView></GestureHandlerRootView></BridgeXAppearanceProvider></NativeLanguageProvider>;
 }
 
 function SignedOutPrompt({ title, copy, onSignIn }: { title: string; copy: string; onSignIn: () => void }) { return <View style={styles.body}><Text style={styles.heroTitle}>{title}</Text><Text style={styles.heroCopy}>{copy}</Text><Pressable onPress={onSignIn} style={styles.primaryAction}><Text style={styles.primaryActionText}>Sign in or create account</Text></Pressable></View>; }
