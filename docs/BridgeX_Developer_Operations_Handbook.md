@@ -1,10 +1,10 @@
 # BridgeX Developer Operations Handbook
 
-**Edition:** 1.0 — Operations Reference  
-**Repository:** `abdullahbinfahad/BridgeX`  
-**Primary public service:** [bridgex.abdullahbinfahad.info](https://bridgex.abdullahbinfahad.info/)  
-**Primary stack:** React, Vite, Supabase Auth/Postgres/Storage/Realtime, Expo Android WebView, Render  
-**Audience:** Engineers, administrators, support operators, moderators, release managers, and security reviewers  
+**Edition:** 1.0 — Operations Reference
+**Repository:** `abdullahbinfahad/BridgeX`
+**Primary public service:** [bridgexmarketplace.com](https://bridgexmarketplace.com/)
+**Primary stack:** React, Vite, Supabase Auth/Postgres/Storage/Realtime, Expo Android WebView, Render
+**Audience:** Engineers, administrators, support operators, moderators, release managers, and security reviewers
 
 > **Operating principle:** BridgeX is a public-discovery and protected-execution marketplace. Browsing is public; private identity documents, exact addresses, payment evidence, payout details, protected messages, and administrative decision records must remain available only to people whose role and lifecycle state justify access.
 
@@ -156,7 +156,7 @@ Carry listings remain public across multiple matches until the traveler hides/de
 | Condition | Listing behavior |
 |---|---|
 | Remaining weight or accepted quantity exists | Remains public and can accept additional eligible interests |
-| Payment request pending | Capacity is not permanently consumed until verification | 
+| Payment request pending | Capacity is not permanently consumed until verification |
 | Verified confirmed interest | Deduct confirmed weight/item quantities |
 | All tracked capacity is zero | Automatically close/hide listing |
 | Owner hides/deletes | Remove public visibility while preserving protected order history |

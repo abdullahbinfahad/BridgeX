@@ -1,7 +1,7 @@
 const { app, BrowserWindow, shell } = require("electron");
 const path = require("path");
 
-const BRIDGEX_URL = "https://bridgex.abdullahbinfahad.info/";
+const BRIDGEX_URL = "https://bridgexmarketplace.com/";
 
 function createWindow() {
   const window = new BrowserWindow({
@@ -21,7 +21,7 @@ function createWindow() {
   });
   window.loadURL(BRIDGEX_URL);
   window.webContents.setWindowOpenHandler(({ url }) => {
-    if (url.startsWith("https://bridgex.abdullahbinfahad.info/") || url.startsWith("https://expo.dev/")) return { action: "allow" };
+    if (url.startsWith("https://bridgexmarketplace.com/") || url.startsWith("https://expo.dev/")) return { action: "allow" };
     void shell.openExternal(url);
     return { action: "deny" };
   });

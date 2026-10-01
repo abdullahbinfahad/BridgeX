@@ -14,7 +14,7 @@ describe("BridgeX marketplace cache and public-review regression coverage", () =
     expect(screen).toContain('tab === "requests" ? "send_requests" : "carry_listings"');
     expect(screen).toContain("native-marketplace-${table}");
     expect(screen).toContain("load(false, true)");
-    expect(screen).toContain('accessibilityLabel="Choose product categories"');
+    expect(screen).toContain('accessibilityLabel={t("chooseCategories")}');
     expect(migration).toContain("ADD TABLE public.send_requests");
     expect(migration).toContain("ADD TABLE public.carry_listings");
   });

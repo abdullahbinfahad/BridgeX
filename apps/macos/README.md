@@ -1,6 +1,6 @@
 # BridgeX for macOS
 
-This project packages the public BridgeX application in a sandboxed Electron desktop window. It loads only `https://bridgex.abdullahbinfahad.info` inside the application. External links open in the user’s normal browser.
+This project packages the public BridgeX application in a sandboxed Electron desktop window. It loads only `https://bridgexmarketplace.com` inside the application. External links open in the user’s normal browser.
 
 ## Build
 

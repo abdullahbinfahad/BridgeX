@@ -7,4 +7,4 @@ Disallow: /onboarding
 Disallow: /create-request
 Disallow: /create-listing
 
-Sitemap: https://bridgex.abdullahbinfahad.info/sitemap.xml
+Sitemap: https://bridgexmarketplace.com/sitemap.xml

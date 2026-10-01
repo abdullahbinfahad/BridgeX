@@ -1,6 +1,6 @@
 # BridgeX for HarmonyOS
 
-This native HarmonyOS Stage-model wrapper is written in ArkTS. It opens BridgeX at `https://bridgex.abdullahbinfahad.info/?app=harmonyos&build=1` inside the HarmonyOS Web component and uses the existing BridgeX web application for authentication, data, messaging, and protected-order workflows.
+This native HarmonyOS Stage-model wrapper is written in ArkTS. It opens BridgeX at `https://bridgexmarketplace.com/?app=harmonyos&build=1` inside the HarmonyOS Web component and uses the existing BridgeX web application for authentication, data, messaging, and protected-order workflows.
 
 ## Build a signed `.hap`
 

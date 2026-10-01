@@ -20,7 +20,7 @@ Create a **Cron Job** in the same Render account with the following values.
 |---|---|
 | Name | `bridgex-daily-traveler-reminders` |
 | Schedule | `0 9 * * *` |
-| Command | `curl --fail --silent --show-error -X POST https://bridgex.abdullahbinfahad.info/api/scheduled/traveler-reminders -H "x-bridgex-reminder-secret: $REMINDER_CRON_SECRET"` |
+| Command | `curl --fail --silent --show-error -X POST https://bridgexmarketplace.com/api/scheduled/traveler-reminders -H "x-bridgex-reminder-secret: $REMINDER_CRON_SECRET"` |
 | Environment variable | Add the exact same `REMINDER_CRON_SECRET` value used by the web service. |
 
 The schedule above runs at **09:00 UTC** each day. It sends a private reminder only when an active traveler-managed order has gone at least one day without a traveler milestone update. After the third reminder day, it sends administrator attention notifications.

@@ -2,7 +2,7 @@
 
 ## ১. প্রশাসক লগইন ও কন্ট্রোল প্যানেল
 
-প্রশাসক হিসেবে সাইন-ইন করার জন্য `https://bridgex.abdullahbinfahad.info/access` ব্যবহার করুন। `abdullahbinfahad.abf@gmail.com` অ্যাকাউন্টটি BridgeX-এর `admin` role পেয়েছে। সাইন-ইন শেষ হলে `https://bridgex.abdullahbinfahad.info/admin` খুলুন। এখানে আলাদা কোনো default password নেই; প্রশাসক অধিকার কেবল role দিয়ে নিয়ন্ত্রিত হয়।
+প্রশাসক হিসেবে সাইন-ইন করার জন্য `https://bridgexmarketplace.com/access` ব্যবহার করুন। `abdullahbinfahad.abf@gmail.com` অ্যাকাউন্টটি BridgeX-এর `admin` role পেয়েছে। সাইন-ইন শেষ হলে `https://bridgexmarketplace.com/admin` খুলুন। এখানে আলাদা কোনো default password নেই; প্রশাসক অধিকার কেবল role দিয়ে নিয়ন্ত্রিত হয়।
 
 | বিভাগ | প্রশাসকের কাজ |
 |---|---|

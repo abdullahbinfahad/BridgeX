@@ -21,8 +21,8 @@ Every deployment should make this distinction clear in its terms, onboarding, po
 
 | Deployment | Link | Purpose |
 |---|---|---|
-| Render application | [bridgex-q2h5.onrender.com](https://bridgex-q2h5.onrender.com/) | Public Render deployment of the BridgeX web application. |
-| Custom domain | [bridgex.abdullahbinfahad.info](https://bridgex.abdullahbinfahad.info/) | Public custom-domain entry point. |
+| Render application | [bridgexmarketplace.com](https://bridgexmarketplace.com/) | Public Render deployment of the BridgeX web application. |
+| Custom domain | [bridgexmarketplace.com](https://bridgexmarketplace.com/) | Public custom-domain entry point. |
 
 ## What is in this repository
 

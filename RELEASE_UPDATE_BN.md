@@ -1,6 +1,6 @@
 # BridgeX সংশোধিত রিলিজ নির্দেশনা
 
-BridgeX-এর ওয়েব সংস্করণ এখন `https://bridgex.abdullahbinfahad.info`-এ প্রকাশিত। হোমপেজ ও Marketplace এখন কেবল বাস্তব Supabase পোস্ট দেখায়; কোনো নমুনা পোস্ট, কাল্পনিক অর্ডার বা কাল্পনিক ব্যালেন্স দেখায় না। পোস্টে আপলোড করা ছবিগুলো প্রাইভেট স্টোরেজ থেকে অনুমোদিত ব্রাউজার ডাউনলোডের মাধ্যমে প্রদর্শিত হয়, তাই স্টোরেজ বালতি পাবলিক না করেও ছবি দেখা যায়।
+BridgeX-এর ওয়েব সংস্করণ এখন `https://bridgexmarketplace.com`-এ প্রকাশিত। হোমপেজ ও Marketplace এখন কেবল বাস্তব Supabase পোস্ট দেখায়; কোনো নমুনা পোস্ট, কাল্পনিক অর্ডার বা কাল্পনিক ব্যালেন্স দেখায় না। পোস্টে আপলোড করা ছবিগুলো প্রাইভেট স্টোরেজ থেকে অনুমোদিত ব্রাউজার ডাউনলোডের মাধ্যমে প্রদর্শিত হয়, তাই স্টোরেজ বালতি পাবলিক না করেও ছবি দেখা যায়।
 
 ইমেইল-পাসওয়ার্ড ও Google সাইন-ইন সক্রিয়। লগইন হওয়ার পর উপরের ডান পাশে **Log in**-এর বদলে সদস্যের নাম ও avatar দেখা যাবে। সেই মেনু থেকে Dashboard, Profile edit, Admin control panel (admin হলে) ও Sign out ব্যবহার করা যাবে। Profile edit পেজ থেকে ছবি, নাম, ফোন, bio, বর্তমান সঠিক ঠিকানা, China address (বর্তমান দেশ China হলে), এবং home location পরিবর্তন করা যায়।
 
@@ -27,7 +27,7 @@ BridgeX-এর ওয়েব সংস্করণ এখন `https://bridgex.abd
 
 দুটি account এখন administrator role পেয়েছে: `abdullahbinfahad.abf@gmail.com` এবং `abdullahbinfahad.abf@proton.me`। এই account দিয়ে লগইন করে নিচের লিংক খুলুন:
 
-`https://bridgex.abdullahbinfahad.info/admin`
+`https://bridgexmarketplace.com/admin`
 
 Admin panel থেকে members, verification submissions, open reports, requests, carry listings এবং protected orders দেখা ও পরিচালনা করা যায়।
 

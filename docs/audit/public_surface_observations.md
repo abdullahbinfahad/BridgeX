@@ -4,7 +4,7 @@ Date reviewed: 2026-08-20 (GMT+8)
 
 ## Observed working public surfaces
 
-The production homepage loaded successfully at `https://bridgex.abdullahbinfahad.info/`. It exposed public navigation, post creation entry points, marketplace access, visible recent-post cards, verification badges, ratings (including `0.0 (0)`), and a payment-safety explanation. The public Marketplace route also loaded its navigation, request/carry tabs, search field, category selector, refresh action, and pagination controls for guest visitors.
+The production homepage loaded successfully at `https://bridgexmarketplace.com/`. It exposed public navigation, post creation entry points, marketplace access, visible recent-post cards, verification badges, ratings (including `0.0 (0)`), and a payment-safety explanation. The public Marketplace route also loaded its navigation, request/carry tabs, search field, category selector, refresh action, and pagination controls for guest visitors.
 
 ## Observed audit signal
 

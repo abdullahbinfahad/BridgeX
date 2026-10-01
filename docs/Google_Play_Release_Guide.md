@@ -1,9 +1,9 @@
 # BridgeX Google Play Release Guide
 
-**Application ID:** `im.bridgex.marketplace`  
-**Public website:** <https://bridgex.abdullahbinfahad.info/>  
-**Privacy policy:** <https://bridgex.abdullahbinfahad.info/privacy>  
-**Primary support route:** <https://bridgex.abdullahbinfahad.info/contact>
+**Application ID:** `im.bridgex.marketplace`
+**Public website:** <https://bridgexmarketplace.com/>
+**Privacy policy:** <https://bridgexmarketplace.com/privacy>
+**Primary support route:** <https://bridgexmarketplace.com/contact>
 
 ## 1. Release artifact
 
@@ -74,11 +74,11 @@ Google requires every published app, including apps on open or closed testing tr
 
 ## 6. Store-listing draft
 
-**App name:** BridgeX  
-**Short description:** Send goods with trusted travelers worldwide.  
-**Category:** Travel & Local or Shopping — choose the best category after reviewing Play Console options.  
-**Support email:** `abdullahbinfahad.abf@gmail.com`  
-**Website:** <https://bridgex.abdullahbinfahad.info/>
+**App name:** BridgeX
+**Short description:** Send goods with trusted travelers worldwide.
+**Category:** Travel & Local or Shopping — choose the best category after reviewing Play Console options.
+**Support email:** `abdullahbinfahad.abf@gmail.com`
+**Website:** <https://bridgexmarketplace.com/>
 
 **Full description draft:**
 

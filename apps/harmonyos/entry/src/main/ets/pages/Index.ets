@@ -1,6 +1,6 @@
 import { webview } from '@kit.ArkWeb';
 
-const BRIDGEX_URL: string = 'https://bridgex.abdullahbinfahad.info/?app=harmonyos&build=1';
+const BRIDGEX_URL: string = 'https://bridgexmarketplace.com/?app=harmonyos&build=1';
 
 @Entry
 @Component

@@ -6,8 +6,8 @@ The public BridgeX crawler assets are reachable at the production domain:
 
 | Asset | Public URL | Observed state |
 |---|---|---|
-| Robots policy | `https://bridgex.abdullahbinfahad.info/robots.txt` | Allows general crawling and blocks private dashboard, administration, onboarding, and compose routes. |
-| XML sitemap | `https://bridgex.abdullahbinfahad.info/sitemap.xml` | Serves the canonical public homepage, marketplace, public help, safety, legal, and contact URLs. |
+| Robots policy | `https://bridgexmarketplace.com/robots.txt` | Allows general crawling and blocks private dashboard, administration, onboarding, and compose routes. |
+| XML sitemap | `https://bridgexmarketplace.com/sitemap.xml` | Serves the canonical public homepage, marketplace, public help, safety, legal, and contact URLs. |
 
 ## Submission sequence
 

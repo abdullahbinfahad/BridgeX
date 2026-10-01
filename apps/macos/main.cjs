@@ -1,8 +1,8 @@
 const { app, BrowserWindow, shell } = require("electron");
 const path = require("node:path");
 
-const BRIDGEX_URL = "https://bridgex.abdullahbinfahad.info/?app=mac&build=1";
-const allowedHost = "bridgex.abdullahbinfahad.info";
+const BRIDGEX_URL = "https://bridgexmarketplace.com/?app=mac&build=1";
+const allowedHost = "bridgexmarketplace.com";
 
 function createWindow() {
   const window = new BrowserWindow({

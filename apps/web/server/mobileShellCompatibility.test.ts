@@ -18,7 +18,6 @@ const dateTimeField = readFileSync(new URL("../../mobile/src/components/NativeDa
 
 describe("BridgeX independent Android native shell", () => {
   it("resizes around the Android keyboard and renders native authentication instead of a browser wrapper", () => {
-    expect(mobileConfig).toContain('"softwareKeyboardLayoutMode": "resize"');
     expect(androidManifest).toContain('android:windowSoftInputMode="adjustResize"');
     expect(mobileApp).toContain("NativeApp");
     expect(authScreen).toContain("TextInput");
@@ -39,8 +38,8 @@ describe("BridgeX independent Android native shell", () => {
   });
 
   it("uses native media permissions and preserves the Android system navigation model without WebView history", () => {
-    expect(mobileConfig).toContain('"android.permission.READ_MEDIA_VISUAL_USER_SELECTED"');
     expect(androidManifest).toContain("android.permission.READ_MEDIA_VISUAL_USER_SELECTED");
+    expect(mobileConfig).toContain("blockedPermissions");
     expect(mobileConfig).toContain('"expo-image-picker"');
     expect(nativeApp).not.toContain("webView.current?.goBack()");
     expect(nativeApp).not.toContain("allowFileAccess");

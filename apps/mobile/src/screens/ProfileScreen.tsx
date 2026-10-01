@@ -100,7 +100,7 @@ function DeletionRequest({ userId, name }: { userId: string; name: string }) {
     <Text style={styles.noticeTitle}>Account and data deletion</Text>
     <Text style={styles.noticeCopy}>Request removal of your account and associated personal data. Some order records may need to be retained where the law requires it.</Text>
     <Pressable disabled={sending} onPress={() => Alert.alert("Request account deletion?", "BridgeX support will receive a request to delete your account and associated data. This does not immediately erase your account or active orders.", [{ text: "Cancel", style: "cancel" }, { text: "Send request", style: "destructive", onPress: () => void send() }])} style={styles.signOut} accessibilityRole="button"><Text style={styles.signOutText}>{sending ? "Sending request…" : "Request account deletion"}</Text></Pressable>
-    <Pressable onPress={() => void Linking.openURL("https://bridgex.abdullahbinfahad.info/contact?topic=privacy")} accessibilityRole="link"><Text style={styles.helper}>You can also request deletion on the BridgeX website.</Text></Pressable>
+    <Pressable onPress={() => void Linking.openURL("https://bridgexmarketplace.com/contact?topic=privacy")} accessibilityRole="link"><Text style={styles.helper}>You can also request deletion on the BridgeX website.</Text></Pressable>
   </View>;
 }
 

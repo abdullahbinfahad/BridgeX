@@ -18,7 +18,7 @@
 
 - Guest-first public marketplace on app launch; private actions still require sign-in and administrator sections check the member role.
 - Persisted native language preference, localized account entry controls, improved readable login/marketplace theme colors, guest-mode navigation checks.
-- Native account and associated-data **deletion request** entry in the profile, including restricted accounts. It creates an authenticated `privacy_request` support enquiry; it **does not immediately delete data**. Administrators must verify identity and fulfill requests according to legal retention requirements. Users may also submit a web request through the existing [BridgeX privacy contact form](https://bridgex.abdullahbinfahad.info/contact?topic=privacy).
+- Native account and associated-data **deletion request** entry in the profile, including restricted accounts. It creates an authenticated `privacy_request` support enquiry; it **does not immediately delete data**. Administrators must verify identity and fulfill requests according to legal retention requirements. Users may also submit a web request through the existing [BridgeX privacy contact form](https://bridgexmarketplace.com/contact?topic=privacy).
 - Removed unused precise/coarse-location and broad `READ_MEDIA_IMAGES`/`READ_MEDIA_VIDEO` declarations from the native manifest and Expo config. Check the *merged* release manifest in the finished AAB before declaring the final permission inventory.
 - SDK 57 package patch updates and the required `expo-font` peer dependency.
 
@@ -42,8 +42,8 @@
 | App pricing | Free to install; the service may involve separately disclosed delivery payments |
 | Short description | Connect with people carrying goods on routes near you. |
 | Full description | BridgeX is a peer-to-peer marketplace for eligible item delivery. Browse requests and available carry space, compare routes and proposals, and coordinate protected order details with matched members. The app includes profile and identity review, order updates, member messaging, safety reporting, and administrator-reviewed payment records. Members must describe items accurately and follow applicable customs, transport, and local rules. Service availability and transaction terms depend on the route and the parties involved. |
-| Privacy policy | https://bridgex.abdullahbinfahad.info/privacy |
-| Account deletion web resource | https://bridgex.abdullahbinfahad.info/contact?topic=privacy (dedicated page recommended) |
+| Privacy policy | https://bridgexmarketplace.com/privacy |
+| Account deletion web resource | https://bridgexmarketplace.com/contact?topic=privacy (dedicated page recommended) |
 | Support contact | abdullahbinfahad.abf@gmail.com |
 
 ## Console gates before any public release
