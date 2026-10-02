@@ -9,10 +9,10 @@ describe("native usability release public surfaces", () => {
   it("labels the requested Android app version 1.0.11 and independent native APK separately without forcing an in-app update", () => {
     const layout = read("client/src/components/bridgex/PublicLayout.tsx");
     expect(layout).toContain('const WEB_APP_URL = "https://bridgexmarketplace.com"');
-    expect(layout).toContain('const LEGACY_WEB_SHELL_VERSION = "1.0.11"');
-    expect(layout).toContain("Web-Scrapped APK · version {LEGACY_WEB_SHELL_VERSION}");
-    expect(layout).toContain("/downloads/legacy");
-    expect(layout).toContain("Android app — independent native");
+    expect(layout).not.toContain("LEGACY_WEB_SHELL_VERSION");
+    expect(layout).not.toContain("Web-Scrapped APK");
+    expect(layout).not.toContain("/downloads/legacy");
+    expect(layout).toContain("downloadAndroid");
     expect(layout).toContain("data-bridgex-android-download");
     expect(layout).not.toContain("function AndroidUpdatePrompt");
   });

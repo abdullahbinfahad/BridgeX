@@ -49,7 +49,7 @@ describe("BridgeX currency, cargo, support, and brand release safeguards", () =>
     expect(read("apps/web/client/src/components/bridgex/Brand.tsx")).toContain("/bridgex-logo.webp");
     expect(read("apps/web/client/index.html")).toContain("/favicon.ico");
     expect(read("apps/mobile/app.json")).toContain("./assets/icon.png");
-    expect(read("apps/mobile/app.json")).toContain('"versionCode": 22');
+    expect(read("apps/mobile/app.json")).toContain('"versionCode": 24');
   });
 
   it("uses the independent native app shell in the prepared BridgeX Android 1.6.4 source release", () => {
@@ -58,8 +58,8 @@ describe("BridgeX currency, cargo, support, and brand release safeguards", () =>
     expect(mobileApp).toContain('import NativeApp from "./src/NativeApp"');
     expect(nativeApp).toContain("SafeAreaView");
     expect(nativeApp).not.toContain("WebView");
-    expect(read("apps/mobile/android/app/build.gradle")).toContain("versionCode 22");
-    expect(read("apps/mobile/android/app/build.gradle")).toContain('versionName "1.6.5"');
+    expect(read("apps/mobile/android/app/build.gradle")).toContain("versionCode 24");
+    expect(read("apps/mobile/android/app/build.gradle")).toContain('versionName "1.6.7"');
   });
 
   it("pairs sound categories with lightweight visual feedback cues that respect motion preferences", () => {
@@ -72,7 +72,7 @@ describe("BridgeX currency, cargo, support, and brand release safeguards", () =>
 
   it("keeps the current independent-native Android APK link alongside the Windows download entry", () => {
     const layout = read("apps/web/client/src/components/bridgex/PublicLayout.tsx");
-    expect(layout).toContain("sZENWkdIl4fcBzhW5SYNWDb7Xo5NsZYWyX9Sd-3SqaU.apk");
+    expect(layout).toContain("CtUDQ5jVf5jYstJS5lI7eTYI5XmY7LsxQSX4JLwe7LQ.apk");
     expect(layout).toContain("downloads/windows");
   });
 
@@ -185,12 +185,12 @@ describe("BridgeX currency, cargo, support, and brand release safeguards", () =>
     expect(layout).toContain('t("harmonyOS")');
     expect(layout).toContain('t("macOS")');
     expect(layout).not.toContain("allow that app to install unknown apps");
-    expect(appConfig).toContain('"versionCode": 22');
+    expect(appConfig).toContain('"versionCode": 24');
     expect(eas).toContain('"play"');
     expect(eas).toContain('"buildType": "app-bundle"');
     expect(gradle).toContain("EAS_BUILD_ANDROID_KEYSTORE_PATH");
-    expect(gradle).toContain("versionCode 22");
-    expect(gradle).toContain('versionName "1.6.5"');
+    expect(gradle).toContain("versionCode 24");
+    expect(gradle).toContain('versionName "1.6.7"');
     expect(gradle).not.toContain("signingConfig signingConfigs.debug\n            def enableShrinkResources");
   });
 
