@@ -9,6 +9,14 @@ import { appRouter } from "../routers";
 import { createContext } from "./context";
 import { serveStatic, setupVite } from "./vite";
 
+const COUNTRY_LANGUAGE: Record<string, string> = {
+  CN: "zh-CN", HK: "zh-CN", MO: "zh-CN", TW: "zh-CN",
+  ES: "es", MX: "es", AR: "es", CL: "es", CO: "es", PE: "es",
+  FR: "fr", BE: "fr", LU: "fr", MC: "fr", DE: "de", AT: "de", CH: "de",
+  SA: "ar", AE: "ar", EG: "ar", MA: "ar", DZ: "ar", TN: "ar",
+  JP: "ja", KR: "ko", BD: "bn", IN: "hi", PK: "ur",
+};
+
 function isPortAvailable(port: number): Promise<boolean> {
   return new Promise(resolve => {
     const server = net.createServer();
@@ -36,6 +44,12 @@ async function startServer() {
   app.use(express.urlencoded({ limit: "50mb", extended: true }));
   registerStorageProxy(app);
   registerOAuthRoutes(app);
+  app.get("/api/locale-hint", (req, res) => {
+    const country = req.get("cf-ipcountry") || req.get("x-vercel-ip-country") || req.get("x-country-code") || req.get("x-geo-country") || "";
+    const language = COUNTRY_LANGUAGE[country.trim().toUpperCase()] || null;
+    res.setHeader("Cache-Control", "private, no-store");
+    return res.json({ language });
+  });
   // tRPC API
   app.use(
     "/api/trpc",

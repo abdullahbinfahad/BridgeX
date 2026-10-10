@@ -1,6 +1,7 @@
-import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
+import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
 import { isSystemLanguage, RTL_LANGUAGES, SystemLanguage, TranslationKey, translationFor } from "@/lib/language";
 import { translateFixedInterfaceText } from "@/lib/fixedInterfaceTranslations";
+import { detectInitialLanguage } from "@/lib/localeDetection";
 
 type LanguageContextValue = {
   language: SystemLanguage;
@@ -63,17 +64,21 @@ const localizeFixedInterface = (root: Node, language: SystemLanguage) => {
 const initialLanguage = (): SystemLanguage => {
   if (typeof window === "undefined") return "en";
   const saved = window.localStorage.getItem(STORAGE_KEY);
-  return isSystemLanguage(saved) ? saved : "en";
+  return isSystemLanguage(saved) ? saved : detectInitialLanguage();
 };
 
 export function LanguageProvider({ children }: { children: React.ReactNode }) {
   const [language, updateLanguage] = useState<SystemLanguage>(initialLanguage);
+  const hadSavedLanguage = useRef(typeof window !== "undefined" && Boolean(window.localStorage.getItem(STORAGE_KEY)));
   const setLanguage = useCallback((next: SystemLanguage) => updateLanguage(next), []);
 
   useEffect(() => {
     document.documentElement.lang = language;
     document.documentElement.dir = RTL_LANGUAGES.includes(language) ? "rtl" : "ltr";
-    try { window.localStorage.setItem(STORAGE_KEY, language); } catch { /* Preference remains in memory when storage is unavailable. */ }
+    try {
+      window.localStorage.setItem(STORAGE_KEY, language);
+      document.documentElement.dataset.bridgexLocaleSource = "saved-or-automatic";
+    } catch { /* Preference remains in memory when storage is unavailable. */ }
     localizeFixedInterface(document, language);
     const observer = new MutationObserver((mutations) => {
       for (const mutation of mutations) {
@@ -83,6 +88,24 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
     if (document.body) observer.observe(document.body, { childList: true, subtree: true });
     return () => observer.disconnect();
   }, [language]);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    if (hadSavedLanguage.current) return;
+    const controller = new AbortController();
+    fetch("/api/locale-hint", { headers: { Accept: "application/json" }, signal: controller.signal })
+      .then(response => response.ok ? response.json() as Promise<{ language?: unknown }> : null)
+      .then(payload => {
+        if (!payload || !isSystemLanguage(payload.language)) return;
+        try {
+          if (window.localStorage.getItem(STORAGE_KEY)) return;
+          window.localStorage.setItem(STORAGE_KEY, payload.language);
+        } catch { /* Use the detected value for this session if storage is unavailable. */ }
+        updateLanguage(payload.language);
+      })
+      .catch(() => { /* Hosting layers without geo headers keep the browser locale fallback. */ });
+    return () => controller.abort();
+  }, []);
 
   const value = useMemo<LanguageContextValue>(() => ({
     language,
