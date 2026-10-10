@@ -18,7 +18,7 @@ describe("native usability release public surfaces", () => {
 
   it("uses mobile-first contact spacing and comfortable touch targets", () => {
     const contact = read("client/src/pages/ContactPage.tsx");
-    expect(contact).toContain('className="px-4 py-6 sm:px-6 sm:py-10');
+    expect(contact).toContain("px-4 py-6 sm:px-6 sm:py-10");
     expect(contact).toContain('className="h-12 rounded-xl text-base"');
     expect(contact).toContain("Stay safe on BridgeX.");
   });

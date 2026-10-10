@@ -61,14 +61,22 @@ export function detectInitialLanguage(): SystemLanguage {
     window.navigator.language,
     Intl.DateTimeFormat().resolvedOptions().locale,
   ];
-  for (const locale of browserLocales) {
+  const specificLocales = browserLocales.filter(locale => Boolean(locale && /[-_]/.test(locale)));
+  for (const locale of specificLocales) {
     const language = languageFromLocale(locale);
-    if (language) return language;
+    if (language && language !== "en") return language;
   }
 
+  // A browser may report only en-US even when the visitor is abroad. In that
+  // case timezone is a better regional signal than silently forcing English.
   const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone || "";
   for (const [pattern, language] of TIMEZONE_LANGUAGE) {
     if (pattern.test(timezone)) return language;
+  }
+
+  for (const locale of browserLocales) {
+    const language = languageFromLocale(locale);
+    if (language) return language;
   }
   return "en";
 }
