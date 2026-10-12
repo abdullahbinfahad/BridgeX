@@ -40,6 +40,15 @@ describe("BridgeX currency, cargo, support, and brand release safeguards", () =>
     expect(deals).toContain("encodeURIComponent(update.related_id || update.id)");
   });
 
+  it("keeps chat attachments sendable and voice input single-pass", () => {
+    const deals = read("apps/web/client/src/pages/Deals.tsx");
+    expect(deals).toContain("setPendingPhoto(file)");
+    expect(deals).toContain("Send photo");
+    expect(deals).toContain("event.resultIndex");
+    expect(deals).toContain("continuous = false");
+    expect(deals).toContain("scrollTop = messageScrollRef.current.scrollHeight");
+  });
+
   it("keeps the member Inbox limited to the signed-in deal participant even when that member is an administrator", () => {
     const deals = read("apps/web/client/src/pages/Deals.tsx");
     expect(deals).toContain(".or(`sender_id.eq.${user.id},traveler_id.eq.${user.id}`)");
