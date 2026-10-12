@@ -36,7 +36,8 @@ describe("BridgeX currency, cargo, support, and brand release safeguards", () =>
     const deals = read("apps/web/client/src/pages/Deals.tsx");
     expect(deals).toContain("const selectedSupportEnquiryId = selectedSupport?.related_id || selectedSupport?.id || \"\"");
     expect(deals).toContain("p_enquiry_id: selectedSupportEnquiryId");
-    expect(deals).toContain("support=${encodeURIComponent(latestSupportUpdate.related_id || latestSupportUpdate.id)}");
+    expect(deals).toContain("const openSupport = (update: SystemNotification)");
+    expect(deals).toContain("encodeURIComponent(update.related_id || update.id)");
   });
 
   it("keeps the member Inbox limited to the signed-in deal participant even when that member is an administrator", () => {
