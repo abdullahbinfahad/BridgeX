@@ -505,3 +505,21 @@
     }
   }
 }
+
+@keyframes bridgex-product-sticker-float {
+  0%, 100% { transform: translate3d(0, 0, 0) rotate(-4deg); }
+  50% { transform: translate3d(-0.22rem, -0.35rem, 0) rotate(4deg); }
+}
+
+.bridgex-product-sticker {
+  animation: bridgex-product-sticker-float 3.8s ease-in-out infinite;
+  border: 1px solid rgba(255, 255, 255, 0.72);
+  opacity: 0.94;
+  transition: transform 180ms cubic-bezier(0.23, 1, 0.32, 1), opacity 180ms ease;
+}
+
+.group:hover .bridgex-product-sticker { opacity: 1; transform: translate3d(-0.18rem, -0.28rem, 0) rotate(6deg) scale(1.05); }
+
+@media (prefers-reduced-motion: reduce) {
+  .bridgex-product-sticker { animation: none; }
+}
