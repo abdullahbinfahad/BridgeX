@@ -42,6 +42,7 @@ describe("BridgeX currency, cargo, support, and brand release safeguards", () =>
 
   it("keeps chat attachments sendable and voice input single-pass", () => {
     const deals = read("apps/web/client/src/pages/Deals.tsx");
+    const mediaMigration = read("supabase/migrations/202610121620_secure_match_chat_media.sql");
     expect(deals).toContain("setPendingPhoto(file)");
     expect(deals).toContain("Send photo");
     expect(deals).toContain("event.resultIndex");
@@ -50,6 +51,9 @@ describe("BridgeX currency, cargo, support, and brand release safeguards", () =>
     expect(deals).toContain(".on(\"presence\", { event: \"sync\" }");
     expect(deals).toContain("document.addEventListener(\"visibilitychange\", refreshOnReturn)");
     expect(deals).toContain("counterpartOnline ? \"Active now\"");
+    expect(deals).toContain("readSessionJson<DealMessage[]>(key)");
+    expect(mediaMigration).toContain("request_media_chat_upload_participant");
+    expect(mediaMigration).toContain("name LIKE auth.uid()::text || '/chat/%'");
   });
 
   it("keeps the member Inbox limited to the signed-in deal participant even when that member is an administrator", () => {
