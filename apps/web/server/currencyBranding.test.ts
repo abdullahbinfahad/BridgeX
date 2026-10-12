@@ -56,6 +56,18 @@ describe("BridgeX currency, cargo, support, and brand release safeguards", () =>
     expect(mediaMigration).toContain("name LIKE auth.uid()::text || '/chat/%'");
   });
 
+  it("allows members to edit or delete only their own protected messages", () => {
+    const deals = read("apps/web/client/src/pages/Deals.tsx");
+    const messageMigration = read("supabase/migrations/202610121955_edit_delete_match_messages.sql");
+    expect(deals).toContain("beginEditMessage");
+    expect(deals).toContain("saveEditMessage");
+    expect(deals).toContain("deleteMessage");
+    expect(deals).toContain("message.sender_id === user?.id");
+    expect(messageMigration).toContain("messages_update_own");
+    expect(messageMigration).toContain("messages_delete_own");
+    expect(messageMigration).toContain("sender_id = auth.uid()");
+  });
+
   it("keeps the member Inbox limited to the signed-in deal participant even when that member is an administrator", () => {
     const deals = read("apps/web/client/src/pages/Deals.tsx");
     expect(deals).toContain(".or(`sender_id.eq.${user.id},traveler_id.eq.${user.id}`)");
