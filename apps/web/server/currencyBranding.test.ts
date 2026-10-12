@@ -47,6 +47,9 @@ describe("BridgeX currency, cargo, support, and brand release safeguards", () =>
     expect(deals).toContain("event.resultIndex");
     expect(deals).toContain("continuous = false");
     expect(deals).toContain("scrollTop = messageScrollRef.current.scrollHeight");
+    expect(deals).toContain(".on(\"presence\", { event: \"sync\" }");
+    expect(deals).toContain("document.addEventListener(\"visibilitychange\", refreshOnReturn)");
+    expect(deals).toContain("counterpartOnline ? \"Active now\"");
   });
 
   it("keeps the member Inbox limited to the signed-in deal participant even when that member is an administrator", () => {
