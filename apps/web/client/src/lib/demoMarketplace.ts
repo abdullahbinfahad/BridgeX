@@ -24,7 +24,8 @@ const image = (id: string) => `https://images.unsplash.com/${id}?auto=format&fit
 const people = [
   ["Mina Rahman", true, 4.9, 18], ["Daniel Wu", false, 4.7, 9], ["Sofia Martinez", true, 5, 6], ["Arif Hossain", false, 4.8, 12], ["Emma Johnson", true, 4.6, 4],
 ] as const;
-const requestRows = [
+type RequestRow = readonly [string, string, string, string, string, string, string, string, string, string, string];
+const requestRows: RequestRow[] = [
   ["demo-request-01", "Hand Watch", "Electronics & accessories", "Personal item", "Nanjing, China → Lahore, Pakistan", "0.2 kg", "৳ 300", "20 days", "5 cm", "Fragile", "photo-1523170335258-f5ed11844a49"],
   ["demo-request-02", "Family Skincare Set", "Beauty", "Products for family", "Guangzhou, China → Dhaka, Bangladesh", "1.4 kg", "৳ 1,200", "14 days", "Small box", "Keep dry", "photo-1556229010-6c3f2c9c8f31"],
   ["demo-request-03", "Wireless Headphones", "Electronics", "Personal item", "Shenzhen, China → Chittagong, Bangladesh", "0.6 kg", "৳ 850", "18 days", "20 × 18 cm", "None", "photo-1505740420928-5e560c06d30e"],
@@ -36,7 +37,8 @@ const requestRows = [
   ["demo-request-09", "Camera Lens", "Photography", "Business product", "Wuhan, China → Kuala Lumpur, Malaysia", "0.8 kg", "৳ 2,500", "10 days", "12 cm", "Fragile", "photo-1516035069371-29a1b244cc32"],
   ["demo-request-10", "Office Documents", "Documents", "Documents", "Suzhou, China → Seoul, South Korea", "0.3 kg", "৳ 400", "7 days", "A4 envelope", "Keep dry", "photo-1455390582262-044cdead277a"],
 ] as const;
-const carryRows = [
+type CarryRow = readonly [string, string, string, string, string, string, string, string];
+const carryRows: CarryRow[] = [
   ["demo-carry-01", "Flight carry space", "flight", "12 kg remaining", "৳ 420 / kg", "Oct 28, 2026", "Dhaka, Bangladesh → Dubai, UAE", "photo-1436491865332-7a61a109cc05"],
   ["demo-carry-02", "Train carry space", "train", "8 kg remaining", "৳ 180 / kg", "Nov 02, 2026", "Beijing, China → Guangzhou, China", "photo-1474487548417-781cb71495f3"],
   ["demo-carry-03", "Cargo capacity", "cargo", "60 kg remaining", "৳ 95 / kg", "Nov 08, 2026", "Shenzhen, China → Dhaka, Bangladesh", "photo-1586528116311-ad8dd3c8310d"],
@@ -49,8 +51,22 @@ const carryRows = [
   ["demo-carry-10", "Cargo capacity", "cargo", "40 kg remaining", "৳ 110 / kg", "Nov 23, 2026", "New York, USA → Mexico City, Mexico", "photo-1586528116311-ad8dd3c8310d"],
 ] as const;
 
-export const DEMO_REQUESTS: DemoMarketItem[] = requestRows.map((row, index) => {
+const expandedRequestRows: RequestRow[] = [...requestRows, ...Array.from({ length: 100 }, (_, index) => {
+  const cities = ["Shanghai", "Shenzhen", "Guangzhou", "Beijing", "Chengdu", "Hangzhou", "Nanjing", "Wuhan", "Kunming", "Xiamen"];
+  const destinations = ["Dhaka", "Chittagong", "Sylhet", "Lahore", "Kathmandu", "Colombo", "Kuala Lumpur", "Seoul", "Yangon", "Dubai"];
+  const products = ["Smart watch", "Tablet case", "Cotton shirt", "Kitchen blender", "Sketchbook", "Vitamin organizer", "LED lamp", "Travel adapter", "Perfume set", "Baby clothes"];
+  const categories = ["Electronics", "Garments & footwear", "Home appliances", "Books & stationery", "Beauty", "Personal item", "Home decoration", "Business product", "Products for family", "Other goods"];
+  const photoIds = ["photo-1523275335684-37898b6baf30", "photo-1542291026-7eec264c27ff", "photo-1556911220-bff31c812dba", "photo-1512820790803-83ca734da794", "photo-1515372039744-b8f02a3ae446"];
+  const origin = cities[index % cities.length]; const destination = destinations[index % destinations.length]; const product = products[index % products.length]; const category = categories[index % categories.length];
+  return [`demo-request-${String(index + 11).padStart(3, "0")}`, `${product} ${index + 1}`, category, index % 3 === 0 ? "Business product" : "Personal item", `${origin}, China → ${destination}, ${index % 2 ? "Bangladesh" : "Pakistan"}`, `${(0.3 + (index % 8) * 0.4).toFixed(1)} kg`, `৳ ${(350 + index * 85).toLocaleString()}`, `${7 + (index % 24)} days`, index % 2 ? "Small box" : "Fragile", index % 3 ? "None" : "Keep dry", photoIds[index % photoIds.length]] as RequestRow;
+})];
+const expandedCarryRows: CarryRow[] = [...carryRows, ...Array.from({ length: 100 }, (_, index) => {
+  const modes = ["flight", "train", "cargo"] as const; const origins = ["Dhaka", "Beijing", "Paris", "Tokyo", "Dubai", "Toronto", "Istanbul", "Madrid", "Kuala Lumpur", "Doha"]; const destinations = ["London", "Guangzhou", "Madrid", "Osaka", "Singapore", "New York", "Berlin", "Barcelona", "Bangkok", "Muscat"]; const photos = ["photo-1436491865332-7a61a109cc05", "photo-1474487548417-781cb71495f3", "photo-1586528116311-ad8dd3c8310d"];
+  const mode = modes[index % modes.length]; return [`demo-carry-${String(index + 11).padStart(3, "0")}`, `${mode === "flight" ? "Flight" : mode === "train" ? "Train" : "Cargo"} carry space`, mode, `${4 + (index % 70)} kg remaining`, `৳ ${90 + (index % 8) * 55} / kg`, `Dec ${1 + (index % 27)}, 2026`, `${origins[index % origins.length]} → ${destinations[index % destinations.length]}`, photos[index % photos.length]] as CarryRow;
+})];
+
+export const DEMO_REQUESTS: DemoMarketItem[] = expandedRequestRows.map((row, index) => {
   const person = people[index % people.length];
   return { id: row[0], ownerId: `demo-member-${index + 1}`, title: row[1], category: row[2], productCategories: [row[2]], route: row[4], weight: row[5], budget: row[6], date: "Demo preview", tag: "Item request · Demo", previewUrl: image(row[10]), previewType: "image", mediaCount: 1, posterName: person[0], posterVerified: person[1], posterRating: { average: person[2], count: person[3] }, requestInfo: { purchaseCity: row[4].split(" → ")[0], destinationCity: row[4].split(" → ")[1], days: Number(row[7].split(" ")[0]), size: row[8], handling: row[9] }, isDemo: true };
 });
-export const DEMO_CARRY: DemoMarketItem[] = carryRows.map((row, index) => { const person = people[(index + 2) % people.length]; return { id: row[0], ownerId: `demo-carrier-${index + 1}`, title: row[1], category: row[2], productCategories: [], route: row[6], weight: row[3], budget: row[4], date: row[5], tag: `${row[2]} · Demo`, previewUrl: image(row[7]), previewType: "image", mediaCount: 1, posterName: person[0], posterVerified: person[1], posterRating: { average: person[2], count: person[3] }, remainingItems: "mobile · laptop · camera", isDemo: true }; });
+export const DEMO_CARRY: DemoMarketItem[] = expandedCarryRows.map((row, index) => { const person = people[(index + 2) % people.length]; return { id: row[0], ownerId: `demo-carrier-${index + 1}`, title: row[1], category: row[2], productCategories: [], route: row[6], weight: row[3], budget: row[4], date: row[5], tag: `${row[2]} · Demo`, previewUrl: image(row[7]), previewType: "image", mediaCount: 1, posterName: person[0], posterVerified: person[1], posterRating: { average: person[2], count: person[3] }, remainingItems: "mobile · laptop · camera", isDemo: true }; });
