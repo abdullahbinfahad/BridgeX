@@ -1,13 +1,13 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import * as ImagePicker from "expo-image-picker";
-import { ActivityIndicator, Alert, FlatList, Image, KeyboardAvoidingView, Platform, Pressable, StyleSheet, Text, TextInput, View } from "react-native";
+import { ActivityIndicator, Alert, BackHandler, FlatList, Image, KeyboardAvoidingView, Platform, Pressable, StyleSheet, Text, TextInput, View } from "react-native";
 import { deleteNativeDealMessage, editNativeDealMessage, loadCachedNativeDealMessages, loadCachedNativeDeals, loadCachedNativeSupportConversations, loadCachedNativeSupportMessages, loadNativeDealMessages, loadNativeDeals, loadNativeSupportConversations, loadNativeSupportMessages, markNativeDealRead, sendNativeDealMessage, sendNativeSupportMessage, type NativeDeal, type NativeDealMessage, type NativeSupportConversation, type NativeSupportMessage } from "../lib/api";
 import { useBridgeXAppearance } from "../lib/appearance";
 import { useNativeLanguage } from "../lib/i18n";
 import { uploadNativeChatPhoto, type NativeMediaAsset } from "../lib/media";
 import { supabase } from "../lib/supabase";
 
-type Props = { userId: string };
+type Props = { userId: string; onBack?: () => boolean };
 type InboxThread = { kind: "deal"; item: NativeDeal } | { kind: "support"; item: NativeSupportConversation };
 type SelectedThread = InboxThread | null;
 type ConversationMessage = Pick<NativeDealMessage, "id" | "sender_id" | "body" | "created_at" | "edited_at" | "deleted_at">;
@@ -15,7 +15,7 @@ const time = (value: string | null) => value ? new Date(value).toDateString() ==
 const mergeMessages = (first: ConversationMessage[], second: ConversationMessage[]) => Array.from(new Map([...first, ...second].map(item => [item.id, item])).values()).sort((a, b) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime());
 const photoUrl = (body: string) => body.startsWith("📷 Photo attachment\n") ? body.split("\n")[1] || "" : "";
 
-export function MessagesScreen({ userId }: Props) {
+export function MessagesScreen({ userId, onBack }: Props) {
   const [deals, setDeals] = useState<NativeDeal[]>([]);
   const [support, setSupport] = useState<NativeSupportConversation[]>([]);
   const [selected, setSelected] = useState<SelectedThread>(null);
@@ -53,6 +53,7 @@ export function MessagesScreen({ userId }: Props) {
     return () => { void supabase.removeChannel(channel); };
   }, [loadDeals, scrollToNewest, selected?.kind, selected?.kind === "support" ? selected.item.id : undefined, userId]);
   useEffect(() => { if (!selected) { setMessages([]); setDraft(""); setEditingId(null); setPendingPhoto(null); return; } if (selected.kind === "deal") void loadMessages(selected.item.id); else void (async () => { const cached = await loadCachedNativeSupportMessages(selected.item.id); if (cached) { setMessages(cached); scrollToNewest(); } try { const fresh = await loadNativeSupportMessages(userId, selected.item); setMessages(fresh); scrollToNewest(); } catch (failure: any) { if (!cached) setError(failure?.message || "BridgeX could not load this support conversation."); } })(); }, [loadMessages, scrollToNewest, selected, userId]);
+  useEffect(() => { if (!selected) return; const subscription = BackHandler.addEventListener("hardwareBackPress", () => { setSelected(null); return true; }); return () => subscription.remove(); }, [selected]);
   const counterpart = (deal: NativeDeal) => deal.sender_id === userId ? deal.traveler_name || "Traveler" : deal.sender_name || "Sender";
   const unread = (deal: NativeDeal) => { const read = deal.sender_id === userId ? deal.sender_last_read_at : deal.traveler_last_read_at; return Boolean(deal.last_message_at && deal.last_message_sender_id !== userId && (!read || new Date(deal.last_message_at).getTime() > new Date(read).getTime())); };
   const send = async () => { if (!selected || !draft.trim() || busy) return; const body = draft.trim(); setBusy(true); try { if (selected.kind === "deal") { if (editingId) { const editedAt = await editNativeDealMessage(editingId, userId, body); setMessages(current => current.map(item => item.id === editingId ? { ...item, body, edited_at: editedAt } : item)); } else { const id = await sendNativeDealMessage(userId, selected.item.id, body); const next = { id: id || `local-${Date.now()}`, match_id: selected.item.id, sender_id: userId, body, created_at: new Date().toISOString() }; setMessages(current => mergeMessages(current, [next])); updatePreview(next); } } else { await sendNativeSupportMessage(selected.item.id, body); setMessages(current => [...current, { id: `local-${Date.now()}`, sender_id: userId, body, created_at: new Date().toISOString() }]); } setDraft(""); setEditingId(null); scrollToNewest(); } catch (failure: any) { setError(failure?.message || "BridgeX could not send that message."); } finally { setBusy(false); } };
