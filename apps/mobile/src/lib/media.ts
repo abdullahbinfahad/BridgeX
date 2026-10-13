@@ -26,6 +26,20 @@ export async function uploadNativePostMedia(userId: string, assets: NativeMediaA
   return paths;
 }
 
+export async function uploadNativeChatPhoto(userId: string, matchId: string, asset: NativeMediaAsset) {
+  if (asset.type !== "image") throw new Error("Choose an image for a chat attachment.");
+  const prepared = await ImageManipulator.manipulateAsync(asset.uri, [], { compress: 0.62, format: ImageManipulator.SaveFormat.JPEG });
+  const response = await fetch(prepared.uri);
+  const buffer = await response.arrayBuffer();
+  if (buffer.byteLength > 4 * 1024 * 1024) throw new Error("Choose a smaller image below 4 MB after compression.");
+  const path = `${userId}/chat/${matchId}/${Date.now()}-${Math.random().toString(36).slice(2)}.jpg`;
+  const { error } = await supabase.storage.from("request-media").upload(path, buffer, { contentType: "image/jpeg", upsert: false });
+  if (error) throw error;
+  const signed = await supabase.storage.from("request-media").createSignedUrl(path, 60 * 60);
+  if (signed.error || !signed.data?.signedUrl) throw signed.error || new Error("The photo could not be prepared.");
+  return signed.data.signedUrl;
+}
+
 export async function uploadNativeVerificationDocument(userId: string, kind: "national_id" | "passport" | "student_id", asset: { uri: string; name?: string | null; mimeType?: string | null; size?: number | null }) {
   const isImage = asset.mimeType?.startsWith("image/");
   const prepared = isImage ? await ImageManipulator.manipulateAsync(asset.uri, [], { compress: 0.64, format: ImageManipulator.SaveFormat.JPEG }) : { uri: asset.uri };

@@ -64,6 +64,10 @@ export async function loadNativeMemberReviews(memberId: string): Promise<NativeM
 export type NativeNotificationPage = { items: NativeNotification[]; nextBefore: string | null; hasMore: boolean };
 export type NativeUnreadCounts = { updates: number; messages: number; workspace: number; payments: number; more: number };
 
+export async function loadCachedNotifications(userId: string): Promise<NativeNotification[] | null> {
+  return cacheGet<NativeNotification[]>(`notifications:${userId}`);
+}
+
 export async function loadNotifications(userId: string, before?: string | null, pageSize = 30): Promise<NativeNotificationPage> {
   const base = supabase.from("notifications").select("id,title,body,created_at,read_at,related_id,type,link").eq("user_id", userId).order("created_at", { ascending: false });
   const { data, error } = before ? await base.lt("created_at", before).limit(pageSize + 1) : await base.limit(pageSize + 1);
@@ -165,6 +169,10 @@ export type NativeWorkspace = {
   listings: Array<{ id: string; origin_country: string | null; origin_city: string | null; destination_country: string | null; destination_city: string | null; status: string; departure_at: string; available_weight_kg: number | null }>;
   orders: Array<{ id: string; match_id: string | null; reference: string; sender_id: string; traveler_id: string; amount_bdt: number | null; currency: string | null; escrow_status: string; fulfillment_status: string; updated_at: string; counterpart_name?: string | null; counterpart_verified?: boolean; counterpart_rating?: number; counterpart_review_count?: number }>;
 };
+
+export async function loadCachedNativeWorkspace(userId: string): Promise<NativeWorkspace | null> {
+  return cacheGet<NativeWorkspace>(`workspace:${userId}`);
+}
 
 export async function loadNativeWorkspace(userId: string): Promise<NativeWorkspace> {
   const [requests, listings, orders] = await Promise.all([
@@ -276,20 +284,38 @@ export async function confirmNativeSenderDelivery(orderId: string) {
 }
 
 export type NativeDeal = { id: string; match_type: string; sender_id: string; traveler_id: string; status: string; sender_name: string | null; traveler_name: string | null; sender_last_read_at: string | null; traveler_last_read_at: string | null; last_message_body: string | null; last_message_at: string | null; last_message_sender_id: string | null; accepted_at: string };
-export type NativeDealMessage = { id: string; match_id: string; sender_id: string; body: string; created_at: string };
+export type NativeDealMessage = { id: string; match_id: string; sender_id: string; body: string; created_at: string; edited_at?: string | null; deleted_at?: string | null };
+
+export async function loadCachedNativeDeals(userId: string): Promise<NativeDeal[] | null> {
+  return cacheGet<NativeDeal[]>(`deals:${userId}`);
+}
 
 export async function loadNativeDeals(userId: string): Promise<NativeDeal[]> {
   const { data, error } = await supabase.from("matches").select("id,match_type,sender_id,traveler_id,status,sender_name,traveler_name,sender_last_read_at,traveler_last_read_at,last_message_body,last_message_at,last_message_sender_id,accepted_at").or(`sender_id.eq.${userId},traveler_id.eq.${userId}`).order("last_message_at", { ascending: false, nullsFirst: false }).order("accepted_at", { ascending: false }).limit(250);
-  if (error) throw error;
+  if (error) {
+    const cached = await loadCachedNativeDeals(userId);
+    if (cached) return cached;
+    throw error;
+  }
   const deals = data ?? [];
   await cacheSet(`deals:${userId}`, deals);
   return deals;
 }
 
+export async function loadCachedNativeDealMessages(matchId: string): Promise<NativeDealMessage[] | null> {
+  return cacheGet<NativeDealMessage[]>(`deal-messages:${matchId}`);
+}
+
 export async function loadNativeDealMessages(matchId: string): Promise<NativeDealMessage[]> {
-  const { data, error } = await supabase.from("match_messages").select("id,match_id,sender_id,body,created_at").eq("match_id", matchId).order("created_at", { ascending: true }).limit(300);
-  if (error) throw error;
-  return data ?? [];
+  const { data, error } = await supabase.from("match_messages").select("id,match_id,sender_id,body,created_at,edited_at,deleted_at").eq("match_id", matchId).order("created_at", { ascending: true }).limit(300);
+  if (error) {
+    const cached = await loadCachedNativeDealMessages(matchId);
+    if (cached) return cached;
+    throw error;
+  }
+  const messages = data ?? [];
+  await cacheSet(`deal-messages:${matchId}`, messages);
+  return messages;
 }
 
 export async function markNativeDealRead(matchId: string) {
@@ -303,6 +329,20 @@ export async function sendNativeDealMessage(userId: string, matchId: string, bod
   const { data, error } = await supabase.rpc("send_bridgex_match_message", { p_match_id: matchId, p_body: trimmed });
   if (error) throw error;
   return data as string;
+}
+
+export async function editNativeDealMessage(messageId: string, userId: string, body: string) {
+  const clean = body.trim();
+  if (!clean) throw new Error("Message cannot be empty.");
+  const editedAt = new Date().toISOString();
+  const { error } = await supabase.from("match_messages").update({ body: clean, edited_at: editedAt }).eq("id", messageId).eq("sender_id", userId);
+  if (error) throw error;
+  return editedAt;
+}
+
+export async function deleteNativeDealMessage(messageId: string, userId: string) {
+  const { error } = await supabase.from("match_messages").delete().eq("id", messageId).eq("sender_id", userId);
+  if (error) throw error;
 }
 
 export type NativeSupportConversation = { id: string; subject: string; message: string; status: string; created_at: string; reply_body: string | null; replied_at: string | null };
@@ -324,10 +364,24 @@ export async function requestNativeAccountDeletion(userId: string, fullName: str
   if (error) throw error;
 }
 
+export async function loadCachedNativeSupportConversations(userId: string): Promise<NativeSupportConversation[] | null> {
+  return cacheGet<NativeSupportConversation[]>(`support-conversations:${userId}`);
+}
+
 export async function loadNativeSupportConversations(userId: string): Promise<NativeSupportConversation[]> {
   const { data, error } = await supabase.from("contact_enquiries").select("id,subject,message,status,created_at,reply_body,replied_at").eq("user_id", userId).order("replied_at", { ascending: false, nullsFirst: false }).order("created_at", { ascending: false }).limit(50);
-  if (error) throw error;
-  return data ?? [];
+  if (error) {
+    const cached = await loadCachedNativeSupportConversations(userId);
+    if (cached) return cached;
+    throw error;
+  }
+  const conversations = data ?? [];
+  await cacheSet(`support-conversations:${userId}`, conversations);
+  return conversations;
+}
+
+export async function loadCachedNativeSupportMessages(enquiryId: string): Promise<NativeSupportMessage[] | null> {
+  return cacheGet<NativeSupportMessage[]>(`support-messages:${enquiryId}`);
 }
 
 export async function loadNativeSupportMessages(userId: string, enquiry: NativeSupportConversation): Promise<NativeSupportMessage[]> {

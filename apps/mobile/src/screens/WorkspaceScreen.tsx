@@ -1,7 +1,8 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { ActivityIndicator, Alert, Pressable, RefreshControl, ScrollView, StyleSheet, Text, View } from "react-native";
-import { confirmNativeSenderDelivery, loadNativeWorkspace, type NativeWorkspace, updateNativeTravelerOrder } from "../lib/api";
+import { confirmNativeSenderDelivery, loadCachedNativeWorkspace, loadNativeWorkspace, type NativeWorkspace, updateNativeTravelerOrder } from "../lib/api";
 import type { WorkspaceSection } from "./WorkspaceRecordsScreen";
+import { supabase } from "../lib/supabase";
 
 type Props = { userId: string; unreadCount?: number; onBrowseMarketplace: () => void; onOpenMessages: () => void; onOpenSection: (section: WorkspaceSection) => void; onManagePosts: () => void; onOpenResponses: () => void };
 const empty: NativeWorkspace = { requests: [], listings: [], orders: [] };
@@ -9,8 +10,21 @@ const statusText = (value: string) => value.replace(/_/g, " ").replace(/\b\w/g, 
 
 export function WorkspaceScreen({ userId, unreadCount = 0, onBrowseMarketplace, onOpenMessages, onOpenSection, onManagePosts, onOpenResponses }: Props) {
   const [data, setData] = useState<NativeWorkspace>(empty); const [loading, setLoading] = useState(true); const [refreshing, setRefreshing] = useState(false); const [error, setError] = useState("");
-  const load = useCallback(async (refresh = false) => { refresh ? setRefreshing(true) : setLoading(true); try { setError(""); setData(await loadNativeWorkspace(userId)); } catch (failure: any) { setError(failure?.message || "BridgeX could not load your workspace."); } finally { setLoading(false); setRefreshing(false); } }, [userId]);
+  const load = useCallback(async (refresh = false) => {
+    if (refresh) setRefreshing(true);
+    const cached = refresh ? null : await loadCachedNativeWorkspace(userId);
+    if (cached) { setData(cached); setLoading(false); } else if (!refresh) setLoading(true);
+    try { setError(""); setData(await loadNativeWorkspace(userId)); } catch (failure: any) { if (!cached && !refresh) setError(failure?.message || "BridgeX could not load your workspace."); } finally { setLoading(false); setRefreshing(false); }
+  }, [userId]);
   useEffect(() => { void load(); }, [load]);
+  useEffect(() => {
+    const channel = supabase.channel(`native-workspace-${userId}`)
+      .on("postgres_changes", { event: "*", schema: "public", table: "send_requests", filter: `user_id=eq.${userId}` }, () => void load(true))
+      .on("postgres_changes", { event: "*", schema: "public", table: "carry_listings", filter: `user_id=eq.${userId}` }, () => void load(true))
+      .on("postgres_changes", { event: "*", schema: "public", table: "orders" }, () => void load(true))
+      .subscribe();
+    return () => { void supabase.removeChannel(channel); };
+  }, [load, userId]);
   const activeOrders = useMemo(() => data.orders.filter(order => !["released", "completed", "cancelled", "refunded"].includes(order.fulfillment_status) && order.escrow_status !== "released"), [data.orders]);
   return <ScrollView style={styles.page} contentContainerStyle={styles.content} refreshControl={<RefreshControl refreshing={refreshing} onRefresh={() => void load(true)} tintColor="#6f5cff" />}><View><Text style={styles.eyebrow}>MEMBER WORKSPACE</Text><View style={styles.titleLine}><Text style={styles.title}>Your BridgeX activity</Text>{unreadCount > 0 ? <View style={styles.unreadBadge}><Text style={styles.unreadBadgeText}>{unreadCount > 99 ? "99+" : unreadCount}</Text></View> : null}</View><Text style={styles.copy}>Open a focused list to manage protected orders, requests, carry space, and completed records without a crowded overview.</Text></View>{unreadCount > 0 ? <View style={styles.updateBanner}><Text style={styles.updateBannerTitle}>You have {unreadCount} workspace update{unreadCount === 1 ? "" : "s"}</Text><Text style={styles.updateBannerCopy}>Open the relevant request, carry space, offer, or protected order to review the latest activity.</Text></View> : null}{loading ? <View style={styles.center}><ActivityIndicator color="#2d8d62" /></View> : null}{error ? <View style={styles.error}><Text style={styles.errorText}>{error}</Text><Pressable onPress={() => void load()}><Text style={styles.retry}>Try again</Text></Pressable></View> : null}<View style={styles.stats}><Stat label="Active orders" value={activeOrders.length} caption={activeOrders.length ? "Protected order in progress" : "No active protected orders"} onPress={() => onOpenSection("active_orders")} /><Stat label="My requests" value={data.requests.length} caption={`${data.requests.filter(item => item.status === "open").length} currently open`} onPress={() => onOpenSection("requests")} /><Stat label="Carry space" value={data.listings.length} caption={data.listings.length ? "Manage your available capacity" : "No carry listing yet"} onPress={() => onOpenSection("carry")} /><Stat label="Completed orders" value={data.orders.filter(order => order.escrow_status === "released" || ["completed", "released"].includes(order.fulfillment_status)).length} caption="Order history retained" onPress={() => onOpenSection("completed")} /></View><View style={styles.management}><Text style={styles.managementTitle}>Post and response management</Text><Text style={styles.managementCopy}>Edit eligible open posts, review every offer or interest under its own post, and continue through the protected payment step when you select a response.</Text><View style={styles.managementActions}><Pressable onPress={onManagePosts} style={styles.managementPrimary}><Text style={styles.managementPrimaryText}>Manage posts</Text></Pressable><Pressable onPress={onOpenResponses} style={styles.managementSecondary}><Text style={styles.managementSecondaryText}>Offers & interests</Text></Pressable></View></View><View style={styles.focused}><Text style={styles.focusedTitle}>Keep the overview clear</Text><Text style={styles.focusedCopy}>Each card opens its own page. Use My item requests to swipe an eligible request left and remove it from your workspace after the protected order is complete.</Text><Pressable onPress={onOpenMessages} style={styles.focusedAction}><Text style={styles.focusedActionText}>Open protected messages</Text></Pressable><Pressable onPress={onBrowseMarketplace} style={styles.marketAction}><Text style={styles.marketActionText}>Browse marketplace</Text></Pressable></View></ScrollView>;
 }
