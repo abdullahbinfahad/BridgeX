@@ -2,7 +2,7 @@ import { supabase } from "./supabase";
 
 export function isNativeImagePath(value?: string | null) {
   if (!value) return false;
-  return /\.(avif|gif|heic|heif|jpe?g|png|webp)(?:[?#].*)?$/i.test(value);
+  return /\.(avif|gif|heic|heif|jpe?g|png|webp)(?:[?#].*)?$/i.test(value) || /^https?:\/\//i.test(value);
 }
 
 export function nativePublicMediaUrl(value?: string | null) {
