@@ -38,9 +38,9 @@ const requestImageQuery = (title: string, category: string) => {
   return "parcel,shopping";
 };
 const carryImageQuery = (mode: string) => mode === "flight" ? "airplane,luggage" : mode === "train" ? "train,travel" : "cargo,freight";
-const people = [
-  ["Mina Rahman", true, 4.9, 18], ["Daniel Wu", false, 4.7, 9], ["Sofia Martinez", true, 5, 6], ["Arif Hossain", false, 4.8, 12], ["Emma Johnson", true, 4.6, 4],
-] as const;
+const people = Array.from({ length: 10 }, (_, index) => [
+  `Demo member ${String(index + 1).padStart(2, "0")}`, false, 0, 0,
+] as const);
 type RequestRow = readonly [string, string, string, string, string, string, string, string, string, string, string];
 const requestRows: RequestRow[] = [
   ["demo-request-01", "Hand Watch", "Electronics & accessories", "Personal item", "Nanjing, China → Lahore, Pakistan", "0.2 kg", "৳ 300", "20 days", "5 cm", "Fragile", "photo-1523170335258-f5ed11844a49"],
@@ -69,16 +69,24 @@ const carryRows: CarryRow[] = [
 ] as const;
 
 const expandedRequestRows: RequestRow[] = [...requestRows, ...Array.from({ length: 100 }, (_, index) => {
-  const cities = ["Shanghai", "Shenzhen", "Guangzhou", "Beijing", "Chengdu", "Hangzhou", "Nanjing", "Wuhan", "Kunming", "Xiamen"];
-  const destinations = ["Dhaka", "Chittagong", "Sylhet", "Lahore", "Kathmandu", "Colombo", "Kuala Lumpur", "Seoul", "Yangon", "Dubai"];
+  const routes = [
+    ["Shanghai", "China", "Dhaka", "Bangladesh"], ["Shenzhen", "China", "Chittagong", "Bangladesh"], ["Guangzhou", "China", "Sylhet", "Bangladesh"],
+    ["Beijing", "China", "Lahore", "Pakistan"], ["Chengdu", "China", "Kathmandu", "Nepal"], ["Hangzhou", "China", "Colombo", "Sri Lanka"],
+    ["Nanjing", "China", "Kuala Lumpur", "Malaysia"], ["Wuhan", "China", "Seoul", "South Korea"], ["Kunming", "China", "Yangon", "Myanmar"], ["Xiamen", "China", "Dubai", "UAE"],
+  ] as const;
   const products = ["Smart watch", "Tablet case", "Cotton shirt", "Kitchen blender", "Sketchbook", "Vitamin organizer", "LED lamp", "Travel adapter", "Perfume set", "Baby clothes"];
   const categories = ["Electronics", "Garments & footwear", "Home appliances", "Books & stationery", "Beauty", "Personal item", "Home decoration", "Business product", "Products for family", "Other goods"];
-  const origin = cities[index % cities.length]; const destination = destinations[index % destinations.length]; const product = products[index % products.length]; const category = categories[index % categories.length];
-  return [`demo-request-${String(index + 11).padStart(3, "0")}`, `${product} ${index + 1}`, category, index % 3 === 0 ? "Business product" : "Personal item", `${origin}, China → ${destination}, ${index % 2 ? "Bangladesh" : "Pakistan"}`, `${(0.3 + (index % 8) * 0.4).toFixed(1)} kg`, `৳ ${(350 + index * 85).toLocaleString()}`, `${7 + (index % 24)} days`, index % 2 ? "Small box" : "Fragile", index % 3 ? "None" : "Keep dry", `demo/request-${String(index + 11).padStart(3, "0")}`] as RequestRow;
+  const [origin, originCountry, destination, destinationCountry] = routes[index % routes.length]; const product = products[index % products.length]; const category = categories[index % categories.length];
+  return [`demo-request-${String(index + 11).padStart(3, "0")}`, `${product} ${index + 1}`, category, index % 3 === 0 ? "Business product" : "Personal item", `${origin}, ${originCountry} → ${destination}, ${destinationCountry}`, `${(0.3 + (index % 8) * 0.4).toFixed(1)} kg`, `৳ ${(350 + index * 85).toLocaleString()}`, `${7 + (index % 24)} days`, index % 2 ? "Small box" : "Fragile", index % 3 ? "None" : "Keep dry", `demo/request-${String(index + 11).padStart(3, "0")}`] as RequestRow;
 })];
 const expandedCarryRows: CarryRow[] = [...carryRows, ...Array.from({ length: 100 }, (_, index) => {
-  const modes = ["flight", "train", "cargo"] as const; const origins = ["Dhaka", "Beijing", "Paris", "Tokyo", "Dubai", "Toronto", "Istanbul", "Madrid", "Kuala Lumpur", "Doha"]; const destinations = ["London", "Guangzhou", "Madrid", "Osaka", "Singapore", "New York", "Berlin", "Barcelona", "Bangkok", "Muscat"];
-  const mode = modes[index % modes.length]; return [`demo-carry-${String(index + 11).padStart(3, "0")}`, `${mode === "flight" ? "Flight" : mode === "train" ? "Train" : "Cargo"} carry space ${index + 1}`, mode, `${4 + (index % 70)} kg remaining`, `৳ ${90 + (index % 8) * 55} / kg`, `Dec ${1 + (index % 27)}, 2026`, `${origins[index % origins.length]} → ${destinations[index % destinations.length]}`, `demo/carry-${String(index + 11).padStart(3, "0")}`] as CarryRow;
+  const modes = ["flight", "train", "cargo"] as const; const routes = [
+    ["Dhaka", "Bangladesh", "Dubai", "UAE"], ["Beijing", "China", "Guangzhou", "China"], ["Shenzhen", "China", "Dhaka", "Bangladesh"],
+    ["Paris", "France", "Madrid", "Spain"], ["Tokyo", "Japan", "Osaka", "Japan"], ["Toronto", "Canada", "London", "UK"],
+    ["Istanbul", "Türkiye", "Berlin", "Germany"], ["Kuala Lumpur", "Malaysia", "Singapore", "Singapore"], ["Madrid", "Spain", "Barcelona", "Spain"], ["New York", "USA", "Mexico City", "Mexico"],
+  ] as const;
+  const [origin, originCountry, destination, destinationCountry] = routes[index % routes.length];
+  const mode = modes[index % modes.length]; return [`demo-carry-${String(index + 11).padStart(3, "0")}`, `${mode === "flight" ? "Flight" : mode === "train" ? "Train" : "Cargo"} carry space ${index + 1}`, mode, `${4 + (index % 70)} kg remaining`, `৳ ${90 + (index % 8) * 55} / kg`, `Dec ${1 + (index % 27)}, 2026`, `${origin}, ${originCountry} → ${destination}, ${destinationCountry}`, `demo/carry-${String(index + 11).padStart(3, "0")}`] as CarryRow;
 })];
 
 export const DEMO_REQUESTS: DemoMarketItem[] = expandedRequestRows.map((row, index) => {
