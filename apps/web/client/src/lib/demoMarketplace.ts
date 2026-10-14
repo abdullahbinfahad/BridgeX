@@ -23,6 +23,21 @@ export type DemoMarketItem = {
 const image = (id: string) => id.startsWith("demo/")
   ? `https://picsum.photos/seed/bridgex-${id.replace("/", "-")}/900/600`
   : `https://images.unsplash.com/${id}?auto=format&fit=crop&w=900&q=72`;
+const demoImage = (query: string, index: number) => `https://loremflickr.com/900/600/${encodeURIComponent(query)}?lock=${index + 1}`;
+const requestImageQuery = (title: string, category: string) => {
+  const value = `${title} ${category}`.toLowerCase();
+  if (value.includes("watch") || value.includes("headphone") || value.includes("charger") || value.includes("adapter")) return "electronics,product";
+  if (value.includes("skin") || value.includes("beauty") || value.includes("perfume") || value.includes("vitamin")) return "cosmetics,beauty";
+  if (value.includes("tea") || value.includes("food") || value.includes("grocery")) return "tea,groceries";
+  if (value.includes("shoe") || value.includes("shirt") || value.includes("garment") || value.includes("clothes")) return "clothing,fashion";
+  if (value.includes("book") || value.includes("sketch") || value.includes("document") || value.includes("stationery")) return "books,stationery";
+  if (value.includes("camera") || value.includes("photography")) return "camera,photography";
+  if (value.includes("blender") || value.includes("appliance") || value.includes("kitchen")) return "kitchen,appliance";
+  if (value.includes("lamp") || value.includes("decor") || value.includes("ceramic")) return "home,decoration";
+  if (value.includes("baby") || value.includes("family")) return "baby,family";
+  return "parcel,shopping";
+};
+const carryImageQuery = (mode: string) => mode === "flight" ? "airplane,luggage" : mode === "train" ? "train,travel" : "cargo,freight";
 const people = [
   ["Mina Rahman", true, 4.9, 18], ["Daniel Wu", false, 4.7, 9], ["Sofia Martinez", true, 5, 6], ["Arif Hossain", false, 4.8, 12], ["Emma Johnson", true, 4.6, 4],
 ] as const;
@@ -68,6 +83,6 @@ const expandedCarryRows: CarryRow[] = [...carryRows, ...Array.from({ length: 100
 
 export const DEMO_REQUESTS: DemoMarketItem[] = expandedRequestRows.map((row, index) => {
   const person = people[index % people.length];
-  return { id: row[0], ownerId: `demo-member-${index + 1}`, title: row[1], category: row[2], productCategories: [row[2]], route: row[4], weight: row[5], budget: row[6], date: "Demo preview", tag: "Item request · Demo", previewUrl: image(`demo/request-${String(index + 1).padStart(3, "0")}`), previewType: "image", mediaCount: 1, posterName: person[0], posterVerified: person[1], posterRating: { average: person[2], count: person[3] }, requestInfo: { purchaseCity: row[4].split(" → ")[0], destinationCity: row[4].split(" → ")[1], days: Number(row[7].split(" ")[0]), size: row[8], handling: row[9] }, isDemo: true };
+  return { id: row[0], ownerId: `demo-member-${index + 1}`, title: row[1], category: row[2], productCategories: [row[2]], route: row[4], weight: row[5], budget: row[6], date: "Demo preview", tag: "Item request · Demo", previewUrl: demoImage(requestImageQuery(row[1], row[2]), index), previewType: "image", mediaCount: 1, posterName: person[0], posterVerified: person[1], posterRating: { average: person[2], count: person[3] }, requestInfo: { purchaseCity: row[4].split(" → ")[0], destinationCity: row[4].split(" → ")[1], days: Number(row[7].split(" ")[0]), size: row[8], handling: row[9] }, isDemo: true };
 });
-export const DEMO_CARRY: DemoMarketItem[] = expandedCarryRows.map((row, index) => { const person = people[(index + 2) % people.length]; return { id: row[0], ownerId: `demo-carrier-${index + 1}`, title: row[1], category: row[2], productCategories: [], route: row[6], weight: row[3], budget: row[4], date: row[5], tag: `${row[2]} · Demo`, previewUrl: image(`demo/carry-${String(index + 1).padStart(3, "0")}`), previewType: "image", mediaCount: 1, posterName: person[0], posterVerified: person[1], posterRating: { average: person[2], count: person[3] }, remainingItems: "mobile · laptop · camera", isDemo: true }; });
+export const DEMO_CARRY: DemoMarketItem[] = expandedCarryRows.map((row, index) => { const person = people[(index + 2) % people.length]; return { id: row[0], ownerId: `demo-carrier-${index + 1}`, title: row[1], category: row[2], productCategories: [], route: row[6], weight: row[3], budget: row[4], date: row[5], tag: `${row[2]} · Demo`, previewUrl: demoImage(carryImageQuery(row[2]), index + 200), previewType: "image", mediaCount: 1, posterName: person[0], posterVerified: person[1], posterRating: { average: person[2], count: person[3] }, remainingItems: "mobile · laptop · camera", isDemo: true }; });
