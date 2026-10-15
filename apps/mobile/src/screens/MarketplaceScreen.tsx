@@ -8,7 +8,6 @@ import { loadCachedMarketplace, loadMarketplace } from "../lib/api";
 import { supabase } from "../lib/supabase";
 import { isNativeImagePath, isNativeVideoPath, nativeSignedPostMediaUrl, withMediaRetry } from "../lib/publicMedia";
 import { PRODUCT_CATEGORIES } from "../lib/constants";
-import { nativeDemoPosts } from "../lib/demoMarketplace";
 import { useBridgeXAppearance } from "../lib/appearance";
 import { useNativeLanguage } from "../lib/i18n";
 import type { MarketplacePost, MarketplaceTab } from "../types";
@@ -51,7 +50,7 @@ export function MarketplaceScreen({ onOpenPost, onCreateRequest, onCreateCarry }
 
   const load = useCallback(async (refresh = false, quiet = false) => {
     if (refresh) setRefreshing(true); else if (!quiet) setLoading(true);
-    try { setError(""); const livePosts = await loadMarketplace(tab); setPosts([...livePosts, ...nativeDemoPosts(tab)]); }
+    try { setError(""); const livePosts = await loadMarketplace(tab); setPosts(livePosts); }
     catch (failure: any) { setError(failure?.message || "BridgeX could not load posts right now."); }
     finally { if (!quiet) setLoading(false); setRefreshing(false); }
   }, [tab]);
@@ -61,7 +60,7 @@ export function MarketplaceScreen({ onOpenPost, onCreateRequest, onCreateCarry }
     const prime = async () => {
       const cached = await loadCachedMarketplace(tab);
       if (!active) return;
-      if (cached?.length) { setPosts([...cached, ...nativeDemoPosts(tab)]); setLoading(false); void load(false, true); } else void load();
+      if (cached?.length) { setPosts(cached); setLoading(false); void load(false, true); } else void load();
     };
     void prime();
     const table = tab === "requests" ? "send_requests" : "carry_listings";

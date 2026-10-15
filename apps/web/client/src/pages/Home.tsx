@@ -4,7 +4,6 @@ import { MemberVerificationBadge } from "@/components/bridgex/VerifiedBadge";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/lib/supabase";
-import { DEMO_CARRY, DEMO_REQUESTS } from "@/lib/demoMarketplace";
 import { ArrowRight, CircleDollarSign, Luggage, Package, PackageCheck, Plane, Plus, ShieldCheck, Star, UserRound, Weight } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Link } from "wouter";
@@ -39,8 +38,7 @@ export default function Home() {
       };
       const requestPosts: FeedPost[] = (requests.data ?? []).map(item => ({ id: item.id, ownerId: item.user_id, type: "Item request", title: item.title, route: `${item.purchase_country} → ${item.destination_country ?? "Destination"}, ${item.destination_city}`, details: `${item.weight_kg} kg · Budget ৳ ${Number(item.budget_bdt).toLocaleString()}`, createdAt: item.created_at, href: `/post/request/${item.id}`, ...identity(item.user_id) }));
       const listingPosts: FeedPost[] = (listings.data ?? []).map(item => ({ id: item.id, ownerId: item.user_id, type: "Carry space", title: "Carry space available", route: `${item.origin_city}, ${item.origin_country} → ${item.destination_city}, ${item.destination_country ?? "Destination"}`, details: `${item.available_weight_kg} kg · ৳ ${Number(item.price_bdt).toLocaleString()}${item.pricing_mode === "per_kg" ? " / kg" : ""}`, createdAt: item.created_at, href: `/post/listing/${item.id}`, ...identity(item.user_id) }));
-      const demoPosts: FeedPost[] = [...DEMO_REQUESTS.slice(0, 6), ...DEMO_CARRY.slice(0, 6)].map(item => ({ id: item.id, ownerId: item.ownerId, type: item.tag.startsWith("Carry") || item.tag.startsWith("flight") || item.tag.startsWith("train") || item.tag.startsWith("cargo") ? "Carry space" : "Item request", title: item.title, route: item.route, details: `${item.weight} · ${item.budget}`, createdAt: "2026-10-01T00:00:00.000Z", href: "/marketplace", posterName: item.posterName, posterVerified: item.posterVerified, posterRating: item.posterRating }));
-      setFeed([...requestPosts, ...listingPosts, ...demoPosts].sort((left, right) => new Date(right.createdAt).getTime() - new Date(left.createdAt).getTime()).slice(0, 18));
+      setFeed([...requestPosts, ...listingPosts].sort((left, right) => new Date(right.createdAt).getTime() - new Date(left.createdAt).getTime()).slice(0, 18));
       setLoading(false);
     })();
     return () => { alive = false; };
