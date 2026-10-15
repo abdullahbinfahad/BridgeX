@@ -101,7 +101,7 @@ describe("BridgeX currency, cargo, support, and brand release safeguards", () =>
 
   it("keeps the current independent-native Android APK link alongside the Windows download entry", () => {
     const layout = read("apps/web/client/src/components/bridgex/PublicLayout.tsx");
-    expect(layout).toContain("075c3c7b-8773-4987-aaad-7e90436d1af4");
+    expect(layout).toContain("gjKLJbZR0bI10YGLUWaUe04_Lql6dc8oTgFtUR5HZtg.apk");
     expect(layout).toContain("downloads/windows");
   });
 
