@@ -113,7 +113,7 @@ assert.match(auth, /account\("emailAddress"\)/);
 assert.match(auth, /useBridgeXAppearance/);
 assert.equal((accountLanguage.match(/nativeLabel:/g) || []).length, 11);
 assert.equal(JSON.parse(packageJson).version, appConfig.expo.version);
-assert.equal(appConfig.expo.android.versionCode, 27);
+assert.equal(appConfig.expo.android.versionCode, 28);
 assert.ok(appConfig.expo.android.blockedPermissions.includes("android.permission.READ_MEDIA_IMAGES"));
 assert.ok(appConfig.expo.android.blockedPermissions.includes("android.permission.ACCESS_FINE_LOCATION"));
 assert.match(appearance, /BridgeXAppearanceProvider/);
