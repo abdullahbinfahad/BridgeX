@@ -2,7 +2,7 @@ import PublicLayout from "@/components/bridgex/PublicLayout";
 import { Button } from "@/components/ui/button";
 import { ArrowDownToLine, ExternalLink, Laptop, Smartphone } from "lucide-react";
 
-const ANDROID_APK = "https://expo.dev/artifacts/eas/CtUDQ5jVf5jYstJS5lI7eTYI5XmY7LsxQSX4JLwe7LQ.apk";
+const ANDROID_APK = "https://expo.dev/accounts/abdullahbinfahadbridexs-team/projects/bridgex/builds/075c3c7b-8773-4987-aaad-7e90436d1af4";
 const GITHUB_SOURCE = "https://github.com/abdullahbinfahad/BridgeX";
 
 function DownloadCard({ icon: Icon, title, description, href, label, muted = false }: { icon: typeof Smartphone; title: string; description: string; href?: string; label: string; muted?: boolean }) {
